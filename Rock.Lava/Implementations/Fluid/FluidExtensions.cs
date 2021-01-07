@@ -185,6 +185,20 @@ namespace Rock.Lava.Fluid
 
                 return values.Select( a => a.ToRealObjectValue() ).ToList();
             }
+            else if ( value is NumberValue nv )
+            {
+                // Fluid stores all numeric values as decimal. If the value has no decimal places, return an integer instead.
+                var d = nv.ToNumberValue();
+
+                int placeCount = BitConverter.GetBytes( decimal.GetBits( d )[3] )[2];
+
+                if ( placeCount == 0 )
+                {
+                    return (int)d;
+                }
+
+                return d;
+            }
             else
             {
                 return value.ToObjectValue();

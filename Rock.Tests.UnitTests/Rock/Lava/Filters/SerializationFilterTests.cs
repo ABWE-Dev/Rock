@@ -49,9 +49,9 @@ namespace Rock.Tests.UnitTests.Lava
 
             var mergeValues = new LavaDictionary { { "Numbers", numbers } };
 
-            var personJson = numbers.ToJson( Formatting.Indented );
+            var numbersJson = numbers.ToJson( Formatting.Indented );
 
-            _helper.AssertTemplateOutput( personJson, "{{ Numbers | ToJSON }}", mergeValues );
+            _helper.AssertTemplateOutput( numbersJson, "{{ Numbers | ToJSON }}", mergeValues );
         }
 
         /// <summary>
