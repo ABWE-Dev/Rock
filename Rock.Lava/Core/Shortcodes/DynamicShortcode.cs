@@ -28,7 +28,7 @@ using Rock.Lava.Utility;
 namespace Rock.Lava.Shortcodes
 {
     /// <summary>
-    /// An implementation of a shortcode that takes the form of a Liquid block element.
+    /// An implementation of a shortcode in the form of a Liquid block element.
     /// </summary>
     public class DynamicShortcodeBlock: DynamicShortcode, IRockLavaBlock
     {
@@ -62,7 +62,7 @@ namespace Rock.Lava.Shortcodes
     }
 
     /// <summary>
-    /// A shortcode that uses a parameterized Lava template supplied at runtime to generate an element in a Lava source document.
+    /// A shortcode that uses a parameterized Lava template supplied at runtime to dynamically generate a block or tag element in a Lava source document.
     /// </summary>
     public class DynamicShortcode : RockLavaShortcodeBase
     {
@@ -92,6 +92,11 @@ namespace Rock.Lava.Shortcodes
 
         public void Initialize( DynamicShortcodeDefinition definition )
         {
+            if ( _shortcode != null )
+            {
+                throw new Exception();
+            }
+
             _shortcode = definition;
         }
 
@@ -128,6 +133,16 @@ namespace Rock.Lava.Shortcodes
 
         public override void OnParsed( List<string> tokens )
         {
+            _blockMarkup = new StringBuilder();
+
+            //if ( !string.IsNullOrWhiteSpace( _blockMarkup.ToString() ) )
+            //{
+            //    //TODO :This should not be populated yet.
+            //    int i = 0;
+            //}
+
+            var tokensCopy = new List<string>( tokens );
+
             // Get the block markup. The list of tokens contains all of the lava from the start tag to
             // the end of the template. This will pull out just the internals of the block.
 
@@ -149,6 +164,10 @@ namespace Rock.Lava.Shortcodes
             string token;
             while ( ( token = tokens.Shift() ) != null )
             {
+                if ( Regex.Matches( _blockMarkup.ToString(), "Panel 1 content" ).Count > 1 )
+                {
+                    int i = 0;
+                }
 
                 Match startTagMatch = regExStart.Match( token );
                 if ( startTagMatch.Success )
@@ -181,6 +200,7 @@ namespace Rock.Lava.Shortcodes
                         _blockMarkup.Append( token );
                     }
                 }
+
             }
 
             // If this is a block, we need a closing tag.
@@ -218,13 +238,13 @@ namespace Rock.Lava.Shortcodes
             parms.AddOrReplace( "uniqueid", "id-" + Guid.NewGuid().ToString() );
 
             // Apply the merge fields in the block context.
-            var _internalMergeFields = context.GetMergeFields();
+            var internalMergeFields = context.GetMergeFields();
             // new Dictionary<string, object>();
 
             foreach ( var item in parms )
                 // context.GetMergeFields() )
             {
-                _internalMergeFields.AddOrReplace( item.Key, item.Value );
+                internalMergeFields.AddOrReplace( item.Key, item.Value );
                  //parms.AddOrReplace( item.Key, item.Value );
             }
 
@@ -248,7 +268,7 @@ namespace Rock.Lava.Shortcodes
 
             // Resolve any merge fields in the block content.
             // The block content will then be merged into the shortcode template to produce the final output.
-            var blockMarkup = context.ResolveMergeFields( _blockMarkup.ToString(), _internalMergeFields );
+            var blockMarkup = context.ResolveMergeFields( _blockMarkup.ToString(), internalMergeFields );
 
             // Extract any child elements from the block content.
             Dictionary<string, object> childParameters;
@@ -305,6 +325,20 @@ namespace Rock.Lava.Shortcodes
                 string results;
 
                 LavaEngine.Instance.TryRender( lavaTemplate, out results, new LavaDictionary( parms ) );
+
+                var expectedOutput = @"
+Parameter 1: value1
+Parameter 2: value2
+Items:
+Panel 1 - Panel 1 content.
+Panel 2 - Panel 2 content.
+Panel 3 - Panel 3 content.
+";
+
+            if ( results.RemoveSpaces() != expectedOutput.RemoveSpaces() )
+            {
+                    int i = 0;
+            }
 
                 result.Write( results.Trim() );
 

@@ -287,6 +287,22 @@ namespace Rock.Tests.Integration.Lava
         }
 
         /// <summary>
+        /// Verify that the specified template is invalid.
+        /// </summary>
+        /// <param name="inputTemplate"></param>
+        /// <returns></returns>
+        public void AssertTemplateIsInvalid( string inputTemplate, LavaDictionary mergeValues = null )
+        {
+            string outputString;
+
+            inputTemplate = inputTemplate ?? string.Empty;
+
+            var isValid = global::Rock.Lava.LavaEngine.Instance.TryRender( inputTemplate.Trim(), out outputString, mergeValues );
+
+            Assert.That.IsFalse(isValid, "Invalid template expected." );
+        }
+
+        /// <summary>
         /// Write a rendered template to debug, with some additional configuration details.
         /// </summary>
         /// <param name="outputString"></param>

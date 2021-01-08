@@ -151,6 +151,7 @@
     <Compile Include="Lava\Engine\CachingTests.cs" />
     <Compile Include="Lava\Engine\ParsingTests.cs" />
     <Compile Include="Lava\Engine\ScopeTests.cs" />
+    <Compile Include="Lava\Engine\ParallelExecutionTests.cs" />
     <Compile Include="Lava\LavaFilterTests.cs" />
     <Compile Include="Lava\MiscellaneousFilterTests.cs" />
     <Compile Include="Lava\EventScheduledInstanceCommandTests.cs" />

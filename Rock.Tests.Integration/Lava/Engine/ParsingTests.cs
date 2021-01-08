@@ -21,10 +21,10 @@ using Rock.Tests.Shared;
 namespace Rock.Tests.Integration.Lava
 {
     /// <summary>
-    /// Test the parsing of a Lava document to a Liquid-compatible syntax.
+    /// Test the compatibility of the Lava parser with the Liquid language syntax.
     /// </summary>
     [TestClass]
-    public class ParsingTests : LavaIntegrationTestBase
+    public class LiquidLanguageCompatibilityTests : LavaIntegrationTestBase
     {
         [TestMethod]
         public void Parsing_LavaTemplateWithElseIfKeyword_EmitsCorrectOutput()
@@ -42,6 +42,24 @@ Slow
             var expectedOutput = @"Moderate";
 
             _helper.AssertTemplateOutput( expectedOutput, input, context:null, ignoreWhiteSpace:true );
+        }
+
+        /// <summary>
+        /// The double-ampersand (&&) boolean comparison syntax for "and" is not recognized Liquid syntax.
+        /// It is also not part of the documented Lava syntax, but has been found in some existing core templates.
+        /// This test ensures that the documented behavior is enforced and the invalid syntax produces an error.
+        /// </summary>
+        [TestMethod]
+        public void Parsing_ConditionalExpressionUsingDoubleAmpersand_EmitsErrorMessage()
+        {
+            var input = @"
+{% assign speed = 50 %}
+{% if speed > 40 && speed < 60 -%}
+    Illegal Boolean Operator!
+{% endif -%}
+";
+
+            _helper.AssertTemplateIsInvalid( input );
         }
 
         [TestMethod]

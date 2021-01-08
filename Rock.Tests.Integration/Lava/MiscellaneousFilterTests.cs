@@ -94,6 +94,11 @@ namespace Rock.Tests.Integration.Lava
 
             var actualDateTime = output.AsDateTime();
 
+            if ( actualDateTime == null )
+            {
+                throw new System.Exception( $"Invalid DateTime - Output = \"{output}\"" );
+            }
+
             Assert.That.AreProximate( expectedValue, actualDateTime, new System.TimeSpan( 0, 0, 30 ) );
         }
 
