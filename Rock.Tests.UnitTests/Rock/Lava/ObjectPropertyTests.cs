@@ -31,8 +31,8 @@ namespace Rock.Tests.UnitTests.Lava
         [ClassInitialize]
         public static void Initialize( TestContext context )
         {
-            _helper.LavaEngine.RegisterSafeType( typeof( TestPerson ) );
-            _helper.LavaEngine.RegisterSafeType( typeof( TestCampus ) );
+            TestHelper.LavaEngine.RegisterSafeType( typeof( TestPerson ) );
+            TestHelper.LavaEngine.RegisterSafeType( typeof( TestCampus ) );
 
         }
 
@@ -44,11 +44,11 @@ namespace Rock.Tests.UnitTests.Lava
         [TestMethod]
         public void RockDynamicType_DotNotationPropertyAccess_ReturnsPropertyValue()
         {
-            System.Diagnostics.Debug.Print( _helper.GetTestPersonTedDecker().ToString() );
+            System.Diagnostics.Debug.Print( TestHelper.GetTestPersonTedDecker().ToString() );
 
-            var mergeValues = new LavaDictionary { { "CurrentPerson", _helper.GetTestPersonTedDecker() } };
+            var mergeValues = new LavaDictionary { { "CurrentPerson", TestHelper.GetTestPersonTedDecker() } };
 
-            _helper.AssertTemplateOutput( "Decker", "{{ CurrentPerson.LastName }}", mergeValues );
+            TestHelper.AssertTemplateOutput( "Decker", "{{ CurrentPerson.LastName }}", mergeValues );
         }
 
         /// <summary>
@@ -57,9 +57,9 @@ namespace Rock.Tests.UnitTests.Lava
         [TestMethod]
         public void RockDynamicType_DotNotationNestedPropertyAccess_ReturnsPropertyValue()
         {
-            var mergeValues = new LavaDictionary { { "CurrentPerson", _helper.GetTestPersonTedDecker() } };
+            var mergeValues = new LavaDictionary { { "CurrentPerson", TestHelper.GetTestPersonTedDecker() } };
 
-            _helper.AssertTemplateOutput( "North Campus", "{{ CurrentPerson.Campus.Name }}", mergeValues );
+            TestHelper.AssertTemplateOutput( "North Campus", "{{ CurrentPerson.Campus.Name }}", mergeValues );
         }
 
         /// <summary>
@@ -68,9 +68,9 @@ namespace Rock.Tests.UnitTests.Lava
         [TestMethod]
         public void RockDynamicType_DotNotationInvalidPropertyName_ReturnsEmptyString()
         {
-            var mergeValues = new LavaDictionary { { "CurrentPerson", _helper.GetTestPersonTedDecker() } };
+            var mergeValues = new LavaDictionary { { "CurrentPerson", TestHelper.GetTestPersonTedDecker() } };
 
-            _helper.AssertTemplateOutput( string.Empty, "{{ CurrentPerson.NonexistentProperty }}", mergeValues );
+            TestHelper.AssertTemplateOutput( string.Empty, "{{ CurrentPerson.NonexistentProperty }}", mergeValues );
         }
 
         /// <summary>
@@ -88,7 +88,7 @@ namespace Rock.Tests.UnitTests.Lava
 
             var mergeValues = new LavaDictionary { { "GroupMember", groupMember } };
 
-            _helper.AssertTemplateOutput( "Group 1: Andrews, Alex (1 Main St)",
+            TestHelper.AssertTemplateOutput( "Group 1: Andrews, Alex (1 Main St)",
                 "{{ GroupMember.GroupName }}: {{ GroupMember.Person.LastName }}, {{ GroupMember.Person.FirstName }} ({{ GroupMember.Person.Address.Street }})",
                 mergeValues );
 

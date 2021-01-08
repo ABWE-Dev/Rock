@@ -29,8 +29,8 @@ namespace Rock.Tests.UnitTests.Lava
         [ClassInitialize]
         public static void Initialize( TestContext context )
         {
-            _helper.LavaEngine.RegisterSafeType( typeof( TestPerson ) );
-            _helper.LavaEngine.RegisterSafeType( typeof( TestCampus ) );
+            TestHelper.LavaEngine.RegisterSafeType( typeof( TestPerson ) );
+            TestHelper.LavaEngine.RegisterSafeType( typeof( TestCampus ) );
         }
 
         #endregion
@@ -57,9 +57,9 @@ Name: Ted Decker
 Email: tdecker@rocksolidchurch.com
 ";
 
-            var output = _helper.GetTemplateOutput( template, mergeValues );
+            var output = TestHelper.GetTemplateOutput( template, mergeValues );
 
-            _helper.AssertTemplateOutput( expectedOutput, output, ignoreWhitespace: true );
+            TestHelper.AssertTemplateOutput( expectedOutput, output, ignoreWhitespace: true );
         }
 
         /// <summary>
@@ -83,9 +83,9 @@ Date of Birth:
 ";
 
             // Date of Birth should be omitted because it is not a named as a Lava property.
-            var output = _helper.GetTemplateOutput( template, mergeValues );
+            var output = TestHelper.GetTemplateOutput( template, mergeValues );
 
-            _helper.AssertTemplateOutput( expectedOutput, output, ignoreWhitespace: true );
+            TestHelper.AssertTemplateOutput( expectedOutput, output, ignoreWhitespace: true );
         }
 
         /// <summary>
@@ -109,9 +109,9 @@ Password:
 ";
 
             // Password value should be omitted even though it is named in the whitelist, because it is marked with the LavaIgnore attribute.
-            var output = _helper.GetTemplateOutput( template, mergeValues );
+            var output = TestHelper.GetTemplateOutput( template, mergeValues );
 
-            _helper.AssertTemplateOutput( expectedOutput, output, ignoreWhitespace: true );
+            TestHelper.AssertTemplateOutput( expectedOutput, output, ignoreWhitespace: true );
         }
 
         #endregion
@@ -137,9 +137,9 @@ Name: Ted Decker
 ";
 
             // Name value should be the only available property, because it is the only property marked with LavaInclude.
-            var output = _helper.GetTemplateOutput( template, mergeValues );
+            var output = TestHelper.GetTemplateOutput( template, mergeValues );
 
-            _helper.AssertTemplateOutput( expectedOutput, output, ignoreWhitespace: true );
+            TestHelper.AssertTemplateOutput( expectedOutput, output, ignoreWhitespace: true );
         }
 
         /// <summary>
@@ -163,9 +163,9 @@ Password:
 ";
 
             // Name value should be the only available property, because it is the only property marked with LavaInclude.
-            var output = _helper.GetTemplateOutput( template, mergeValues );
+            var output = TestHelper.GetTemplateOutput( template, mergeValues );
 
-            _helper.AssertTemplateOutput( expectedOutput, output, ignoreWhitespace: true );
+            TestHelper.AssertTemplateOutput( expectedOutput, output, ignoreWhitespace: true );
         }
 
         #endregion

@@ -54,7 +54,7 @@ namespace Rock.Tests.Integration.Lava
 
 ";
 
-            _helper.AssertTemplateOutput( expectedOutput, input, ignoreWhitespace: true );
+            TestHelper.AssertTemplateOutput( expectedOutput, input, ignoreWhitespace: true );
         }
 
         #endregion
@@ -76,7 +76,7 @@ namespace Rock.Tests.Integration.Lava
 
             var expectedOutput = @"\s*The Lava command 'cache' is not configured for this template\.\s*";
 
-            _helper.AssertTemplateOutputRegex( expectedOutput, input );
+            TestHelper.AssertTemplateOutputRegex( expectedOutput, input );
         }
 
         [TestMethod]
@@ -96,11 +96,11 @@ namespace Rock.Tests.Integration.Lava
 TedDecker<br/>
 ";
 
-            var context = _helper.LavaEngine.NewContext();
+            var context = TestHelper.LavaEngine.NewContext();
 
             context.SetEnabledCommands( "Cache,RockEntity" );
 
-            _helper.AssertTemplateOutput( expectedOutput, input, context, ignoreWhiteSpace: true );
+            TestHelper.AssertTemplateOutput( expectedOutput, input, context, ignoreWhiteSpace: true );
         }
 
         /// <summary>
@@ -131,11 +131,11 @@ Color 3: red
 Color 4: blue
 ";
 
-            var context = _helper.LavaEngine.NewContext();
+            var context = TestHelper.LavaEngine.NewContext();
 
             context.SetEnabledCommands( "Cache" );
 
-            _helper.AssertTemplateOutput( expectedOutput, input, context, ignoreWhiteSpace: true );
+            TestHelper.AssertTemplateOutput( expectedOutput, input, context, ignoreWhiteSpace: true );
         }
 
         #endregion
@@ -155,7 +155,7 @@ Color 4: blue
 
             var expectedOutput = @"\s*The Lava command 'rockentity' is not configured for this template\.\s*";
 
-            _helper.AssertTemplateOutputRegex( expectedOutput, input );
+            TestHelper.AssertTemplateOutputRegex( expectedOutput, input );
         }
 
         [TestMethod]
@@ -169,13 +169,13 @@ Color 4: blue
 {% endperson %}
             ";
 
-            var context = _helper.LavaEngine.NewContext();
+            var context = TestHelper.LavaEngine.NewContext();
 
             context.SetEnabledCommands( "RockEntity" );
 
-            var output = _helper.GetTemplateOutput( input, context );
+            var output = TestHelper.GetTemplateOutput( input, context );
 
-            _helper.WriteTemplateRenderToDebug( input, output );
+            TestHelper.WriteTemplateRenderToDebug( input, output );
 
             Assert.IsTrue( output.Contains( "Ted Decker" ), "Expected person not found." );
             Assert.IsTrue( output.Contains( "Cindy Decker" ), "Expected person not found." );
@@ -196,7 +196,7 @@ Color 4: blue
 
             var expectedOutput = @"\s*The Lava command 'execute' is not configured for this template\.\s*";
 
-            _helper.AssertTemplateOutputRegex( expectedOutput, input );
+            TestHelper.AssertTemplateOutputRegex( expectedOutput, input );
         }
 
         [TestMethod]
@@ -210,11 +210,11 @@ Color 4: blue
 
             var expectedOutput = @"Hello World!";
 
-            var context = _helper.LavaEngine.NewContext();
+            var context = TestHelper.LavaEngine.NewContext();
 
             context.SetEnabledCommands( "execute" );
 
-            _helper.AssertTemplateOutput( expectedOutput, input, context );
+            TestHelper.AssertTemplateOutput( expectedOutput, input, context );
         }
 
         [TestMethod]
@@ -234,11 +234,11 @@ Color 4: blue
 
             var expectedOutput = @"Fruit: Orange";
 
-            var context = _helper.LavaEngine.NewContext();
+            var context = TestHelper.LavaEngine.NewContext();
 
             context.SetEnabledCommands( "execute" );
 
-            _helper.AssertTemplateOutput( expectedOutput, input, context );
+            TestHelper.AssertTemplateOutput( expectedOutput, input, context );
         }
 
         [TestMethod]
@@ -263,15 +263,15 @@ Color 4: blue
 {% endexecute %}
 ";
 
-            input = input.Replace( "<PersonGuid>", _helper.GetTestPersonTedDecker().Guid );
+            input = input.Replace( "<PersonGuid>", TestHelper.GetTestPersonTedDecker().Guid );
 
             var expectedOutput = @"Ted Decker";
 
-            var context = _helper.LavaEngine.NewContext();
+            var context = TestHelper.LavaEngine.NewContext();
 
             context.SetEnabledCommands( "execute" );
 
-            _helper.AssertTemplateOutput( expectedOutput, input, context );
+            TestHelper.AssertTemplateOutput( expectedOutput, input, context );
         }
 
         [TestMethod]
@@ -298,13 +298,13 @@ Color 4: blue
 
             var expectedOutput = @"Ted Decker";
 
-            var context = _helper.LavaEngine.NewContext();
+            var context = TestHelper.LavaEngine.NewContext();
 
             context.SetEnabledCommands( "execute" );
 
-            context.SetMergeFieldValue( "Person", _helper.GetTestPersonTedDecker() );
+            context.SetMergeFieldValue( "Person", TestHelper.GetTestPersonTedDecker() );
 
-            _helper.AssertTemplateOutput( expectedOutput, input, context );
+            TestHelper.AssertTemplateOutput( expectedOutput, input, context );
         }
         #endregion
 
@@ -321,7 +321,7 @@ Color 4: blue
 
             var expectedOutput = @"\s*The Lava command 'interactionwrite' is not configured for this template\.\s*";
 
-            _helper.AssertTemplateOutputRegex( expectedOutput, input );
+            TestHelper.AssertTemplateOutputRegex( expectedOutput, input );
         }
 
         [TestMethod]
@@ -336,11 +336,11 @@ Color 4: blue
             var expectedOutput = @"
 ";
 
-            var context = _helper.LavaEngine.NewContext();
+            var context = TestHelper.LavaEngine.NewContext();
 
             context.SetEnabledCommands( "InteractionWrite" );
 
-            _helper.AssertTemplateOutput( expectedOutput, input, context, ignoreWhiteSpace: true );
+            TestHelper.AssertTemplateOutput( expectedOutput, input, context, ignoreWhiteSpace: true );
         }
 
         #endregion
@@ -356,7 +356,7 @@ Color 4: blue
 
             var expectedOutput = @"\s*The Lava command 'interactioncontentchannelitemwrite' is not configured for this template\.\s*";
 
-            _helper.AssertTemplateOutputRegex( expectedOutput, input );
+            TestHelper.AssertTemplateOutputRegex( expectedOutput, input );
         }
 
         [TestMethod]
@@ -369,11 +369,11 @@ Color 4: blue
             var expectedOutput = @"
 ";
 
-            var context = _helper.LavaEngine.NewContext();
+            var context = TestHelper.LavaEngine.NewContext();
 
             context.SetEnabledCommands( "InteractionContentChannelItemWrite" );
 
-            _helper.AssertTemplateOutput( expectedOutput, input, context, ignoreWhiteSpace: true );
+            TestHelper.AssertTemplateOutput( expectedOutput, input, context, ignoreWhiteSpace: true );
         }
 
         #endregion
@@ -397,7 +397,7 @@ Color 4: blue
 </script>
 ";
 
-            _helper.AssertTemplateOutput( expectedOutput, input, ignoreWhitespace: true );
+            TestHelper.AssertTemplateOutput( expectedOutput, input, ignoreWhitespace: true );
         }
 
         #endregion
@@ -417,7 +417,7 @@ Color 4: blue
 
             var expectedOutput = @"\s*The Lava command 'search' is not configured for this template\.\s*";
 
-            _helper.AssertTemplateOutputRegex( expectedOutput, input );
+            TestHelper.AssertTemplateOutputRegex( expectedOutput, input );
         }
 
         [TestMethod]
@@ -433,11 +433,11 @@ Color 4: blue
 
             var expectedOutput = @"(.*)Search results not available. Universal search is not enabled for this Rock instance.";
 
-            var context = _helper.LavaEngine.NewContext();
+            var context = TestHelper.LavaEngine.NewContext();
 
             context.SetEnabledCommands( "Search" );
 
-            _helper.AssertTemplateOutputRegex( expectedOutput, input, context );
+            TestHelper.AssertTemplateOutputRegex( expectedOutput, input, context );
         }
 
         #endregion Search
@@ -459,7 +459,7 @@ Color 4: blue
 
             var expectedOutput = @"\s*The Lava command 'sql' is not configured for this template\.\s*";
 
-            _helper.AssertTemplateOutputRegex( expectedOutput, input );
+            TestHelper.AssertTemplateOutputRegex( expectedOutput, input );
         }
 
         [TestMethod]
@@ -479,11 +479,11 @@ Color 4: blue
 
             var expectedOutput = @"Alex_Decker;Ted_Decker;";
 
-            var context = _helper.LavaEngine.NewContext();
+            var context = TestHelper.LavaEngine.NewContext();
 
             context.SetEnabledCommands( "Sql" );
 
-            _helper.AssertTemplateOutput( expectedOutput, input, context, ignoreWhiteSpace: true );
+            TestHelper.AssertTemplateOutput( expectedOutput, input, context, ignoreWhiteSpace: true );
         }
 
         #endregion
@@ -508,7 +508,7 @@ Color 4: blue
 </style> 
 ";
 
-            _helper.AssertTemplateOutput( expectedOutput, input, ignoreWhitespace: true );
+            TestHelper.AssertTemplateOutput( expectedOutput, input, ignoreWhitespace: true );
         }
 
         #endregion
@@ -522,7 +522,7 @@ Color 4: blue
 {% taglist %}
 ";
 
-            var output = _helper.GetTemplateOutput( input );
+            var output = TestHelper.GetTemplateOutput( input );
 
             output = output.Replace( " ", string.Empty );
 
@@ -546,7 +546,7 @@ Color 4: blue
 
             var expectedOutput = @"\s*The Lava command 'webrequest' is not configured for this template\.\s*";
 
-            _helper.AssertTemplateOutputRegex( expectedOutput, input );
+            TestHelper.AssertTemplateOutputRegex( expectedOutput, input );
         }
 
         [TestMethod]
@@ -558,11 +558,11 @@ Color 4: blue
 {% endwebrequest %}  
 ";
 
-            var context = _helper.LavaEngine.NewContext();
+            var context = TestHelper.LavaEngine.NewContext();
 
             context.SetEnabledCommands( "WebRequest" );
 
-            _helper.AssertTemplateOutput( "readme", input, context, ignoreWhiteSpace: true );
+            TestHelper.AssertTemplateOutput( "readme", input, context, ignoreWhiteSpace: true );
         }
 
         #endregion
@@ -582,7 +582,7 @@ Color 4: blue
             // Is this correct behavior, or should the content of the block be hidden?
             var expectedOutput = @"\s*The Lava command 'workflowactivate' is not configured for this template\.\s*.*";
 
-            _helper.AssertTemplateOutputRegex( expectedOutput, input );
+            TestHelper.AssertTemplateOutputRegex( expectedOutput, input );
         }
 
         [TestMethod]
@@ -597,11 +597,11 @@ Color 4: blue
 
             var expectedOutput = @"Activated new workflow with the name 'IT Support'.";
 
-            var context = _helper.LavaEngine.NewContext();
+            var context = TestHelper.LavaEngine.NewContext();
 
             context.SetEnabledCommands( "WorkflowActivate" );
 
-            _helper.AssertTemplateOutput( expectedOutput, input, context, true );
+            TestHelper.AssertTemplateOutput( expectedOutput, input, context, true );
         }
 
         #endregion

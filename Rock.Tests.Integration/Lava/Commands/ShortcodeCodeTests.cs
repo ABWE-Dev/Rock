@@ -35,7 +35,7 @@ namespace Rock.Tests.Integration.Lava
         public void BootstrapAlertShortcode_VariousTypes_ProducesCorrectHtml( string input, string expectedResult )
         {
             
-            _helper.AssertTemplateOutput( expectedResult,
+            TestHelper.AssertTemplateOutput( expectedResult,
                                           input );
         }
 
@@ -59,7 +59,7 @@ Schedule Live: {{ IsLive }}
 ScheduleName:Saturday4:30pm<br>ScheduleLive:true<br>
 ";
 
-            _helper.AssertTemplateOutput( expectedOutput, input, ignoreWhitespace: true );
+            TestHelper.AssertTemplateOutput( expectedOutput, input, ignoreWhitespace: true );
         }
 
         #endregion
@@ -76,7 +76,7 @@ ScheduleName:Saturday4:30pm<br>ScheduleLive:true<br>
 
         public void ScripturizeShortcode_YouVersion_ProducesCorrectHtml( string input, string expectedResult )
         {
-            _helper.AssertTemplateOutput( expectedResult,
+            TestHelper.AssertTemplateOutput( expectedResult,
                                           "{[ scripturize defaulttranslation:'NLT' landingsite:'YouVersion' cssclass:'scripture' ]}" + input + "{[ endscripturize ]}" );
         }
 

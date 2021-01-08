@@ -32,7 +32,7 @@ namespace Rock.Tests.Integration.Lava
         {
             // The filter returns the Sunday associated with the current week.
             // If Sunday is considered to be the first day of the week, any other day should return a prior date.
-            _helper.AssertTemplateOutputDate( "26-Apr-2020",
+            TestHelper.AssertTemplateOutputDate( "26-Apr-2020",
                                       "{{ '1-May-2020' | SundayDate }}" );
         }
 
@@ -42,7 +42,7 @@ namespace Rock.Tests.Integration.Lava
         [TestMethod]
         public void SundayDate_InputDateIsSunday_YieldsSameDay()
         {
-            _helper.AssertTemplateOutputDate( "3-May-2020",
+            TestHelper.AssertTemplateOutputDate( "3-May-2020",
                                       "{{ '3-May-2020' | SundayDate }}" );
         }
 
@@ -54,7 +54,7 @@ namespace Rock.Tests.Integration.Lava
         {
             var nextSunday = RockDateTime.Now.SundayDate();
 
-            _helper.AssertTemplateOutputDate( nextSunday,
+            TestHelper.AssertTemplateOutputDate( nextSunday,
                                       "{{ 'Now' | SundayDate }}" );
         }
 

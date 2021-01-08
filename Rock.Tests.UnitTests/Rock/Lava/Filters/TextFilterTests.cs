@@ -36,11 +36,11 @@ namespace Rock.Tests.UnitTests.Lava
         [TestMethod]
         public void AsString_AnonymousObjectWithToStringMethodOverride_ReturnsToStringForObject()
         {
-            var person = _helper.GetTestPersonAlishaMarble();
+            var person = TestHelper.GetTestPersonAlishaMarble();
 
             var mergeValues = new LavaDictionary { { "CurrentPerson", person } };
 
-            _helper.AssertTemplateOutput( "Alisha Marble", "{{ CurrentPerson | AsString }}", mergeValues );
+            TestHelper.AssertTemplateOutput( "Alisha Marble", "{{ CurrentPerson | AsString }}", mergeValues );
         }
 
         #region Filter Tests: Humanize
@@ -51,7 +51,7 @@ namespace Rock.Tests.UnitTests.Lava
         [TestMethod]
         public void Humanize_CamelCase_ProducesSeparatedWords()
         {
-            _helper.AssertTemplateOutput( "Camel case", "{{ 'camelCase' | Humanize }}" );
+            TestHelper.AssertTemplateOutput( "Camel case", "{{ 'camelCase' | Humanize }}" );
         }
 
         /// <summary>
@@ -60,7 +60,7 @@ namespace Rock.Tests.UnitTests.Lava
         [TestMethod]
         public void Humanize_Underscore_ProducesSeparatedWords()
         {
-            _helper.AssertTemplateOutput( "underscore a point", "{{ 'underscore_a_point' | Humanize }}" );
+            TestHelper.AssertTemplateOutput( "underscore a point", "{{ 'underscore_a_point' | Humanize }}" );
         }
 
         /// <summary>
@@ -69,7 +69,7 @@ namespace Rock.Tests.UnitTests.Lava
         [TestMethod]
         public void Humanize_DashSeparator_ProducesSeparatedWords()
         {
-            _helper.AssertTemplateOutput( "css classes", "{{ 'css-classes' | Humanize }}" );
+            TestHelper.AssertTemplateOutput( "css classes", "{{ 'css-classes' | Humanize }}" );
         }
 
         #endregion
@@ -80,7 +80,7 @@ namespace Rock.Tests.UnitTests.Lava
         [TestMethod]
         public void SentenceCase_LowerCaseString_ProducesSentenceCase()
         {
-            _helper.AssertTemplateOutput( "Good to great", "{{ 'good to great' | SentenceCase }}" );
+            TestHelper.AssertTemplateOutput( "Good to great", "{{ 'good to great' | SentenceCase }}" );
         }
 
         /// <summary>
@@ -89,7 +89,7 @@ namespace Rock.Tests.UnitTests.Lava
         [TestMethod]
         public void TitleCase_MixedCaseString_ProducesTitleCase()
         {
-            _helper.AssertTemplateOutput( "Job Posting For Groundskeeper", "{{ 'Job posting for groundskeeper' | TitleCase }}" );
+            TestHelper.AssertTemplateOutput( "Job Posting For Groundskeeper", "{{ 'Job posting for groundskeeper' | TitleCase }}" );
         }
 
         /// <summary>
@@ -98,7 +98,7 @@ namespace Rock.Tests.UnitTests.Lava
         [TestMethod]
         public void ToPascal_LowerCaseString_ProducesPascalCase()
         {
-            _helper.AssertTemplateOutput( "CommunityParticipant", "{{ 'community participant' | ToPascal }}" );
+            TestHelper.AssertTemplateOutput( "CommunityParticipant", "{{ 'community participant' | ToPascal }}" );
         }
 
         /// <summary>
@@ -107,7 +107,7 @@ namespace Rock.Tests.UnitTests.Lava
         [TestMethod]
         public void ToString_NumericInput_ProducesText()
         {
-            _helper.AssertTemplateOutput( "1234567.89", "{{ 1234567.89 | ToString }}" );
+            TestHelper.AssertTemplateOutput( "1234567.89", "{{ 1234567.89 | ToString }}" );
         }
 
         /// <summary>
@@ -116,7 +116,7 @@ namespace Rock.Tests.UnitTests.Lava
         [TestMethod]
         public void ObfuscateEmail_ReadableEmailAddress_IsObfuscated()
         {
-            _helper.AssertTemplateOutput( "txxxxx@rocksolidchurchdemo.com", "{{ 'ted@rocksolidchurchdemo.com' | ObfuscateEmail }}" );
+            TestHelper.AssertTemplateOutput( "txxxxx@rocksolidchurchdemo.com", "{{ 'ted@rocksolidchurchdemo.com' | ObfuscateEmail }}" );
         }
 
         #region Filter Tests: Pluralize
@@ -127,7 +127,7 @@ namespace Rock.Tests.UnitTests.Lava
         [TestMethod]
         public void Pluralize_SingularTerm_ProducesPluralizedTerm()
         {
-            _helper.AssertTemplateOutput( "geese", "{{ 'goose' | Pluralize }}" );
+            TestHelper.AssertTemplateOutput( "geese", "{{ 'goose' | Pluralize }}" );
         }
 
         /// <summary>
@@ -136,7 +136,7 @@ namespace Rock.Tests.UnitTests.Lava
         [TestMethod]
         public void Pluralize_PluralTerm_ProducesUnchangedOutput()
         {
-            _helper.AssertTemplateOutput( "requests", "{{ 'requests' | Pluralize }}" );
+            TestHelper.AssertTemplateOutput( "requests", "{{ 'requests' | Pluralize }}" );
         }
 
         #endregion
@@ -149,7 +149,7 @@ namespace Rock.Tests.UnitTests.Lava
         [TestMethod]
         public void PluralizeForQuantity_QuantityOf3_ProducesPluralizedTerm()
         {
-            _helper.AssertTemplateOutput( "Leaders", "{{ 'Leader' | PluralizeForQuantity:3 }}" );
+            TestHelper.AssertTemplateOutput( "Leaders", "{{ 'Leader' | PluralizeForQuantity:3 }}" );
         }
 
         /// <summary>
@@ -158,7 +158,7 @@ namespace Rock.Tests.UnitTests.Lava
         [TestMethod]
         public void PluralizeForQuantity_QuantityOf1_ProducesSingularTerm()
         {
-            _helper.AssertTemplateOutput( "Leader", "{{ 'Leader' | PluralizeForQuantity:1 }}" );
+            TestHelper.AssertTemplateOutput( "Leader", "{{ 'Leader' | PluralizeForQuantity:1 }}" );
         }
 
         #endregion
@@ -169,7 +169,7 @@ namespace Rock.Tests.UnitTests.Lava
         [TestMethod]
         public void Possessive_NameEndingWithS_ProducesPossessiveFormWithTrailingApostrophe()
         {
-            _helper.AssertTemplateOutput( "Charles’", "{{ 'Charles' | Possessive }}" );
+            TestHelper.AssertTemplateOutput( "Charles’", "{{ 'Charles' | Possessive }}" );
         }
 
         /// <summary>
@@ -178,7 +178,7 @@ namespace Rock.Tests.UnitTests.Lava
         [TestMethod]
         public void Possessive_NameNotEndingWithS_ProducesPossessiveForm()
         {
-            _helper.AssertTemplateOutput( "Ted’s", "{{ 'Ted' | Possessive }}" );
+            TestHelper.AssertTemplateOutput( "Ted’s", "{{ 'Ted' | Possessive }}" );
         }
 
         #region Filter Tests: Read Time
@@ -197,7 +197,7 @@ namespace Rock.Tests.UnitTests.Lava
             var template = "{{ '<content>' | ReadTime }}"
                 .Replace( "<content>", documentText );
 
-            var output = _helper.GetTemplateOutput( template );
+            var output = TestHelper.GetTemplateOutput( template );
 
             Assert.That.False( string.IsNullOrWhiteSpace( output ) );
 
@@ -218,7 +218,7 @@ namespace Rock.Tests.UnitTests.Lava
             var template = "{{ '<content>' | ReadTime:5,30 }}"
                 .Replace( "<content>", documentText );
 
-            var output = _helper.GetTemplateOutput( template );
+            var output = TestHelper.GetTemplateOutput( template );
 
             Assert.That.False( string.IsNullOrWhiteSpace( output ) );
 
@@ -239,7 +239,7 @@ namespace Rock.Tests.UnitTests.Lava
             var template = "{{ '<content>' | ReadTime:500,6 }}"
                 .Replace( "<content>", documentText );
 
-            var output = _helper.GetTemplateOutput( template );
+            var output = TestHelper.GetTemplateOutput( template );
 
             var readTime = TimeSpan.ParseExact( output, _timeSpanOutputFormats, CultureInfo.CurrentCulture );
 
@@ -282,7 +282,7 @@ namespace Rock.Tests.UnitTests.Lava
             var template = @"{{ '<input>' | RegExMatch:'\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*' }}"
                            .Replace( "<input>", input );
 
-            _helper.AssertTemplateOutput( isMatch.ToString().ToLower(), template );
+            TestHelper.AssertTemplateOutput( isMatch.ToString().ToLower(), template );
         }
 
         /// <summary>
@@ -293,8 +293,8 @@ namespace Rock.Tests.UnitTests.Lava
         {
             // [2020-12-22] DJL - This test passes using DotLiquid - modified "\\" to "\".
             // May need to verify if Fluid automatically escapes the filter parameter input?
-            _helper.AssertTemplateOutput( "12345", @"{{ 'group 12345' | RegExMatchValue:'\d+' }}" );
-            _helper.AssertTemplateOutput( "Saturday", @"{{ 'Services on Saturday and Sunday' | RegExMatchValue:'\b\w+day\b' }}" );
+            TestHelper.AssertTemplateOutput( "12345", @"{{ 'group 12345' | RegExMatchValue:'\d+' }}" );
+            TestHelper.AssertTemplateOutput( "Saturday", @"{{ 'Services on Saturday and Sunday' | RegExMatchValue:'\b\w+day\b' }}" );
         }
 
         /// <summary>
@@ -309,7 +309,7 @@ namespace Rock.Tests.UnitTests.Lava
 ";
             template = template.Replace( "\n", string.Empty ).Replace( "\r", string.Empty );
 
-            _helper.AssertTemplateOutput( "Saturday,Sunday,Monday,", template );
+            TestHelper.AssertTemplateOutput( "Saturday,Sunday,Monday,", template );
         }
 
         /// <summary>
@@ -326,7 +326,7 @@ namespace Rock.Tests.UnitTests.Lava
             var template = "{{ '<input>' | ReplaceLast:'Red','Green' }}"
                            .Replace( "<input>", input );
 
-            _helper.AssertTemplateOutput( expected, template );
+            TestHelper.AssertTemplateOutput( expected, template );
         }
 
         #region Filter Tests: Right
@@ -337,7 +337,7 @@ namespace Rock.Tests.UnitTests.Lava
         [TestMethod]
         public void Right_LessThanStringLength_ProducesSubstring()
         {
-            _helper.AssertTemplateOutput( "cker", "{{ 'Decker' | Right:4 }}" );
+            TestHelper.AssertTemplateOutput( "cker", "{{ 'Decker' | Right:4 }}" );
         }
 
         /// <summary>
@@ -346,7 +346,7 @@ namespace Rock.Tests.UnitTests.Lava
         [TestMethod]
         public void Right_GreaterThanStringLength_ProducesEntireString()
         {
-            _helper.AssertTemplateOutput( "Decker", "{{ 'Decker' | Right:10 }}" );
+            TestHelper.AssertTemplateOutput( "Decker", "{{ 'Decker' | Right:10 }}" );
         }
 
         /// <summary>
@@ -355,7 +355,7 @@ namespace Rock.Tests.UnitTests.Lava
         [TestMethod]
         public void Right_EmptyString_ProducesEmptyString()
         {
-            _helper.AssertTemplateOutput( "", "{{ '' | Right:10 }}" );
+            TestHelper.AssertTemplateOutput( "", "{{ '' | Right:10 }}" );
         }
 
         #endregion
@@ -368,7 +368,7 @@ namespace Rock.Tests.UnitTests.Lava
         [TestMethod]
         public void Singularize_SingularTerm_ProducesUnchangedOutput()
         {
-            _helper.AssertTemplateOutput( "goose", "{{ 'goose' | Singularize }}" );
+            TestHelper.AssertTemplateOutput( "goose", "{{ 'goose' | Singularize }}" );
         }
 
         /// <summary>
@@ -377,7 +377,7 @@ namespace Rock.Tests.UnitTests.Lava
         [TestMethod]
         public void Singularize_PluralTerm_ProducesSingularTerm()
         {
-            _helper.AssertTemplateOutput( "goose", "{{ 'geese' | Singularize }}" );
+            TestHelper.AssertTemplateOutput( "goose", "{{ 'geese' | Singularize }}" );
         }
 
         #endregion
@@ -395,7 +395,7 @@ namespace Rock.Tests.UnitTests.Lava
         {
             var template = "{{ '" + input + "' | Trim }}";
 
-            _helper.AssertTemplateOutput( expected, template );
+            TestHelper.AssertTemplateOutput( expected, template );
         }
 
         /// <summary>
@@ -430,7 +430,7 @@ namespace Rock.Tests.UnitTests.Lava
             
             template = template.Replace( "<url>", url );
 
-            _helper.AssertTemplateOutput( "/|WorkflowEntry/|35", template );
+            TestHelper.AssertTemplateOutput( "/|WorkflowEntry/|35", template );
         }
 
         private void VerifyUrlPart( string url, string part, string key, string expected )
@@ -447,7 +447,7 @@ namespace Rock.Tests.UnitTests.Lava
             template = template.Replace( "<url>", url );
             template = template.Replace( "<options>", options );
 
-            _helper.AssertTemplateOutput( expected, template );
+            TestHelper.AssertTemplateOutput( expected, template );
         }
 
         /// <summary>
@@ -465,7 +465,7 @@ namespace Rock.Tests.UnitTests.Lava
         [TestMethod]
         public void WithFallback_InputTextContainsValue_SuccessTextIsAppended()
         {
-            _helper.AssertTemplateOutput( "Ted, are you interested in baptism?", "{{ 'Ted' | WithFallback:', are', 'Are', 'append' }} you interested in baptism?" );
+            TestHelper.AssertTemplateOutput( "Ted, are you interested in baptism?", "{{ 'Ted' | WithFallback:', are', 'Are', 'append' }} you interested in baptism?" );
         }
 
         /// <summary>
@@ -474,7 +474,7 @@ namespace Rock.Tests.UnitTests.Lava
         [TestMethod]
         public void WithFallback_InputTextIsEmpty_FallbackTextIsAppended()
         {
-            _helper.AssertTemplateOutput( "Are you interested in baptism?", "{{ '' | WithFallback:', are', 'Are' }} you interested in baptism?" );
+            TestHelper.AssertTemplateOutput( "Are you interested in baptism?", "{{ '' | WithFallback:', are', 'Are' }} you interested in baptism?" );
         }
         /// <summary>
         /// Success text is prepended when input text contains value.
@@ -482,7 +482,7 @@ namespace Rock.Tests.UnitTests.Lava
         [TestMethod]
         public void WithFallback_InputTextContainsValue_SuccessTextIsPrepended()
         {
-            _helper.AssertTemplateOutput( "Welcome back Ted!", "Welcome{{ 'Ted' | WithFallback:' back ', ' stranger', 'prepend' }}!" );
+            TestHelper.AssertTemplateOutput( "Welcome back Ted!", "Welcome{{ 'Ted' | WithFallback:' back ', ' stranger', 'prepend' }}!" );
         }
 
         /// <summary>
@@ -491,7 +491,7 @@ namespace Rock.Tests.UnitTests.Lava
         [TestMethod]
         public void WithFallback_InputTextIsEmpty_FallbackTextIsPrepended()
         {
-            _helper.AssertTemplateOutput( "Welcome stranger!", "Welcome{{ '' | WithFallback:' back ', ' stranger', 'prepend' }}!" );
+            TestHelper.AssertTemplateOutput( "Welcome stranger!", "Welcome{{ '' | WithFallback:' back ', ' stranger', 'prepend' }}!" );
         }
 
     }

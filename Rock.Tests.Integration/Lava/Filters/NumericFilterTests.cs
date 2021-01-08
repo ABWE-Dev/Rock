@@ -28,7 +28,7 @@ namespace Rock.Tests.Integration.Lava
         [TestMethod]
         public void FormatAsCurrency_DecimalInputWithNoSymbol_ProducesDefaultCurrencyFormat()
         {
-            _helper.AssertTemplateOutput( "$1,234,567.89", "{{ '1234567.89' | FormatAsCurrency }}" );
+            TestHelper.AssertTemplateOutput( "$1,234,567.89", "{{ '1234567.89' | FormatAsCurrency }}" );
         }
 
     }

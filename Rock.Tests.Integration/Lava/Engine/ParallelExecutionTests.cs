@@ -50,7 +50,7 @@ Items:
             shortcodeDefinition.Name = "shortcodetest";
             shortcodeDefinition.Parameters = new Dictionary<string, string> { { "parameter1", "value1" }, { "parameter2", "value2" } };
 
-            _helper.LavaEngine.RegisterDynamicShortcode( shortcodeDefinition.Name, ( shortcodeName ) => { return shortcodeDefinition; } );
+            TestHelper.LavaEngine.RegisterDynamicShortcode( shortcodeDefinition.Name, ( shortcodeName ) => { return shortcodeDefinition; } );
 
             var input = @"
 ***
@@ -93,7 +93,7 @@ Panel 3 - Panel 3 content.
             {
                 var context = new LavaDictionary();
                 context["iteration"] = x;
-                _helper.AssertTemplateOutputWithWildcard( expectedOutput, input, context, ignoreWhiteSpace: true, wildCard: "<?>" );
+                TestHelper.AssertTemplateOutputWithWildcard( expectedOutput, input, context, ignoreWhiteSpace: true, wildCard: "<?>" );
             } );
 
         }
@@ -115,7 +115,7 @@ Font Bold: {{ fontbold }}
             shortcodeDefinition.Name = "shortcodetest";
             //shortcodeDefinition.Parameters = new Dictionary<string, string> { { "speed", "10" } };
 
-            _helper.LavaEngine.RegisterDynamicShortcode( shortcodeDefinition.Name, ( shortcodeName ) => { return shortcodeDefinition; } );
+            TestHelper.LavaEngine.RegisterDynamicShortcode( shortcodeDefinition.Name, ( shortcodeName ) => { return shortcodeDefinition; } );
 
             var input = @"
 {[ shortcodetest fontname:'Arial' fontsize:'{{ fontsize }}' fontbold:'true' ]}
@@ -130,7 +130,7 @@ Font Bold: true
 
             expectedOutput = expectedOutput.Replace( "``", @"""" );
 
-            _helper.AssertTemplateOutput( expectedOutput, input, null, ignoreWhiteSpace: true );
+            TestHelper.AssertTemplateOutput( expectedOutput, input, null, ignoreWhiteSpace: true );
 
             var parallelOptions = new ParallelOptions { MaxDegreeOfParallelism = 100 };
 
@@ -138,7 +138,7 @@ Font Bold: true
             {
                 var context = new LavaDictionary();
                 context["fontsize"] = x;
-                _helper.AssertTemplateOutputWithWildcard( expectedOutput, input, context, ignoreWhiteSpace: true, wildCard: "<?>" );
+                TestHelper.AssertTemplateOutputWithWildcard( expectedOutput, input, context, ignoreWhiteSpace: true, wildCard: "<?>" );
             } );
 
         }

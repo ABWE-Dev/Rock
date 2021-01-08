@@ -47,7 +47,7 @@ namespace Rock.Tests.UnitTests.Lava
             var lavaTemplate = "{{ TestList | Contains:'<searchValue>' }}";
             lavaTemplate = lavaTemplate.Replace( "<searchValue>", searchValue );
 
-            _helper.AssertTemplateOutput( isFound ? "true" : "false", lavaTemplate, mergeValues );
+            TestHelper.AssertTemplateOutput( isFound ? "true" : "false", lavaTemplate, mergeValues );
         }
 
         #region Filter Tests: Index
@@ -66,7 +66,7 @@ namespace Rock.Tests.UnitTests.Lava
             var lavaTemplate = "{{ TestList | Index:<index> }}";
             lavaTemplate = lavaTemplate.Replace( "<index>", index.ToString() );
 
-            _helper.AssertTemplateOutput( expectedValue, lavaTemplate, mergeValues );
+            TestHelper.AssertTemplateOutput( expectedValue, lavaTemplate, mergeValues );
 
         }
 
@@ -78,7 +78,7 @@ namespace Rock.Tests.UnitTests.Lava
         {
             var mergeValues = new LavaDictionary { { "TestList", _TestNameList } };
 
-            _helper.AssertTemplateOutput( "", "{{ TestList | Index:999 }}", mergeValues );
+            TestHelper.AssertTemplateOutput( "", "{{ TestList | Index:999 }}", mergeValues );
         }
 
         #endregion
@@ -111,7 +111,7 @@ namespace Rock.Tests.UnitTests.Lava
 
             var mergeValues = new LavaDictionary { { "Members", members } };
 
-            _helper.AssertTemplateOutput( "Ted;Alex;Cindy;",
+            TestHelper.AssertTemplateOutput( "Ted;Alex;Cindy;",
                 "{% assign items = Members | OrderBy:'GroupRole.IsLeader desc,Person.FirstName' %}{% for item in items %}{{ item.Person.FirstName }};{% endfor %}",
                 mergeValues );
         }
@@ -124,7 +124,7 @@ namespace Rock.Tests.UnitTests.Lava
         {
             var mergeValues = new LavaDictionary { { "Items", GetOrderByTestCollection() } } ;
 
-            _helper.AssertTemplateOutput( "A;B;C;D;",
+            TestHelper.AssertTemplateOutput( "A;B;C;D;",
                 "{% assign items = Items | OrderBy:'Order' %}{% for item in items %}{{ item.Title }};{% endfor %}",
                 mergeValues );
         }
@@ -137,7 +137,7 @@ namespace Rock.Tests.UnitTests.Lava
         {
             var mergeValues = new LavaDictionary { { "Items", GetOrderByTestCollection() } };
 
-            _helper.AssertTemplateOutput( "D;C;B;A;",
+            TestHelper.AssertTemplateOutput( "D;C;B;A;",
                 "{% assign items = Items | OrderBy:'Order DESC' %}{% for item in items %}{{ item.Title }};{% endfor %}",
                 mergeValues );
         }
@@ -150,7 +150,7 @@ namespace Rock.Tests.UnitTests.Lava
         {
             var mergeValues = new LavaDictionary { { "Items", GetOrderByTestCollection() } };
 
-            _helper.AssertTemplateOutput( "A;B;C;D;",
+            TestHelper.AssertTemplateOutput( "A;B;C;D;",
                 "{% assign items = Items | OrderBy:'Order, SecondOrder DESC' %}{% for item in items %}{{ item.Title }};{% endfor %}",
                 mergeValues );
         }
@@ -163,7 +163,7 @@ namespace Rock.Tests.UnitTests.Lava
         {
             var mergeValues = new LavaDictionary { { "Items", GetOrderByTestCollection() } };
 
-            _helper.AssertTemplateOutput( "A;B;C;D;",
+            TestHelper.AssertTemplateOutput( "A;B;C;D;",
                 "{% assign items = Items | OrderBy:'Order, Nested.Order DESC' %}{% for item in items %}{{ item.Title }};{% endfor %}",
                 mergeValues );
         }
@@ -196,7 +196,7 @@ namespace Rock.Tests.UnitTests.Lava
             var orderedOutput = _TestOrderedList.JoinStrings( ";" ) + ";";
 
             // First, verify that the unshuffled lists are equal.
-            var orderedResult = _helper.GetTemplateOutput( "{% assign items = OrderedList %}{% for item in items %}{{ item }};{% endfor %}", mergeValues );
+            var orderedResult = TestHelper.GetTemplateOutput( "{% assign items = OrderedList %}{% for item in items %}{{ item }};{% endfor %}", mergeValues );
 
             Assert.That.Equal( orderedOutput, orderedResult );
 
@@ -209,7 +209,7 @@ namespace Rock.Tests.UnitTests.Lava
             string shuffledResult = string.Empty;
             for ( int i = 0; i < 10; i++ )
             {
-                shuffledResult = _helper.GetTemplateOutput( "{% assign items = OrderedList | Shuffle %}{% for item in items %}{{ item }};{% endfor %}", mergeValues );
+                shuffledResult = TestHelper.GetTemplateOutput( "{% assign items = OrderedList | Shuffle %}{% for item in items %}{{ item }};{% endfor %}", mergeValues );
 
                 if ( orderedOutput != shuffledResult )
                 {
@@ -226,11 +226,11 @@ namespace Rock.Tests.UnitTests.Lava
         [TestMethod]
         public void Select_ValidItemPropertyFromItemCollection_ReturnsValueCollection()
         {
-            var personList = _helper.GetTestPersonCollectionForDecker();
+            var personList = TestHelper.GetTestPersonCollectionForDecker();
 
             var mergeValues = new LavaDictionary { { "People", personList } };
 
-            _helper.AssertTemplateOutput( "Edward;Cindy;Noah;Alex;",
+            TestHelper.AssertTemplateOutput( "Edward;Cindy;Noah;Alex;",
                 "{% assign names = People | Select:'FirstName' %}{% for name in names %}{{ name }};{% endfor %}",
                 mergeValues );
         }
@@ -243,7 +243,7 @@ namespace Rock.Tests.UnitTests.Lava
         {
             var mergeValues = new LavaDictionary { { "TestList", _TestNameList } };
 
-            _helper.AssertTemplateOutput( _TestNameList.Count.ToString(), "{{ TestList | Size }}", mergeValues );
+            TestHelper.AssertTemplateOutput( _TestNameList.Count.ToString(), "{{ TestList | Size }}", mergeValues );
         }
 
         /// <summary>
@@ -256,7 +256,7 @@ namespace Rock.Tests.UnitTests.Lava
 
             var mergeValues = new LavaDictionary { { "TestString", testString } };
 
-            _helper.AssertTemplateOutput( testString.Length.ToString(), "{{ TestString | Size }}", mergeValues );
+            TestHelper.AssertTemplateOutput( testString.Length.ToString(), "{{ TestString | Size }}", mergeValues );
         }
     }
 }

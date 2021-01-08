@@ -41,7 +41,7 @@ Slow
 ";
             var expectedOutput = @"Moderate";
 
-            _helper.AssertTemplateOutput( expectedOutput, input, context:null, ignoreWhiteSpace:true );
+            TestHelper.AssertTemplateOutput( expectedOutput, input, context:null, ignoreWhiteSpace:true );
         }
 
         /// <summary>
@@ -59,7 +59,7 @@ Slow
 {% endif -%}
 ";
 
-            _helper.AssertTemplateIsInvalid( input );
+            TestHelper.AssertTemplateIsInvalid( input );
         }
 
         [TestMethod]

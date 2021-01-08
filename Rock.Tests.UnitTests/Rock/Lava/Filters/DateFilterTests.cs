@@ -39,12 +39,12 @@ namespace Rock.Tests.UnitTests.Lava
             var template = "{{ '<inputString>' | AsDateTime }}"
                 .Replace( "<inputString>", inputString );
 
-            var outputString = _helper.GetTemplateOutput( template );
+            var outputString = TestHelper.GetTemplateOutput( template );
 
             // Parse the result to a date and compare with the expected output.
             var dateTimeString = DateTime.Parse( outputString ).ToString( "dd/MMM/yyyy hh:mm tt" );
 
-            _helper.AssertTemplateOutput( result, dateTimeString );
+            TestHelper.AssertTemplateOutput( result, dateTimeString );
             //Assert.That.Equal( result, dateTimeString );
         }
 
@@ -59,7 +59,7 @@ namespace Rock.Tests.UnitTests.Lava
             var template = "{{ '1-May-2018 6:30 PM' | Date:'<formatString>' }}"
                 .Replace( "<formatString>", formatString );
 
-            _helper.AssertTemplateOutput( result, template );
+            TestHelper.AssertTemplateOutput( result, template );
         }
 
         /// <summary>
@@ -68,7 +68,7 @@ namespace Rock.Tests.UnitTests.Lava
         [TestMethod]
         public void Date_NowAsInput_ResolvesToCurrentDate()
         {
-            _helper.AssertTemplateOutputDate( RockDateTime.Now.ToString( "yyyy-MM-dd" ), "{{ 'Now' | Date:'yyyy-MM-dd' }}" );
+            TestHelper.AssertTemplateOutputDate( RockDateTime.Now.ToString( "yyyy-MM-dd" ), "{{ 'Now' | Date:'yyyy-MM-dd' }}" );
         }
 
         /// <summary>
@@ -79,7 +79,7 @@ namespace Rock.Tests.UnitTests.Lava
         {
             var shortDate = new DateTime( 2018, 5, 1 );
 
-            _helper.AssertTemplateOutput( shortDate.ToShortDateString(), "{{ '1-May-2018' | Date:'sd' }}" );
+            TestHelper.AssertTemplateOutput( shortDate.ToShortDateString(), "{{ '1-May-2018' | Date:'sd' }}" );
         }
 
         /// <summary>
@@ -90,7 +90,7 @@ namespace Rock.Tests.UnitTests.Lava
         {
             var shortTime = new DateTime( 2018, 5, 1, 18, 30, 0 );
 
-            _helper.AssertTemplateOutput( shortTime.ToShortTimeString(), "{{ '1-May-2018 6:30 PM' | Date:'st' }}" );
+            TestHelper.AssertTemplateOutput( shortTime.ToShortTimeString(), "{{ '1-May-2018 6:30 PM' | Date:'st' }}" );
         }
 
         #endregion
@@ -103,7 +103,7 @@ namespace Rock.Tests.UnitTests.Lava
         [TestMethod]
         public void DateAdd_Now_ResolvesToCurrentDate()
         {
-            _helper.AssertTemplateOutputDate( DateTime.Now.AddDays( 5 ), "{{ 'Now' | DateAdd:5,'d' }}", TimeSpan.FromSeconds( 300 ) );
+            TestHelper.AssertTemplateOutputDate( DateTime.Now.AddDays( 5 ), "{{ 'Now' | DateAdd:5,'d' }}", TimeSpan.FromSeconds( 300 ) );
         }
 
         /// <summary>
@@ -112,7 +112,7 @@ namespace Rock.Tests.UnitTests.Lava
         [TestMethod]
         public void DateAdd_AddDefaultIncrement_AddsDays()
         {
-            _helper.AssertTemplateOutputDate( "4-May-2018", "{{ '1-May-2018' | DateAdd:'3' }}" );
+            TestHelper.AssertTemplateOutputDate( "4-May-2018", "{{ '1-May-2018' | DateAdd:'3' }}" );
         }
 
         /// <summary>
@@ -121,7 +121,7 @@ namespace Rock.Tests.UnitTests.Lava
         [TestMethod]
         public void DateAdd_AddDaysIntervalToGivenDate()
         {
-            _helper.AssertTemplateOutputDate( "4-Jan-2018", "{{ '1-Jan-2018' | DateAdd:'3','d' }}" );
+            TestHelper.AssertTemplateOutputDate( "4-Jan-2018", "{{ '1-Jan-2018' | DateAdd:'3','d' }}" );
         }
 
         /// <summary>
@@ -130,7 +130,7 @@ namespace Rock.Tests.UnitTests.Lava
         [TestMethod]
         public void DateAdd_AddHoursIntervalToGivenDate()
         {
-            _helper.AssertTemplateOutputDate( "1-May-2018 4:00 PM", "{{ '1-May-2018 3:00 PM' | DateAdd:'1','h' }}" );
+            TestHelper.AssertTemplateOutputDate( "1-May-2018 4:00 PM", "{{ '1-May-2018 3:00 PM' | DateAdd:'1','h' }}" );
         }
 
         /// <summary>
@@ -139,7 +139,7 @@ namespace Rock.Tests.UnitTests.Lava
         [TestMethod]
         public void DateAdd_AddMinutesIntervalToGivenDate()
         {
-            _helper.AssertTemplateOutputDate( "1-May-2018 5:00 PM", "{{ '1-May-2018 3:00 PM' | DateAdd:'120','m' }}" );
+            TestHelper.AssertTemplateOutputDate( "1-May-2018 5:00 PM", "{{ '1-May-2018 3:00 PM' | DateAdd:'120','m' }}" );
         }
 
         /// <summary>
@@ -148,7 +148,7 @@ namespace Rock.Tests.UnitTests.Lava
         [TestMethod]
         public void DateAdd_AddSecondsIntervalToGivenDate()
         {
-            _helper.AssertTemplateOutputDate( "1-May-2018 3:05 PM", "{{ '1-May-2018 3:00 PM' | DateAdd:'300','s' }}" );
+            TestHelper.AssertTemplateOutputDate( "1-May-2018 3:05 PM", "{{ '1-May-2018 3:00 PM' | DateAdd:'300','s' }}" );
         }
 
         /// <summary>
@@ -157,7 +157,7 @@ namespace Rock.Tests.UnitTests.Lava
         [TestMethod]
         public void DateAdd_AddYearsIntervalToGivenDate()
         {
-            _helper.AssertTemplateOutputDate( "1-May-2020 3:00 PM", "{{ '1-May-2018 3:00 PM' | DateAdd:'2','y' }}" );
+            TestHelper.AssertTemplateOutputDate( "1-May-2020 3:00 PM", "{{ '1-May-2018 3:00 PM' | DateAdd:'2','y' }}" );
         }
 
         /// <summary>
@@ -166,7 +166,7 @@ namespace Rock.Tests.UnitTests.Lava
         [TestMethod]
         public void DateAdd_AddYearsIntervalToGivenLeapDate()
         {
-            _helper.AssertTemplateOutputDate( "28-Feb-2017 3:00 PM", "{{ '29-Feb-2016 3:00 PM' | DateAdd:'1','y' }}" );
+            TestHelper.AssertTemplateOutputDate( "28-Feb-2017 3:00 PM", "{{ '29-Feb-2016 3:00 PM' | DateAdd:'1','y' }}" );
         }
 
         /// <summary>
@@ -175,7 +175,7 @@ namespace Rock.Tests.UnitTests.Lava
         [TestMethod]
         public void DateAdd_AddMonthsIntervalToGivenDate()
         {
-            _helper.AssertTemplateOutputDate( "1-Jun-2018 3:00 PM", "{{ '1-May-2018 3:00 PM' | DateAdd:'1','M' }}" );
+            TestHelper.AssertTemplateOutputDate( "1-Jun-2018 3:00 PM", "{{ '1-May-2018 3:00 PM' | DateAdd:'1','M' }}" );
         }
 
         /// <summary>
@@ -185,7 +185,7 @@ namespace Rock.Tests.UnitTests.Lava
         [TestMethod]
         public void DateAdd_AddMonthsIntervalToGivenLongerMonthDate()
         {
-            _helper.AssertTemplateOutputDate( "30-Jun-2018 3:00 PM", "{{ '31-May-2018 3:00 PM' | DateAdd:'1','M' }}" );
+            TestHelper.AssertTemplateOutputDate( "30-Jun-2018 3:00 PM", "{{ '31-May-2018 3:00 PM' | DateAdd:'1','M' }}" );
         }
 
         /// <summary>
@@ -194,7 +194,7 @@ namespace Rock.Tests.UnitTests.Lava
         [TestMethod]
         public void DateAdd_AddWeeksIntervalToGivenDate()
         {
-            _helper.AssertTemplateOutputDate( "15-May-2018 3:00 PM", "{{ '1-May-2018 3:00 PM' | DateAdd:'2','w' }}" );
+            TestHelper.AssertTemplateOutputDate( "15-May-2018 3:00 PM", "{{ '1-May-2018 3:00 PM' | DateAdd:'2','w' }}" );
         }
 
         #endregion
@@ -207,7 +207,7 @@ namespace Rock.Tests.UnitTests.Lava
         [TestMethod]
         public void DateDiff_CompareLaterDateInDays_YieldsPositiveInteger()
         {
-            _helper.AssertTemplateOutput( "32", "{{ '14-Feb-2011 8:00 AM' | DateDiff:'18-Mar-2011 11:30 AM','d' }}" );
+            TestHelper.AssertTemplateOutput( "32", "{{ '14-Feb-2011 8:00 AM' | DateDiff:'18-Mar-2011 11:30 AM','d' }}" );
         }
 
         /// <summary>
@@ -216,7 +216,7 @@ namespace Rock.Tests.UnitTests.Lava
         [TestMethod]
         public void DateDiff_CompareEarlierDateInDays_YieldsNegativeInteger()
         {
-            _helper.AssertTemplateOutput( "-32", "{{ '18-Mar-2011 11:30 AM' | DateDiff:'14-Feb-2011 8:00 AM','d' }}" );
+            TestHelper.AssertTemplateOutput( "-32", "{{ '18-Mar-2011 11:30 AM' | DateDiff:'14-Feb-2011 8:00 AM','d' }}" );
         }
 
         #endregion
@@ -233,7 +233,7 @@ namespace Rock.Tests.UnitTests.Lava
 
             template = template.Replace( "<compareDate>", RockDateTime.Now.AddDays( -14 ).ToString( "dd-MMM-yyyy" ) );
 
-            _helper.AssertTemplateOutput( "14 days ago", template );
+            TestHelper.AssertTemplateOutput( "14 days ago", template );
         }
 
         /// <summary>
@@ -246,7 +246,7 @@ namespace Rock.Tests.UnitTests.Lava
 
             template = template.Replace( "<compareDate>", RockDateTime.Now.AddDays( -1 ).ToString( "dd-MMM-yyyy" ) );
 
-            _helper.AssertTemplateOutput( "yesterday", template );
+            TestHelper.AssertTemplateOutput( "yesterday", template );
         }
 
         /// <summary>
@@ -259,7 +259,7 @@ namespace Rock.Tests.UnitTests.Lava
 
             template = template.Replace( "<compareDate>", RockDateTime.Now.ToString( "dd-MMM-yyyy" ) );
 
-            _helper.AssertTemplateOutput( "today", template );
+            TestHelper.AssertTemplateOutput( "today", template );
         }
 
         /// <summary>
@@ -272,7 +272,7 @@ namespace Rock.Tests.UnitTests.Lava
 
             template = template.Replace( "<compareDate>", RockDateTime.Now.AddDays( 1 ).ToString( "dd-MMM-yyyy" ) );
 
-            _helper.AssertTemplateOutput( "tomorrow", template );
+            TestHelper.AssertTemplateOutput( "tomorrow", template );
         }
 
         /// <summary>
@@ -285,7 +285,7 @@ namespace Rock.Tests.UnitTests.Lava
 
             template = template.Replace( "<compareDate>", RockDateTime.Now.AddDays( 14 ).ToString( "dd-MMM-yyyy" ) );
 
-            _helper.AssertTemplateOutput( "in 14 days", template );
+            TestHelper.AssertTemplateOutput( "in 14 days", template );
         }
 
         #endregion
@@ -302,7 +302,7 @@ namespace Rock.Tests.UnitTests.Lava
 
             targetDate = targetDate.AddDays( -1 );
 
-            _helper.AssertTemplateOutput(targetDate.Day.ToString(), "{{ 'Now' | DaysInMonth }}" );
+            TestHelper.AssertTemplateOutput(targetDate.Day.ToString(), "{{ 'Now' | DaysInMonth }}" );
         }
 
         /// <summary>
@@ -311,7 +311,7 @@ namespace Rock.Tests.UnitTests.Lava
         [TestMethod]
         public void DaysInMonth_InputMonthParameter_YieldsDaysInSpecifiedMonth()
         {
-            _helper.AssertTemplateOutput( "31", "{{ '' | DaysInMonth:'03' }}" );
+            TestHelper.AssertTemplateOutput( "31", "{{ '' | DaysInMonth:'03' }}" );
         }
 
         /// <summary>
@@ -320,7 +320,7 @@ namespace Rock.Tests.UnitTests.Lava
         [TestMethod]
         public void DaysInMonth_InputMonthYearParameters_YieldsDaysInSpecifiedMonth()
         {
-            _helper.AssertTemplateOutput( "29", "{{ '' | DaysInMonth:'02','2016' }}" );
+            TestHelper.AssertTemplateOutput( "29", "{{ '' | DaysInMonth:'02','2016' }}" );
         }
 
         /// <summary>
@@ -329,7 +329,7 @@ namespace Rock.Tests.UnitTests.Lava
         [TestMethod]
         public void DaysInMonth_InputDate_YieldsDaysInMonth()
         {
-            _helper.AssertTemplateOutput( "28", "{{ '1-Feb-2017' | DaysInMonth }}" );
+            TestHelper.AssertTemplateOutput( "28", "{{ '1-Feb-2017' | DaysInMonth }}" );
         }
 
         #region Filter Tests: DaysSince
@@ -344,7 +344,7 @@ namespace Rock.Tests.UnitTests.Lava
 
             template = template.Replace( "<compareDate>", RockDateTime.Now.AddDays( -3 ).ToString( "dd-MMM-yyyy" ) );
 
-            _helper.AssertTemplateOutput( "3", template );
+            TestHelper.AssertTemplateOutput( "3", template );
         }
 
         /// <summary>
@@ -357,7 +357,7 @@ namespace Rock.Tests.UnitTests.Lava
 
             template = template.Replace( "<compareDate>", RockDateTime.Now.ToString( "dd-MMM-yyyy" ) );
 
-            _helper.AssertTemplateOutput( "0", template );
+            TestHelper.AssertTemplateOutput( "0", template );
         }
 
         /// <summary>
@@ -370,7 +370,7 @@ namespace Rock.Tests.UnitTests.Lava
 
             template = template.Replace( "<compareDate>", RockDateTime.Now.AddDays( 3 ).ToString( "dd-MMM-yyyy" ) );
 
-            _helper.AssertTemplateOutput( "-2", template );
+            TestHelper.AssertTemplateOutput( "-2", template );
         }
 
         #endregion
@@ -388,7 +388,7 @@ namespace Rock.Tests.UnitTests.Lava
             template = template.Replace( "<compareDate>", RockDateTime.Now.AddDays( 3 ).ToString( "dd-MMM-yyyy" ) );
 
             // Note that only complete days are counted in the result, so the remaining portion of today is not included, nor is any portion of the target date.
-            _helper.AssertTemplateOutput( "2", template );
+            TestHelper.AssertTemplateOutput( "2", template );
         }
 
         /// <summary>
@@ -401,7 +401,7 @@ namespace Rock.Tests.UnitTests.Lava
 
             template = template.Replace( "<compareDate>", RockDateTime.Now.ToString( "dd-MMM-yyyy" ) );
 
-            _helper.AssertTemplateOutput( "0", template );
+            TestHelper.AssertTemplateOutput( "0", template );
         }
 
         /// <summary>
@@ -414,7 +414,7 @@ namespace Rock.Tests.UnitTests.Lava
 
             template = template.Replace( "<compareDate>", RockDateTime.Now.AddDays( -3 ).ToString( "dd-MMM-yyyy" ) );
 
-            _helper.AssertTemplateOutput( "-3", template );
+            TestHelper.AssertTemplateOutput( "-3", template );
         }
 
         #endregion
@@ -430,7 +430,7 @@ namespace Rock.Tests.UnitTests.Lava
             var template = "{{ '<compareDate>' | HumanizeDateTime }}";
             template = template.Replace( "<compareDate>", RockDateTime.Now.AddDays( -1 ).ToString( "dd-MMM-yyyy" ) );
 
-            _helper.AssertTemplateOutput( "yesterday", template );
+            TestHelper.AssertTemplateOutput( "yesterday", template );
         }
 
         /// <summary>
@@ -442,7 +442,7 @@ namespace Rock.Tests.UnitTests.Lava
             var template = "{{ '<compareDate>' | HumanizeDateTime }}";
             template = template.Replace( "<compareDate>", RockDateTime.Now.AddHours( -2 ).ToString( "dd-MMM-yyyy hh:mm:ss tt" ) );
 
-            _helper.AssertTemplateOutput( "2 hours ago", template );
+            TestHelper.AssertTemplateOutput( "2 hours ago", template );
         }
 
         /// <summary>
@@ -454,7 +454,7 @@ namespace Rock.Tests.UnitTests.Lava
             var template = "{{ '<compareDate>' | HumanizeDateTime }}";
             template = template.Replace( "<compareDate>", RockDateTime.Now.AddDays( -2 ).ToString( "dd-MMM-yyyy hh:mm:ss" ) );
 
-            _helper.AssertTemplateOutput( "2 days ago", template );
+            TestHelper.AssertTemplateOutput( "2 days ago", template );
         }
 
         /// <summary>
@@ -466,7 +466,7 @@ namespace Rock.Tests.UnitTests.Lava
             var template = "{{ '<compareDate>' | HumanizeDateTime }}";
             template = template.Replace( "<compareDate>", RockDateTime.Now.AddMonths( -2 ).ToString( "dd-MMM-yyyy hh:mm:ss" ) );
 
-            _helper.AssertTemplateOutput( "2 months ago", template );
+            TestHelper.AssertTemplateOutput( "2 months ago", template );
         }
 
         /// <summary>
@@ -477,7 +477,7 @@ namespace Rock.Tests.UnitTests.Lava
         {
             var template = "{{ '1-May-2020' | HumanizeDateTime:'2-May-2020' }}";
 
-            _helper.AssertTemplateOutput( "yesterday", template );
+            TestHelper.AssertTemplateOutput( "yesterday", template );
         }
 
         /// <summary>
@@ -488,7 +488,7 @@ namespace Rock.Tests.UnitTests.Lava
         {
             var template = "{{ '1-May-2020 6:00 PM' | HumanizeDateTime:'1-May-2020 8:00 PM' }}";
 
-            _helper.AssertTemplateOutput( "2 hours ago", template );
+            TestHelper.AssertTemplateOutput( "2 hours ago", template );
         }
 
         /// <summary>
@@ -499,7 +499,7 @@ namespace Rock.Tests.UnitTests.Lava
         {
             var template = "{{ '7-May-2020' | HumanizeDateTime:'10-May-2020' }}";
 
-            _helper.AssertTemplateOutput( "3 days ago", template );
+            TestHelper.AssertTemplateOutput( "3 days ago", template );
         }
 
         /// <summary>
@@ -510,7 +510,7 @@ namespace Rock.Tests.UnitTests.Lava
         {
             var template = "{{ '1-Jan-2020' | HumanizeDateTime:'10-May-2020' }}";
 
-            _helper.AssertTemplateOutput( "4 months ago", template );
+            TestHelper.AssertTemplateOutput( "4 months ago", template );
         }
 
         /// <summary>
@@ -521,7 +521,7 @@ namespace Rock.Tests.UnitTests.Lava
         {
             var template = "{{ '1-May-2020 10:00 PM' | HumanizeDateTime:'1-May-2020 8:00 PM' }}";
 
-            _helper.AssertTemplateOutput( "2 hours from now", template );
+            TestHelper.AssertTemplateOutput( "2 hours from now", template );
         }
 
         #endregion
@@ -536,7 +536,7 @@ namespace Rock.Tests.UnitTests.Lava
         {
             var template = "{{ '1-May-2020 10:00 PM' | HumanizeTimeSpan:'3-Sep-2020 11:30 PM' }}";
 
-            _helper.AssertTemplateOutput( "17 weeks", template );
+            TestHelper.AssertTemplateOutput( "17 weeks", template );
         }
 
         /// <summary>
@@ -547,7 +547,7 @@ namespace Rock.Tests.UnitTests.Lava
         {
             var template = "{{ '1-May-2020 10:00 PM' | HumanizeTimeSpan:'3-Sep-2020 11:30 PM',1 }}";
 
-            _helper.AssertTemplateOutput( "17 weeks", template );
+            TestHelper.AssertTemplateOutput( "17 weeks", template );
         }
 
         /// <summary>
@@ -558,7 +558,7 @@ namespace Rock.Tests.UnitTests.Lava
         {
             var template = "{{ '1-May-2020 10:00 PM' | HumanizeTimeSpan:'3-Sep-2020 11:30 PM',2 }}";
 
-            _helper.AssertTemplateOutput( "17 weeks, 6 days", template );
+            TestHelper.AssertTemplateOutput( "17 weeks, 6 days", template );
         }
 
         /// <summary>
@@ -569,7 +569,7 @@ namespace Rock.Tests.UnitTests.Lava
         {
             var template = "{{ '1-May-2020 10:00 PM' | HumanizeTimeSpan:'3-Sep-2020 11:30 PM',3 }}";
 
-            _helper.AssertTemplateOutput( "17 weeks, 6 days, 1 hour", template );
+            TestHelper.AssertTemplateOutput( "17 weeks, 6 days, 1 hour", template );
         }
 
         /// <summary>
@@ -580,7 +580,7 @@ namespace Rock.Tests.UnitTests.Lava
         {
             var template = "{{ '1-May-2020 10:00 PM' | HumanizeTimeSpan:'3-Sep-2020 11:30 PM',4 }}";
 
-            _helper.AssertTemplateOutput( "17 weeks, 6 days, 1 hour, 30 minutes", template );
+            TestHelper.AssertTemplateOutput( "17 weeks, 6 days, 1 hour, 30 minutes", template );
         }
 
         /// <summary>
@@ -592,7 +592,7 @@ namespace Rock.Tests.UnitTests.Lava
             var template = "{{ 'Now' | HumanizeTimeSpan:'<compareDate>' }}";
             template = template.Replace( "<compareDate>", RockDateTime.Now.AddDays( 3 ).ToString( "yyyy-MM-dd hh:mm:ss" ) );
 
-            _helper.AssertTemplateOutputRegex( "[23] days", template );
+            TestHelper.AssertTemplateOutputRegex( "[23] days", template );
         }
 
         /// <summary>
@@ -604,7 +604,7 @@ namespace Rock.Tests.UnitTests.Lava
             var template = "{{ '<compareDate>' | HumanizeTimeSpan:'Now' }}";
             template = template.Replace( "<compareDate>", RockDateTime.Now.AddDays( 3 ).ToString( "yyyy-MM-dd hh:mm:ss" ) );
 
-            _helper.AssertTemplateOutputRegex( "[23] days", template );
+            TestHelper.AssertTemplateOutputRegex( "[23] days", template );
 
         }
 
@@ -618,7 +618,7 @@ namespace Rock.Tests.UnitTests.Lava
         [TestMethod]
         public void NextDayOfTheWeek_NextWeekdayWithDefaultParameters_ReturnsNextWeekday()
         {
-            _helper.AssertTemplateOutputDate( "8-May-2018 3:00 PM",
+            TestHelper.AssertTemplateOutputDate( "8-May-2018 3:00 PM",
                                               "{{ '1-May-2018 3:00 PM' | NextDayOfTheWeek:'Tuesday' }}" );
         }
 
@@ -629,7 +629,7 @@ namespace Rock.Tests.UnitTests.Lava
         public void NextDayOfTheWeek_WithNextDow_ReturnsNextDaysDate()
         {
             // Since Wednesday has not happened, we advance to it -- which is Wed, 5/2
-            _helper.AssertTemplateOutputDate( "2-May-2018 3:00 PM",
+            TestHelper.AssertTemplateOutputDate( "2-May-2018 3:00 PM",
                                               "{{ '1-May-2018 3:00 PM' | NextDayOfTheWeek:'Wednesday' }}" );
         }
 
@@ -639,7 +639,7 @@ namespace Rock.Tests.UnitTests.Lava
         [TestMethod]
         public void NextDayOfTheWeek_IncludeCurrentDayWhereInputDateIsSameDay_ReturnsInputDate()
         {
-            _helper.AssertTemplateOutputDate( "1-May-2018 3:00 PM",
+            TestHelper.AssertTemplateOutputDate( "1-May-2018 3:00 PM",
                                               "{{ '1-May-2018 3:00 PM' | NextDayOfTheWeek:'Tuesday','true' }}" );
         }
 
@@ -657,15 +657,15 @@ namespace Rock.Tests.UnitTests.Lava
         [TestMethod]
         public void NextDayOfTheWeek_TwoWeeksHence_ReturnsFollowingWeekday()
         {
-            _helper.AssertTemplateOutputDate( "15-May-2018 3:00 PM",
+            TestHelper.AssertTemplateOutputDate( "15-May-2018 3:00 PM",
                                               "{{ '1-May-2018 3:00 PM' | NextDayOfTheWeek:'Tuesday','false','2' }}" );
 
             // Since Wednesday has not happened, we advance two Wednesdays -- which is Wed, 5/9
-            _helper.AssertTemplateOutputDate( "9-May-2018 3:00 PM",
+            TestHelper.AssertTemplateOutputDate( "9-May-2018 3:00 PM",
                                               "{{ '1-May-2018 3:00 PM' | NextDayOfTheWeek:'Wednesday','false','2' }}" );
 
             // Since Monday has passed, we advance to two week's out Monday, 5/14
-            _helper.AssertTemplateOutputDate( "14-May-2018 3:00 PM",
+            TestHelper.AssertTemplateOutputDate( "14-May-2018 3:00 PM",
                                               "{{ '1-May-2018 3:00 PM' | NextDayOfTheWeek:'Monday','false','2' }}" );
         }
 
@@ -693,16 +693,16 @@ namespace Rock.Tests.UnitTests.Lava
         {
             // If we include the current day (so it counts as *this* current week), then one week ago would be
             // last Tuesday, April 24.
-            _helper.AssertTemplateOutputDate( "24-Apr-2018 3:00 PM",
+            TestHelper.AssertTemplateOutputDate( "24-Apr-2018 3:00 PM",
                                               "{{ '1-May-2018 3:00 PM' | NextDayOfTheWeek:'Tuesday',true,'-1' }}" );
 
             // Otherwise in this case, since it's Tuesday (and we're not including it as the current week), then
             // the same date is the *previous* week's Tuesday.
-            _helper.AssertTemplateOutputDate( "1-May-2018 3:00 PM",
+            TestHelper.AssertTemplateOutputDate( "1-May-2018 3:00 PM",
                                               "{{ '1-May-2018 3:00 PM' | NextDayOfTheWeek:'Tuesday',false,'-1' }}" );
 
             // Since Monday has just passed, we get this past Monday, 4/30
-            _helper.AssertTemplateOutputDate( "30-Apr-2018 3:00 PM",
+            TestHelper.AssertTemplateOutputDate( "30-Apr-2018 3:00 PM",
                                               "{{ '1-May-2018 3:00 PM' | NextDayOfTheWeek:'Monday',false,'-1' }}" );
         }
 
@@ -712,7 +712,7 @@ namespace Rock.Tests.UnitTests.Lava
         [TestMethod]
         public void NextDayOfTheWeek_InvalidNumberOfWeeks_ReturnsEmpty()
         {
-            _helper.AssertTemplateOutput( "", "{{ '1-May-2018 3:00 PM' | NextDayOfTheWeek:'Tuesday',false,'0' }}" );
+            TestHelper.AssertTemplateOutput( "", "{{ '1-May-2018 3:00 PM' | NextDayOfTheWeek:'Tuesday',false,'0' }}" );
         }
 
         #endregion
@@ -725,7 +725,7 @@ namespace Rock.Tests.UnitTests.Lava
         [TestMethod]
         public void ToMidnight_InputDateHasTimeComponent_YieldsMidnight()
         {
-            _helper.AssertTemplateOutputDate( "1-May-2018 12:00 AM",
+            TestHelper.AssertTemplateOutputDate( "1-May-2018 12:00 AM",
                                       "{{ '1-May-2018 3:00 PM' | ToMidnight }}" );
         }
 
@@ -735,7 +735,7 @@ namespace Rock.Tests.UnitTests.Lava
         [TestMethod]
         public void ToMidnight_Now()
         {
-            _helper.AssertTemplateOutputDate( RockDateTime.Now.Date,
+            TestHelper.AssertTemplateOutputDate( RockDateTime.Now.Date,
                                       "{{ 'Now' | ToMidnight }}" );
         }
 

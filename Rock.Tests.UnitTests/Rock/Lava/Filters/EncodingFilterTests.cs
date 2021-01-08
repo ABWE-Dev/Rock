@@ -27,7 +27,7 @@ namespace Rock.Tests.UnitTests.Lava
         [TestMethod]
         public void Base64_EncodePlainText_IsEncoded()
         {
-            _helper.AssertTemplateOutput( "Um9ja0lzQXdlc29tZSE=", "{{ 'RockIsAwesome!' | Base64 }}" );
+            TestHelper.AssertTemplateOutput( "Um9ja0lzQXdlc29tZSE=", "{{ 'RockIsAwesome!' | Base64 }}" );
         }
 
         /// <summary>
@@ -36,7 +36,7 @@ namespace Rock.Tests.UnitTests.Lava
         [TestMethod]
         public void HmacSha1_EncodePlainText_IsEncoded()
         {
-            _helper.AssertTemplateOutput( "17dbf467d8f49e9f541c7af8adf26c8422bdb342", "{{ 'RockIsAwesome!' | HmacSha1:'secret_key' }}" );            
+            TestHelper.AssertTemplateOutput( "17dbf467d8f49e9f541c7af8adf26c8422bdb342", "{{ 'RockIsAwesome!' | HmacSha1:'secret_key' }}" );            
         }
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace Rock.Tests.UnitTests.Lava
         [TestMethod]
         public void HmacSha256_EncodePlainText_IsEncoded()
         {
-            _helper.AssertTemplateOutput( "3518d7aa4ad81041e14033f2bbfa317e8f2f5aa26d6f48f719783aeaebe481ae", "{{ 'RockIsAwesome!' | HmacSha256:'secret_key' }}" );
+            TestHelper.AssertTemplateOutput( "3518d7aa4ad81041e14033f2bbfa317e8f2f5aa26d6f48f719783aeaebe481ae", "{{ 'RockIsAwesome!' | HmacSha256:'secret_key' }}" );
             
         }
 
@@ -55,7 +55,7 @@ namespace Rock.Tests.UnitTests.Lava
         [TestMethod]
         public void Md5_EncodePlainText_IsEncoded()
         {
-            _helper.AssertTemplateOutput( "a8277e7e83abe10c3f8bc249809293ca", "{{ 'hi@example.com' | Md5 }}" );
+            TestHelper.AssertTemplateOutput( "a8277e7e83abe10c3f8bc249809293ca", "{{ 'hi@example.com' | Md5 }}" );
         }
 
         /// <summary>
@@ -64,7 +64,7 @@ namespace Rock.Tests.UnitTests.Lava
         [TestMethod]
         public void Sha1_EncodePlainText_IsEncoded()
         {
-            _helper.AssertTemplateOutput( "845b0f246f221697761d085847fbc056652d03d0", "{{ 'RockIsAwesome!' | Sha1 }}" );
+            TestHelper.AssertTemplateOutput( "845b0f246f221697761d085847fbc056652d03d0", "{{ 'RockIsAwesome!' | Sha1 }}" );
         }
 
         /// <summary>
@@ -73,7 +73,7 @@ namespace Rock.Tests.UnitTests.Lava
         [TestMethod]
         public void Sha256_EncodePlainText_IsEncoded()
         {
-            _helper.AssertTemplateOutput( "06530e8aabeb6becaabcd0c357134f3cd0a340d87500002b0a14929d92e0ac78", "{{ 'RockIsAwesome!' | Sha256 }}" );
+            TestHelper.AssertTemplateOutput( "06530e8aabeb6becaabcd0c357134f3cd0a340d87500002b0a14929d92e0ac78", "{{ 'RockIsAwesome!' | Sha256 }}" );
         }
 
     }

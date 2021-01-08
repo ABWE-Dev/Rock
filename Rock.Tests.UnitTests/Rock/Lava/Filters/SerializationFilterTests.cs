@@ -30,13 +30,13 @@ namespace Rock.Tests.UnitTests.Lava
         [TestMethod]
         public void ToJSON_ForDynamicObject_ProducesJsonString()
         {
-            var person = _helper.GetTestPersonTedDecker();
+            var person = TestHelper.GetTestPersonTedDecker();
 
             var mergeValues = new LavaDictionary { { "CurrentPerson", person } };
 
             var personJson = person.ToJson( Formatting.Indented );
 
-            _helper.AssertTemplateOutput( personJson, "{{ CurrentPerson | ToJSON }}", mergeValues );
+            TestHelper.AssertTemplateOutput( personJson, "{{ CurrentPerson | ToJSON }}", mergeValues );
         }
 
         /// <summary>
@@ -51,7 +51,7 @@ namespace Rock.Tests.UnitTests.Lava
 
             var numbersJson = numbers.ToJson( Formatting.Indented );
 
-            _helper.AssertTemplateOutput( numbersJson, "{{ Numbers | ToJSON }}", mergeValues );
+            TestHelper.AssertTemplateOutput( numbersJson, "{{ Numbers | ToJSON }}", mergeValues );
         }
 
         /// <summary>
@@ -60,13 +60,13 @@ namespace Rock.Tests.UnitTests.Lava
         [TestMethod]
         public void FromJSON_ForTestPersonObject_ProducesJsonObject()
         {
-            var person = _helper.GetTestPersonTedDecker();
+            var person = TestHelper.GetTestPersonTedDecker();
 
             var jsonString = person.ToJson();
 
             var mergeValues = new LavaDictionary { { "JsonString", jsonString } };
 
-            _helper.AssertTemplateOutput( "Ted Decker - North Campus",
+            TestHelper.AssertTemplateOutput( "Ted Decker - North Campus",
                 "{% assign jsonObject = JsonString | FromJSON %}{{ jsonObject.NickName }} {{ jsonObject.LastName }} - {{ jsonObject.Campus.Name }}",
                 mergeValues );
         }
@@ -87,7 +87,7 @@ namespace Rock.Tests.UnitTests.Lava
 
             var dictionaryJson = dictionary.ToJson( Formatting.Indented );
 
-            _helper.AssertTemplateOutput( dictionaryJson, "{{ Dictionary | ToJSON }}", mergeValues );
+            TestHelper.AssertTemplateOutput( dictionaryJson, "{{ Dictionary | ToJSON }}", mergeValues );
         }
     }
 }

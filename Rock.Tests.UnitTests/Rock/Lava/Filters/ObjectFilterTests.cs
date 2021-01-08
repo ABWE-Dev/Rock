@@ -28,9 +28,9 @@ namespace Rock.Tests.UnitTests.Lava
         [TestMethod]
         public void Property_AnonymousObjectFirstLevelPropertyAccess_ReturnsPropertyValue()
         {
-            var mergeValues = new LavaDictionary { { "CurrentPerson", _helper.GetTestPersonTedDecker() } };
+            var mergeValues = new LavaDictionary { { "CurrentPerson", TestHelper.GetTestPersonTedDecker() } };
 
-            _helper.AssertTemplateOutput( "Decker", "{{ CurrentPerson | Property:'LastName' }}", mergeValues );
+            TestHelper.AssertTemplateOutput( "Decker", "{{ CurrentPerson | Property:'LastName' }}", mergeValues );
         }
 
         /// <summary>
@@ -39,9 +39,9 @@ namespace Rock.Tests.UnitTests.Lava
         [TestMethod]
         public void Property_AnonymousObjectSecondLevelPropertyAccess_ReturnsValue()
         {
-            var mergeValues = new LavaDictionary { { "CurrentPerson", _helper.GetTestPersonTedDecker() } };
+            var mergeValues = new LavaDictionary { { "CurrentPerson", TestHelper.GetTestPersonTedDecker() } };
 
-            _helper.AssertTemplateOutput( "North Campus", "{{ CurrentPerson | Property:'Campus.Name' }}", mergeValues );
+            TestHelper.AssertTemplateOutput( "North Campus", "{{ CurrentPerson | Property:'Campus.Name' }}", mergeValues );
         }
 
         /// <summary>
@@ -50,9 +50,9 @@ namespace Rock.Tests.UnitTests.Lava
         [TestMethod]
         public void Property_InvalidPropertyName_ReturnsEmptyString()
         {
-            var mergeValues = new LavaDictionary { { "CurrentPerson", _helper.GetTestPersonTedDecker() } };
+            var mergeValues = new LavaDictionary { { "CurrentPerson", TestHelper.GetTestPersonTedDecker() } };
 
-            _helper.AssertTemplateOutput( string.Empty, "{{ CurrentPerson | Property:'NonexistentProperty' }}", mergeValues );
+            TestHelper.AssertTemplateOutput( string.Empty, "{{ CurrentPerson | Property:'NonexistentProperty' }}", mergeValues );
         }
 
         /// <summary>

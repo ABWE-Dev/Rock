@@ -31,7 +31,7 @@ namespace Rock.Tests.Integration.Lava
             }
         }
 
-        public static LavaTestHelper _helper
+        public static LavaTestHelper TestHelper
         {
             get
             {

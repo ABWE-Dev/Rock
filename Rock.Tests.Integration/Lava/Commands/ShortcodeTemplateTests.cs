@@ -50,7 +50,7 @@ Items:
             shortcodeDefinition.Name = "shortcodetest";
             shortcodeDefinition.Parameters = new Dictionary<string, string> { { "parameter1", "value1" }, { "parameter2", "value2" } };
 
-            _helper.LavaEngine.RegisterDynamicShortcode( shortcodeDefinition.Name, ( shortcodeName ) => { return shortcodeDefinition; } );
+            TestHelper.LavaEngine.RegisterDynamicShortcode( shortcodeDefinition.Name, ( shortcodeName ) => { return shortcodeDefinition; } );
 
             var input = @"
 {[ shortcodetest ]}
@@ -81,7 +81,7 @@ Panel 3 - Panel 3 content.
 
             expectedOutput = expectedOutput.Replace( "``", @"""" );
 
-            _helper.AssertTemplateOutput( expectedOutput, input, null, ignoreWhiteSpace: true );
+            TestHelper.AssertTemplateOutput( expectedOutput, input, null, ignoreWhiteSpace: true );
         }
 
         [TestMethod]
@@ -101,7 +101,7 @@ Font Bold: {{ fontbold }}
             shortcodeDefinition.Name = "shortcodetest";
             shortcodeDefinition.Parameters = new Dictionary<string, string> { { "speed", "10" } };
 
-            _helper.LavaEngine.RegisterDynamicShortcode( shortcodeDefinition.Name, ( shortcodeName ) => { return shortcodeDefinition; } );
+            TestHelper.LavaEngine.RegisterDynamicShortcode( shortcodeDefinition.Name, ( shortcodeName ) => { return shortcodeDefinition; } );
 
             var input = @"
 {[ shortcodetest fontname:'Arial' fontsize:'14' fontbold:'true' ]}
@@ -116,7 +116,7 @@ Font Bold: true
 
             expectedOutput = expectedOutput.Replace( "``", @"""" );
 
-            _helper.AssertTemplateOutput( expectedOutput, input, null, ignoreWhiteSpace: true );
+            TestHelper.AssertTemplateOutput( expectedOutput, input, null, ignoreWhiteSpace: true );
         }
 
         #region Accordion
@@ -137,7 +137,7 @@ Font Bold: {{ fontbold }}
             shortcode1.TemplateMarkup = shortcodeTemplate;
             shortcode1.Name = "shortcodetest1";
 
-            _helper.LavaEngine.RegisterDynamicShortcode( shortcode1.Name, ( shortcodeName ) => { return shortcode1; } );
+            TestHelper.LavaEngine.RegisterDynamicShortcode( shortcode1.Name, ( shortcodeName ) => { return shortcode1; } );
 
             var shortcode2 = new DynamicShortcodeDefinition();
 
@@ -145,7 +145,7 @@ Font Bold: {{ fontbold }}
             shortcode2.TemplateMarkup = shortcodeTemplate;
             shortcode2.Name = "shortcodetest2";
 
-            _helper.LavaEngine.RegisterDynamicShortcode( shortcode2.Name, ( shortcodeName ) => { return shortcode2; } );
+            TestHelper.LavaEngine.RegisterDynamicShortcode( shortcode2.Name, ( shortcodeName ) => { return shortcode2; } );
 
             var input = @"
 {[ shortcodetest1 fontname:'Arial' fontsize:'14' fontbold:'true' ]}
@@ -163,7 +163,7 @@ Font Bold: true
 
             var parallelOptions = new ParallelOptions { MaxDegreeOfParallelism = 30 };
 
-            Parallel.For( 0, 1000, parallelOptions, ( x ) => _helper.AssertTemplateOutput( expectedOutput, input, null, ignoreWhiteSpace: true ) );
+            Parallel.For( 0, 1000, parallelOptions, ( x ) => TestHelper.AssertTemplateOutput( expectedOutput, input, null, ignoreWhiteSpace: true ) );
 
 
 
@@ -267,7 +267,7 @@ Font Bold: true
 
             expectedOutput = expectedOutput.Replace( "``", @"""" );
 
-            _helper.AssertTemplateOutputWithWildcard( expectedOutput, input, ignoreWhiteSpace: true, wildCard: "<<guid>>" );
+            TestHelper.AssertTemplateOutputWithWildcard( expectedOutput, input, ignoreWhiteSpace: true, wildCard: "<<guid>>" );
         }
 
         #endregion
@@ -346,7 +346,7 @@ var chart = new Chart(ctx, {
 
             expectedOutput = expectedOutput.Replace( "``", @"""" );
 
-            _helper.AssertTemplateOutputWithWildcard( expectedOutput, input, ignoreWhiteSpace: true, wildCard: "<<guid>>" );
+            TestHelper.AssertTemplateOutputWithWildcard( expectedOutput, input, ignoreWhiteSpace: true, wildCard: "<<guid>>" );
         }
 
         #endregion
@@ -445,7 +445,7 @@ $( document ).ready(function() {
 
             expectedOutput = expectedOutput.Replace( "``", @"""" );
 
-            _helper.AssertTemplateOutputWithWildcard( expectedOutput, input, ignoreWhiteSpace: true );
+            TestHelper.AssertTemplateOutputWithWildcard( expectedOutput, input, ignoreWhiteSpace: true );
 
         }
 
@@ -567,7 +567,7 @@ $( document ).ready(function() {
 
             expectedOutput = expectedOutput.Replace( "``", @"""" );
 
-            _helper.AssertTemplateOutputWithWildcard( expectedOutput, input, ignoreWhiteSpace: true, wildCard: "<<guid>>" );
+            TestHelper.AssertTemplateOutputWithWildcard( expectedOutput, input, ignoreWhiteSpace: true, wildCard: "<<guid>>" );
         }
 
         #endregion
@@ -688,7 +688,7 @@ $( document ).ready(function() {
 
             expectedOutput = expectedOutput.Replace( "``", @"""" );
 
-            _helper.AssertTemplateOutputWithWildcard( expectedOutput, input, ignoreWhiteSpace: true, wildCard: "<<guid>>" );
+            TestHelper.AssertTemplateOutputWithWildcard( expectedOutput, input, ignoreWhiteSpace: true, wildCard: "<<guid>>" );
         }
 
         #endregion
@@ -723,7 +723,7 @@ This is a super simple panel.
 
             expectedOutput = expectedOutput.Replace( "``", @"""" );
 
-            _helper.AssertTemplateOutputWithWildcard( expectedOutput, input, ignoreWhiteSpace: true );
+            TestHelper.AssertTemplateOutputWithWildcard( expectedOutput, input, ignoreWhiteSpace: true );
         }
 
         #endregion
@@ -782,7 +782,7 @@ This is a super simple panel.
 
             expectedOutput = expectedOutput.Replace( "``", @"""" );
 
-            _helper.AssertTemplateOutputWithWildcard( expectedOutput, input, ignoreWhiteSpace: true, wildCard: "<<guid>>" );
+            TestHelper.AssertTemplateOutputWithWildcard( expectedOutput, input, ignoreWhiteSpace: true, wildCard: "<<guid>>" );
 
         }
 
@@ -830,7 +830,7 @@ This is a super simple panel.
 
             expectedOutput = expectedOutput.Replace( "``", @"""" );
 
-            _helper.AssertTemplateOutputWithWildcard( expectedOutput, input, ignoreWhiteSpace: true, wildCard: "<<guid>>" );
+            TestHelper.AssertTemplateOutputWithWildcard( expectedOutput, input, ignoreWhiteSpace: true, wildCard: "<<guid>>" );
         }
 
         #endregion
@@ -862,7 +862,7 @@ This is a super simple panel.
 </div>
 ";
 
-            _helper.AssertTemplateOutputWithWildcard( expectedOutput, input, ignoreWhiteSpace: true, wildCard: "<<guid>>" );
+            TestHelper.AssertTemplateOutputWithWildcard( expectedOutput, input, ignoreWhiteSpace: true, wildCard: "<<guid>>" );
         }
 
         #endregion
@@ -941,7 +941,7 @@ Another possibility would be to merge a word’s tree with a single large tree o
 
             expectedOutput = expectedOutput.Replace( "``", @"""" );
 
-            _helper.AssertTemplateOutputWithWildcard( expectedOutput, input, ignoreWhiteSpace: true, wildCard: "<<guid>>" );
+            TestHelper.AssertTemplateOutputWithWildcard( expectedOutput, input, ignoreWhiteSpace: true, wildCard: "<<guid>>" );
         }
 
         #endregion
@@ -978,7 +978,7 @@ Another possibility would be to merge a word’s tree with a single large tree o
 </div>
 ";
 
-            _helper.AssertTemplateOutputWithWildcard( expectedOutput, input, ignoreWhiteSpace: true, wildCard: "<<guid>>" );
+            TestHelper.AssertTemplateOutputWithWildcard( expectedOutput, input, ignoreWhiteSpace: true, wildCard: "<<guid>>" );
         }
 
         #endregion

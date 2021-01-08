@@ -43,7 +43,7 @@ namespace Rock.Tests.Integration.Lava
         {
             var fileSystem = GetMockFileProvider();
 
-            _helper.LavaEngine.Initialize( fileSystem );
+            TestHelper.LavaEngine.Initialize( fileSystem );
 
             var input = @"
 Name: Ted Decker
@@ -66,7 +66,7 @@ Email: ted@rocksolidchurch.com
 **
 ";
 
-            _helper.AssertTemplateOutput( expectedOutput, input, mergeValues, ignoreWhitespace:true );
+            TestHelper.AssertTemplateOutput( expectedOutput, input, mergeValues, ignoreWhitespace:true );
         }
 
         [TestMethod]
@@ -74,13 +74,13 @@ Email: ted@rocksolidchurch.com
         {
             var fileSystem = GetMockFileProvider();
 
-            _helper.LavaEngine.Initialize( fileSystem );
+            TestHelper.LavaEngine.Initialize( fileSystem );
 
             var input = @"
 {% include '_unknown.lava' %}
 ";
 
-            var output = _helper.GetTemplateOutput( input );
+            var output = TestHelper.GetTemplateOutput( input );
 
             Assert.That.IsTrue( output.Contains( "File Load Failed." ) );
         }
@@ -88,13 +88,13 @@ Email: ted@rocksolidchurch.com
         [TestMethod]
         public void IncludeStatement_ShouldRenderError_IfFileSystemIsNotConfigured()
         {
-            _helper.LavaEngine.Initialize( null );
+            TestHelper.LavaEngine.Initialize( null );
 
             var input = @"
 {% include '_template.lava' %}
 ";
 
-            var output = _helper.GetTemplateOutput( input );
+            var output = TestHelper.GetTemplateOutput( input );
 
             Assert.That.IsTrue( output.Contains( "File Load Failed." ) );
         }

@@ -48,13 +48,13 @@ namespace Rock.Tests.Integration.Lava
 ";
             var expectedOutput = @"Admin Admin"; // NOT 'Ted Decker'
 
-            var context = _helper.LavaEngine.NewContext();
+            var context = TestHelper.LavaEngine.NewContext();
 
             context.SetEnabledCommands( "execute" );
 
-            context.SetMergeFieldValue( "CurrentPerson", _helper.GetTestPersonTedDecker() );
+            context.SetMergeFieldValue( "CurrentPerson", TestHelper.GetTestPersonTedDecker() );
 
-            _helper.AssertTemplateOutput( expectedOutput, input, context );
+            TestHelper.AssertTemplateOutput( expectedOutput, input, context );
         }
 
         /// <summary>
@@ -89,11 +89,11 @@ Loop Value (Level 2): for_loop_3
 Document Value (Level 1): for_loop_3
 Document Value (Level 1): document_2";
 
-            var context = _helper.LavaEngine.NewContext();
+            var context = TestHelper.LavaEngine.NewContext();
 
             context.SetMergeFieldValue( "currentBlock", "context" );
 
-            _helper.AssertTemplateOutput( expectedOutput, input, context, ignoreWhiteSpace: true );
+            TestHelper.AssertTemplateOutput( expectedOutput, input, context, ignoreWhiteSpace: true );
         }
     }
 }

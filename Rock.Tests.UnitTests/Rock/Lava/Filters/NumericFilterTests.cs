@@ -35,7 +35,7 @@ namespace Rock.Tests.UnitTests.Lava
         [TestMethod]
         public void Format_UsingValidDotNetFormatString_ProducesValidNumber()
         {
-            _helper.AssertTemplateOutput( "1,234,567.89", "{{ '1234567.89' | Format:'#,##0.00' }}" );
+            TestHelper.AssertTemplateOutput( "1,234,567.89", "{{ '1234567.89' | Format:'#,##0.00' }}" );
         }
 
         /// <summary>
@@ -44,7 +44,7 @@ namespace Rock.Tests.UnitTests.Lava
         [TestMethod]
         public void Format_EmptyInput_ProducesZeroLengthStringOutput()
         {
-            _helper.AssertTemplateOutput( "", "{{ '' | Format:'#,##0.00' }}" );
+            TestHelper.AssertTemplateOutput( "", "{{ '' | Format:'#,##0.00' }}" );
         }
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace Rock.Tests.UnitTests.Lava
         [TestMethod]
         public void Format_NonnumericInput_ProducesUnchangedOutput()
         {
-            _helper.AssertTemplateOutput( "not_a_number", "{{ 'not_a_number' | Format:'#,##0.00' }}" );
+            TestHelper.AssertTemplateOutput( "not_a_number", "{{ 'not_a_number' | Format:'#,##0.00' }}" );
         }
 
         #endregion
@@ -64,7 +64,7 @@ namespace Rock.Tests.UnitTests.Lava
         [TestMethod]
         public void NumberToOrdinal_IntegerInput_ProducesValidOrdinal()
         {
-            _helper.AssertTemplateOutput( "1st", "{{ 1 | NumberToOrdinal }}" );
+            TestHelper.AssertTemplateOutput( "1st", "{{ 1 | NumberToOrdinal }}" );
         }
 
         /// <summary>
@@ -73,7 +73,7 @@ namespace Rock.Tests.UnitTests.Lava
         [TestMethod]
         public void NumberToOrdinalWords_IntegerInput_ProducesValidWords()
         {
-            _helper.AssertTemplateOutput( "third", "{{ 3 | NumberToOrdinalWords }}" );
+            TestHelper.AssertTemplateOutput( "third", "{{ 3 | NumberToOrdinalWords }}" );
         }
 
         /// <summary>
@@ -82,7 +82,7 @@ namespace Rock.Tests.UnitTests.Lava
         [TestMethod]
         public void NumberToRomanNumerals_IntegerInput_ProducesValidNumerals()
         {
-            _helper.AssertTemplateOutput( "VII", "{{ 7 | NumberToRomanNumerals }}" );
+            TestHelper.AssertTemplateOutput( "VII", "{{ 7 | NumberToRomanNumerals }}" );
         }
 
         /// <summary>
@@ -91,7 +91,7 @@ namespace Rock.Tests.UnitTests.Lava
         [TestMethod]
         public void NumberToWords_IntegerInput_ProducesValidWords()
         {
-            _helper.AssertTemplateOutput( "one", "{{ 1 | NumberToWords }}" );
+            TestHelper.AssertTemplateOutput( "one", "{{ 1 | NumberToWords }}" );
         }
 
         /// <summary>
@@ -100,7 +100,7 @@ namespace Rock.Tests.UnitTests.Lava
         [TestMethod]
         public void ToQuantity_EqualToOne_ProducesSingularDescription()
         {
-            _helper.AssertTemplateOutput( "1 phone number", "{{ 'phone number' | ToQuantity:1 }}" );
+            TestHelper.AssertTemplateOutput( "1 phone number", "{{ 'phone number' | ToQuantity:1 }}" );
         }
 
         /// <summary>
@@ -109,7 +109,7 @@ namespace Rock.Tests.UnitTests.Lava
         [TestMethod]
         public void ToQuantity_GreaterThanOne_ProducesPluralDescription()
         {
-            _helper.AssertTemplateOutput( "3 phone numbers", "{{ 'phone number' | ToQuantity:3 }}" );
+            TestHelper.AssertTemplateOutput( "3 phone numbers", "{{ 'phone number' | ToQuantity:3 }}" );
         }
 
         /// <summary>
@@ -123,7 +123,7 @@ namespace Rock.Tests.UnitTests.Lava
         [DataRow( "1" )]
         public void AsBoolean_Theory_CanConvertCommonTextRepresentationsOfTrue( string input )
         {
-            var result = _helper.GetTemplateOutput( "{{ '" +  input + "' | AsBoolean }}" );
+            var result = TestHelper.GetTemplateOutput( "{{ '" +  input + "' | AsBoolean }}" );
 
             Assert.That.True( result.AsBoolean( false ) );
         }
@@ -141,7 +141,7 @@ namespace Rock.Tests.UnitTests.Lava
         [DataRow( "xyzzy" )]
         public void AsBoolean_Theory_CanConvertCommonTextRepresentationsOfFalse( string input )
         {
-            var result = _helper.GetTemplateOutput( "{{ '" + input + "' | AsBoolean }}" );
+            var result = TestHelper.GetTemplateOutput( "{{ '" + input + "' | AsBoolean }}" );
 
             Assert.That.False( result.AsBoolean( false ) );
         }
@@ -160,7 +160,7 @@ namespace Rock.Tests.UnitTests.Lava
             // Convert to a decimal here, because the DataRow Attribute does not allow a decimal parameter to be explicitly specified.
             var expectedDecimal = Convert.ToDecimal( expectedResult );
 
-            var result = _helper.GetTemplateOutput( "{{ '" + input + "' | AsDecimal }}" );
+            var result = TestHelper.GetTemplateOutput( "{{ '" + input + "' | AsDecimal }}" );
 
             Assert.That.Equal( expectedDecimal, result.AsDecimalOrNull() );
         }
@@ -171,7 +171,7 @@ namespace Rock.Tests.UnitTests.Lava
         [TestMethod]
         public void AsDecimal_NonNumericInput_ReturnsEmptyString()
         {
-            var result = _helper.GetTemplateOutput( "{{ 'xyzzy' | AsDecimal }}" );
+            var result = TestHelper.GetTemplateOutput( "{{ 'xyzzy' | AsDecimal }}" );
 
             Assert.That.Equal( string.Empty, result );
         }
@@ -187,7 +187,7 @@ namespace Rock.Tests.UnitTests.Lava
         [DataRow( "0", 0 )]
         public void AsDouble_NumericText_ReturnsNumber( string input, double expectedResult )
         {
-            var result = _helper.GetTemplateOutput( "{{ '" + input + "' | AsDouble }}" );
+            var result = TestHelper.GetTemplateOutput( "{{ '" + input + "' | AsDouble }}" );
 
             Assert.That.Equal( expectedResult, result.AsDoubleOrNull() );
         }
@@ -198,7 +198,7 @@ namespace Rock.Tests.UnitTests.Lava
         [TestMethod]
         public void AsDouble_NonNumericInput_ReturnsEmptyString()
         {
-            var result = _helper.GetTemplateOutput( "{{ 'xyzzy' | AsDouble }}" );
+            var result = TestHelper.GetTemplateOutput( "{{ 'xyzzy' | AsDouble }}" );
 
             Assert.That.Equal( string.Empty, result );
         }
@@ -215,7 +215,7 @@ namespace Rock.Tests.UnitTests.Lava
         [DataRow( "$1000", 1000 )]
         public void AsInteger_FormattedNumericInput_ReturnsNumber( string input, int expectedResult )
         {
-            _helper.AssertTemplateOutput( expectedResult.ToString(), "{{ '" + input + "' | AsInteger }}" );
+            TestHelper.AssertTemplateOutput( expectedResult.ToString(), "{{ '" + input + "' | AsInteger }}" );
         }
 
         /// <summary>
@@ -224,7 +224,7 @@ namespace Rock.Tests.UnitTests.Lava
         [TestMethod]
         public void AsInteger_NonNumericInput_ReturnsEmptyString()
         {
-            _helper.AssertTemplateOutput( string.Empty, "{{ 'xyzzy' | AsInteger }}" );
+            TestHelper.AssertTemplateOutput( string.Empty, "{{ 'xyzzy' | AsInteger }}" );
         }
 
         /// <summary>
@@ -237,7 +237,7 @@ namespace Rock.Tests.UnitTests.Lava
         [DataRow( "3", "2.1", "0.9" )]
         public void Minus_ValidNumericOperands_ReturnsNumericResult( string input1, string input2, string expectedResult )
         {
-            _helper.AssertTemplateOutput( expectedResult, "{{ " + input1 + " | Minus: " + input2 + " }}" );
+            TestHelper.AssertTemplateOutput( expectedResult, "{{ " + input1 + " | Minus: " + input2 + " }}" );
         }
 
         /// <summary>
@@ -249,7 +249,7 @@ namespace Rock.Tests.UnitTests.Lava
         public void Minus_ValidNumericStringOperands_ReturnsNumericResult( string input1, string input2, string expectedResult )
         {
             // Insert the operands as string values.
-            _helper.AssertTemplateOutput( expectedResult, "{{ '" + input1 + "' | Minus: '" + input2 + "' }}" );
+            TestHelper.AssertTemplateOutput( expectedResult, "{{ '" + input1 + "' | Minus: '" + input2 + "' }}" );
         }
 
         /// <summary>
@@ -262,7 +262,7 @@ namespace Rock.Tests.UnitTests.Lava
         [DataRow( "3", "2.1", "5.1" )]
         public void Plus_ValidNumericOperands_ReturnsNumericResult( string input1, string input2, string expectedResult )
         {
-            _helper.AssertTemplateOutput( expectedResult, "{{ " + input1 + " | Plus: " + input2 + " }}" );
+            TestHelper.AssertTemplateOutput( expectedResult, "{{ " + input1 + " | Plus: " + input2 + " }}" );
         }
 
         /// <summary>
@@ -274,7 +274,7 @@ namespace Rock.Tests.UnitTests.Lava
         public void Plus_ValidNumericStringOperands_ReturnsNumericResult( string input1, string input2, string expectedResult )
         {
             // Insert the operands as string values.
-            _helper.AssertTemplateOutput( expectedResult, "{{ '" + input1 + "' | Plus: '" + input2 + "' }}" );
+            TestHelper.AssertTemplateOutput( expectedResult, "{{ '" + input1 + "' | Plus: '" + input2 + "' }}" );
         }
 
         /// <summary>
@@ -285,7 +285,7 @@ namespace Rock.Tests.UnitTests.Lava
         [DataRow( "3.0", "2.0", "6.00" )]
         public void Times_ValidNumericOperands_ReturnsNumericResult( string input1, string input2, string expectedResult )
         {
-            _helper.AssertTemplateOutput( expectedResult, "{{ " + input1 + " | Times: " + input2 + " }}" );
+            TestHelper.AssertTemplateOutput( expectedResult, "{{ " + input1 + " | Times: " + input2 + " }}" );
         }
 
         /// <summary>
@@ -297,7 +297,7 @@ namespace Rock.Tests.UnitTests.Lava
         public void Times_ValidNumericStringOperands_ReturnsNumericResult( string input1, string input2, string expectedResult )
         {
             // Insert the operands as string values.
-            _helper.AssertTemplateOutput( expectedResult, "{{ '" + input1 + "' | Times: '" + input2 + "' }}" );
+            TestHelper.AssertTemplateOutput( expectedResult, "{{ '" + input1 + "' | Times: '" + input2 + "' }}" );
         }
 
         /// <summary>
@@ -309,7 +309,7 @@ namespace Rock.Tests.UnitTests.Lava
         public void Times_StringAndNumericOperand_ReturnsRepeatedString( string input1, string input2, string expectedResult )
         {
             // Insert the operands as string values.
-            _helper.AssertTemplateOutput( expectedResult, "{{ '" + input1 + "' | Times: " + input2 + " }}" );
+            TestHelper.AssertTemplateOutput( expectedResult, "{{ '" + input1 + "' | Times: " + input2 + " }}" );
         }
     }
 
