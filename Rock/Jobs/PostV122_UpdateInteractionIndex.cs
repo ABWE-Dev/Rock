@@ -29,7 +29,7 @@ namespace Rock.Jobs
     /// </summary>
     /// <seealso cref="Quartz.IJob" />
     [DisallowConcurrentExecution]
-    [DisplayName( "Rock Update Helper v12.N - Adds PersonalDeviceId to Interaction Index." )]
+    [DisplayName( "Rock Update Helper v12.2 - Adds PersonalDeviceId to Interaction Index." )]
     [Description( "This job will update the index. After all the operations are done, this job will delete itself." )]
 
     [IntegerField(
@@ -39,7 +39,7 @@ namespace Rock.Jobs
         IsRequired = false,
         DefaultIntegerValue = AttributeDefaultValue.CommandTimeout )]
 
-    public class PostV12N_UpdateInteractionIndex : IJob
+    public class PostV122_UpdateInteractionIndex : IJob
     {
         private static class AttributeKey
         {

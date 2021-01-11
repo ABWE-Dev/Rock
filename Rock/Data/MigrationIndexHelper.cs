@@ -56,13 +56,14 @@ namespace Rock.Data
         /// <param name="includes">The includes.</param>
         public static string GenerateCreateIndexIfNotExistsSql( string tableName, string indexName, IEnumerable<string> keys, IEnumerable<string> includes )
         {
-            return
-$@"IF NOT EXISTS( SELECT * FROM sys.indexes WHERE NAME = '{indexName}' AND object_id = OBJECT_ID( '{tableName}' ) )
-BEGIN
-    CREATE INDEX [{indexName}]
-    ON [{tableName}] ( {keys.JoinStrings( "," )} )
-    { ( includes.Any() ? $"INCLUDE ( {includes.JoinStrings( "," )} )" : "" ) };
-END";
+            return $@"
+
+            IF NOT EXISTS( SELECT * FROM sys.indexes WHERE NAME = '{indexName}' AND object_id = OBJECT_ID( '{tableName}' ) )
+            BEGIN
+                CREATE INDEX [{indexName}]
+                ON [{tableName}] ( {keys.JoinStrings( "," )} )
+                { ( includes.Any() ? $"INCLUDE ( {includes.JoinStrings( "," )} )" : "" ) };
+            END";
         }
 
         /// <summary>
@@ -72,12 +73,13 @@ END";
         /// <param name="indexName">Name of the index.</param>
         public static string GenerateDropIndexIfExistsSql( string tableName, string indexName )
         {
-            return
-$@"IF EXISTS( SELECT * FROM sys.indexes WHERE NAME = '{indexName}' AND object_id = OBJECT_ID( '{tableName}' ) )
-BEGIN
-    DROP INDEX [{indexName}]
-    ON [{tableName}];
-END";
+            return $@"
+
+            IF EXISTS( SELECT * FROM sys.indexes WHERE NAME = '{indexName}' AND object_id = OBJECT_ID( '{tableName}' ) )
+            BEGIN
+                DROP INDEX [{indexName}]
+                ON [{tableName}];
+            END";
         }
     }
 }

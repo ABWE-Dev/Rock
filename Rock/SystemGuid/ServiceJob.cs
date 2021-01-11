@@ -112,9 +112,9 @@ namespace Rock.SystemGuid
         public const string DATA_MIGRATIONS_120_ADD_COMMUNICATION_GET_QUEUED_INDEX = "BF3AADCC-B2A5-4EB9-A365-08C3F052A551";
 
         /// <summary>
-        /// The Job to run Post v12.N Data Migrations for adding PersonalDeviceId to Interaction index
+        /// The Job to run Post v12.2 Data Migrations for adding PersonalDeviceId to Interaction index
         /// </summary>
-        public const string DATA_MIGRATIONS_12N_INTERACTION_PERSONAL_DEVICE_ID = "6BEDCC6F-620B-4DE0-AE9F-F6DB0E0153E4";
+        public const string DATA_MIGRATIONS_122_INTERACTION_PERSONAL_DEVICE_ID = "6BEDCC6F-620B-4DE0-AE9F-F6DB0E0153E4";
 
         /// <summary>
         /// The Job to Migrate pre-v8.0 History Summary Data
