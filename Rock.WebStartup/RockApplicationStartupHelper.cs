@@ -604,7 +604,14 @@ namespace Rock.WebStartup
                 throw new RockStartupException( string.Format( "Invalid Lava Engine Type. The LavaEngineType configuration parameter \"{0}\" is not valid.", liquidEngineTypeValue ) );
             }
 
-            LavaEngine.Initialize( engineType, new WebsiteLavaFileSystem(), new List<Type> { typeof( Rock.Lava.RockFilters ) } );
+            var engineOptions = new LavaEngineConfigurationOptions
+            {
+                FileSystem = new WebsiteLavaFileSystem(),
+                FilterImplementationTypes = new List<Type> { typeof( Rock.Lava.RockFilters ) },
+                CacheService = new WebsiteLavaTemplateCacheService()
+            };
+
+            LavaEngine.Initialize( engineType, engineOptions );
 
             var engine = LavaEngine.Instance;
 

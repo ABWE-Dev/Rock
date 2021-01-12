@@ -21,8 +21,7 @@ using Rock.Lava;
 namespace Rock.Web.Cache
 {
     /// <summary>
-    /// Information about a definedValue that is required by the rendering engine.
-    /// This information will be cached by the engine
+    /// An implementation of a provider for Lava Template objects that supports caching in a web environnment.
     /// </summary>
     public class LavaTemplateCache : ItemCache<LavaTemplateCache>
     {
@@ -41,11 +40,8 @@ namespace Rock.Web.Cache
         #region Properties
 
         /// <summary>
-        /// Gets or sets the defined type id.
+        /// Gets or sets the Template object.
         /// </summary>
-        /// <value>
-        /// The defined type id.
-        /// </value>
         public ILavaTemplate Template { get; set; }
 
         #endregion
@@ -97,13 +93,44 @@ namespace Rock.Web.Cache
         /// <returns></returns>
         public static LavaTemplateCache Get( string key, string content )
         {
-            // If cache items need to be serialized, do not cache the template (it's not serializable)
+            LavaTemplateCache template;
+            bool fromCache;
+
+            Get( key, content, out template, out fromCache );
+
+            return template;
+        }
+
+        /// <summary>
+        /// Returns a LavaTemplate object from the template cache.
+        /// If the template does not already exist, it will be created and added to the cache.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <param name="content">The content.</param>
+        /// <param name="template"></param>
+        /// <param name="retrievedFromCache"></param>
+        /// <returns></returns>
+        public static void Get( string key, string content, out LavaTemplateCache template, out bool retrievedFromCache )
+        {
+            // If cache items need to be serialized, do not cache the template because it isn't serializable.
             if ( RockCache.IsCacheSerialized )
             {
-                return Load( content );
+                template = Load( content );
+                retrievedFromCache = false;
+                return;
             }
 
-            return ItemCache<LavaTemplateCache>.GetOrAddExisting( key, () => Load( content ) );
+            var fromCache = false;
+
+            template = ItemCache<LavaTemplateCache>.GetOrAddExisting( key, () =>
+            {
+                fromCache = true;
+                return Load( content );
+            } );
+
+            retrievedFromCache = fromCache;
+
+            return;
         }
 
         private static LavaTemplateCache Load( string content )
@@ -111,9 +138,12 @@ namespace Rock.Web.Cache
             // Strip out Lava comments before parsing the template because they are not recognized by standard Liquid syntax.
             content = LavaHelper.RemoveLavaComments( content );
 
-            var template = LavaEngine.Instance.ParseTemplate( content );
+            ILavaTemplate template;
+
+            LavaEngine.Instance.TryParseTemplate( content, out template );
 
             var lavaTemplate = new LavaTemplateCache { Template = template };
+
             return lavaTemplate;
         }
 

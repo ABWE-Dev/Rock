@@ -85,6 +85,7 @@
     <Compile Include="Core\DynamicShortcodeDefinition.cs" />
     <Compile Include="Core\ILavaDataObject.cs" />
     <Compile Include="Core\ILavaDataObjectSource.cs" />
+    <Compile Include="Core\ILavaTemplateCacheService.cs" />
     <Compile Include="Core\IRockLavaElement.cs" />
     <Compile Include="Core\IRockLavaTag.cs" />
     <Compile Include="Core\IRockLavaBlock.cs" />
