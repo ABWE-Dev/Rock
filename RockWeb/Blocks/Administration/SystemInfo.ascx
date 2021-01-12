@@ -96,6 +96,10 @@
             <strong>Last Migration(s):</strong><br />
              <asp:Literal ID="lLastMigrations" runat="server"></asp:Literal>
         </p>
+        <p>
+            <strong>Lava Engine:</strong><br />
+             <asp:Literal ID="lLavaEngine" runat="server"></asp:Literal>
+        </p>
 
         <div>
             <h4>Transaction Queue</h4>
