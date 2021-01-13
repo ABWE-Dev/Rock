@@ -369,14 +369,19 @@ namespace Rock.Lava.Fluid
         /// Gets a named value that is for internal use only. Internal values are not available to be resolved in the Lava Template.
         /// </summary>
         /// <param name="key"></param>
-        public override object GetInternalFieldValue( string key )
+        public override object GetInternalFieldValue( string key, object defaultValue = null )
         {
             // In the Fluid framework, internal values are stored in the AmbientValues collection.
             object value;
 
-            _context.AmbientValues.TryGetValue( key, out value );
+            var exists = _context.AmbientValues.TryGetValue( key, out value );
 
-            return value;
+            if ( exists )
+            {
+                return value;
+            }
+
+            return defaultValue;
         }
         public override LavaDictionary GetInternalFields()
         {

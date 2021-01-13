@@ -29,7 +29,7 @@ namespace Rock.Lava
         /// Gets a named value that is for internal use only. Internal values are not available to be resolved in the Lava Template.
         /// </summary>
         /// <param name="key"></param>
-        object GetInternalFieldValue( string key );
+        object GetInternalFieldValue( string key, object defaultValue = null );
 
         /// <summary>
         /// Gets the collection of variables defined for internal use only.  Internal values are not available to be resolved in the Lava Template.
@@ -79,7 +79,7 @@ namespace Rock.Lava
         /// <param name="key"></param>
         /// <param name="defaultValue"></param>
         /// <returns></returns>
-        object GetMergeFieldValue( string key, object defaultValue );
+        object GetMergeFieldValue( string key, object defaultValue = null );
 
         /// <summary>
         /// Gets the collection of user-defined variables in the current context that are accessible in a template.

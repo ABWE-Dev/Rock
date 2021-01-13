@@ -41,7 +41,8 @@ namespace Rock.Lava
         //public abstract IDictionary<string, object> GetMergeFieldsInContainerScope();
         //public abstract IDictionary<string, object> GetMergeFieldsInScope();
 
-        public abstract object GetMergeFieldValue( string key, object defaultValue );
+        public abstract object GetMergeFieldValue( string key, object defaultValue = null );
+
         public abstract LavaDictionary GetMergeFields();
         //public abstract IList<LavaDictionary> GetScopes();
 
@@ -88,7 +89,7 @@ namespace Rock.Lava
         /// Gets a named value that is for internal use only. Internal values are not available to be resolved in the Lava Template.
         /// </summary>
         /// <param name="key"></param>
-        public abstract object GetInternalFieldValue( string key );
+        public abstract object GetInternalFieldValue( string key, object defaultValue = null );
 
         /// <summary>
         /// Gets the collection of variables defined for internal use only.  Internal values are not available to be resolved in the Lava Template.

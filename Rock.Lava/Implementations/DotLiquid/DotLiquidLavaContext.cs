@@ -130,7 +130,7 @@ namespace Rock.Lava.DotLiquid
         /// <param name="key"></param>
         /// <param name="defaultValue"></param>
         /// <returns></returns>
-        public override object GetMergeFieldValue( string key, object defaultValue )
+        public override object GetMergeFieldValue( string key, object defaultValue = null )
         {
             if ( !_context.HasKey(key) )
             {
@@ -493,9 +493,14 @@ namespace Rock.Lava.DotLiquid
         //    return fields;
         //}
 
-        public override object GetInternalFieldValue( string key )
+        public override object GetInternalFieldValue( string key, object defaultValue = null )
         {
-            return _context.Registers[key];
+            if ( _context.Registers.ContainsKey( key ) )
+            {
+                return _context.Registers[key];
+            }
+
+            return defaultValue;
         }
 
         public override LavaDictionary GetInternalFields()
