@@ -60,19 +60,20 @@ namespace Rock.Lava.Fluid
 
         #endregion
 
-        //public Guid Id = Guid.NewGuid();
-        //public FluidBlockProxy()
-        //{
-        //    System.Diagnostics.Debug.Print(Id.ToString());
-        //}
+        #region Debug Code
+
+        public Guid Id = Guid.NewGuid();
+
+        #endregion
 
         //private IRockLavaBlock _lavaBlock = null;
+        private string _sourceElementName;
 
         public string SourceElementName
         {
             get
             {
-                return _lavaBlock.SourceElementName;
+                return _sourceElementName; // _lavaBlock.SourceElementName;
             }
         }
 
@@ -125,7 +126,13 @@ namespace Rock.Lava.Fluid
             
             var factoryMethod = _factoryMethods[blockName];
 
-            _lavaBlock = factoryMethod( blockName );
+            System.Diagnostics.Debug.Print( $"Parsing FluidBlockProxy. [Id={Id.ToString()}, BlockName={blockName}, ThreadId={System.Threading.Thread.CurrentThread.ManagedThreadId}]" );
+
+            var lavaBlock = factoryMethod( blockName );
+
+            _sourceElementName = lavaBlock.SourceElementName;
+
+
 
             // Get the markup for the block attributes.
             var argsNode = context.CurrentBlock.Tag.ChildNodes[0].ChildNodes[0];
@@ -139,14 +146,16 @@ namespace Rock.Lava.Fluid
             
             tokens.Add( context.CurrentBlock.AdditionalData.InnerText );
             tokens.Add( context.CurrentBlock.AdditionalData.CloseTag );
-
-            var renderBlockDelegate = new DelegateStatement( ( writer, encoder, ctx ) => WriteToAsync( writer, encoder, ctx, _lavaBlock, blockName, blockAttributesMarkup, tokens, statements ) );
+            
+            var renderBlockDelegate = new DelegateStatement( ( writer, encoder, ctx ) => WriteToAsync( writer, encoder, ctx, lavaBlock, blockName, blockAttributesMarkup, tokens, statements ) );
 
             return renderBlockDelegate; 
         }
 
         private ValueTask<Completion> WriteToAsync( TextWriter writer, TextEncoder encoder, TemplateContext context, IRockLavaBlock lavaBlock, string blockName, string blockAttributesMarkup, List<string> tokens, List<Statement> statements )
         {
+            System.Diagnostics.Debug.Print( $"WriteToAsync FluidBlockProxy. [Id={Id}, BlockName={blockName}, Attributes={blockAttributesMarkup}, Tokens={tokens.Count}, ThreadId={System.Threading.Thread.CurrentThread.ManagedThreadId}]" );
+
             var lavaContext = new FluidLavaContext( context );
 
             var elementRenderer = lavaBlock as ILiquidFrameworkElementRenderer;
@@ -159,7 +168,14 @@ namespace Rock.Lava.Fluid
             // Initialize the block, then allow it to post-process the tokens parsed from the source template.
             lavaBlock.OnInitialize( blockName, blockAttributesMarkup, tokens );
 
-            lavaBlock.OnParsed( tokens );
+            // Earlier implementations of Lava required that the document tokens passed to the block be consumed as they are processed.
+            // This function is called each time the block is rendered, so we pass a copy of the token list to preserve compatibility
+            // with custom blocks that implement this behavior.
+            // TODO: Why? Is this actually the same behavior as the DotLiquid library?
+
+            var parseTokens = tokens.ToList();
+
+            lavaBlock.OnParsed( parseTokens );
 
             // Store the Fluid Statements required to render the block in the template context.
             lavaContext.SetInternalFieldValue( Constants.ContextKeys.SourceTemplateStatements, statements );
