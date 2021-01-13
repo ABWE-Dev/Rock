@@ -25,9 +25,8 @@ using Rock.Lava.Shortcodes;
 
 namespace Rock.Lava.Fluid
 {
-
     /// <summary>
-    /// An implementation of a LavaTemplate using the Fluid Framework.
+    /// A wrapper for a Fluid Template for use with the Rock Lava library.
     /// </summary>
     /// <remarks>
     /// This class should exist in the Rock.Lava.Fluid library.
@@ -47,6 +46,14 @@ namespace Rock.Lava.Fluid
 
         #endregion
 
+        public LavaFluidTemplate FluidTemplate
+        {
+            get
+            {
+                return _template;
+            }
+        }
+
         //public void Dispose()
         //{
         //    //
@@ -62,6 +69,44 @@ namespace Rock.Lava.Fluid
         //{
         //    throw new NotImplementedException();
         //}
+
+        protected override bool OnTryRender( ILavaContext context, out string output, out IList<Exception> errors )
+        {
+            output = null;
+            errors = new List<Exception>();
+
+            var proxyContext = context as FluidLavaContext;
+
+            var fluidTemplateContext = proxyContext?.FluidContext;
+
+            // Copy the local variables into the Fluid Template context.
+            // TODO: What about InstanceAssigns and Registers?
+            //if ( parameters.LocalVariables != null )
+            //{
+            //    foreach ( var p in parameters.LocalVariables )
+            //    {
+            //        templateContext.SetValue( p.Key, p.Value );
+            //    }
+            //}
+
+            try
+            {
+                if ( context != null && fluidTemplateContext == null )
+                {
+                    throw new LavaException( "Invalid context type." );
+                }
+
+                output = _template.Render( fluidTemplateContext );
+            }
+            catch ( Exception ex )
+            {
+                errors.Add( ex );
+
+                return false;
+            }
+
+            return true;
+        }
 
         protected override bool OnTryRender( LavaRenderParameters parameters, out string output, out IList<Exception> errors )
         {

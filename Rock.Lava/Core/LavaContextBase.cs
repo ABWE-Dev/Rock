@@ -66,7 +66,12 @@ namespace Rock.Lava
 
         public abstract void SetMergeFieldValue( string key, object value, string scopeSelector );
 
-        public virtual void SetMergeFieldValues( LavaDictionary values )
+        public void SetMergeFieldValues( LavaDictionary values )
+        {
+            SetMergeFieldValues( values as IDictionary<string, object> );
+        }
+
+        public virtual void SetMergeFieldValues( IDictionary<string, object> values )
         {
             if ( values == null )
             {
@@ -97,7 +102,23 @@ namespace Rock.Lava
         /// <param name="value"></param>
         public abstract void SetInternalFieldValue( string key, object value );
 
-        public abstract void SetInternalFieldValues( LavaDictionary values );
+        public void SetInternalFieldValues( LavaDictionary values )
+        {
+            SetInternalFieldValues( values as IDictionary<string, object> );
+        }
+
+        public virtual void SetInternalFieldValues( IDictionary<string, object> values )
+        {
+            if ( values == null )
+            {
+                return;
+            }
+
+            foreach ( var kvp in values )
+            {
+                SetInternalFieldValue( kvp.Key, kvp.Value );
+            }
+        }
 
         public void ExecuteInChildScope( Action<ILavaContext> callback )
         {

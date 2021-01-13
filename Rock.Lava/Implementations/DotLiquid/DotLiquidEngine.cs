@@ -61,7 +61,7 @@ namespace Rock.Lava.DotLiquid
         /// so that the standard filters are loaded prior to the custom RockFilter.
         /// This is to allow the custom 'Date' filter to replace the standard Date filter.
         /// </summary>
-        public override void Initialize( ILavaFileSystem fileSystem, IList<Type> filterImplementationTypes = null )
+        public override void OnSetConfiguration( LavaEngineConfigurationOptions options )
         {
             // DotLiquid uses a RubyDateFormat by default,
             // but since we aren't using Ruby, we want to disable that
@@ -80,12 +80,12 @@ namespace Rock.Lava.DotLiquid
 
             Template.NamingConvention = new global::DotLiquid.NamingConventions.CSharpNamingConvention();
 
-            if ( fileSystem == null )
+            if ( options.FileSystem == null )
             {
-                fileSystem = new DotLiquidFileSystem( new LavaNullFileSystem() );
+                options.FileSystem = new DotLiquidFileSystem( new LavaNullFileSystem() );
             }
 
-            Template.FileSystem = new DotLiquidFileSystem( fileSystem );
+            Template.FileSystem = new DotLiquidFileSystem( options.FileSystem );
 
             Template.RegisterSafeType( typeof( Enum ), o => o.ToString() );
             Template.RegisterSafeType( typeof( DBNull ), o => null );
@@ -101,9 +101,9 @@ namespace Rock.Lava.DotLiquid
             };
 
             // Register custom filters last, so they can override built-in filters of the same name.
-            if ( filterImplementationTypes != null )
+            if ( options.FilterImplementationTypes != null )
             {
-                foreach ( var filterImplementationType in filterImplementationTypes )
+                foreach ( var filterImplementationType in options.FilterImplementationTypes )
                 {
                     Template.RegisterFilter( filterImplementationType );
                 }
@@ -130,10 +130,10 @@ namespace Rock.Lava.DotLiquid
             }
         }
 
-        public override Type GetShortcodeType( string name )
-        {
-            throw new NotImplementedException();
-        }
+        //public override Type GetShortcodeType( string name )
+        //{
+        //    throw new NotImplementedException();
+        //}
 
         public override void RegisterSafeType( Type type, string[] allowedMembers = null )
         {
@@ -237,7 +237,36 @@ namespace Rock.Lava.DotLiquid
             return renderSettings;
         }
 
-        public override bool TryRender( string inputTemplate, out string output, ILavaContext context )
+        protected override bool OnTryRender( ILavaTemplate template, out string output, ILavaContext context )
+        {
+            try
+            {
+                //var template = CreateNewDotLiquidTemplate( inputTemplate );
+                var liquidTemplate = template as DotLiquidTemplateProxy;
+
+                //liquidTemplate.
+                //var renderSettings = GetDotLiquidRenderParametersFromLavaContext( context );
+                IList<Exception> errors;
+
+                var success = template.TryRender( context, out output, out errors ); // renderSettings );
+
+                if ( !success )
+                {
+                    // Process the first error.
+                    ProcessException( new LavaException("Rendering error", errors[0] ) );
+                }
+
+                return success;
+            }
+            catch ( Exception ex )
+            {
+                ProcessException( ex, out output );
+
+                return false;
+            }
+        }
+
+        protected override bool OnTryRender( string inputTemplate, out string output, ILavaContext context )
         {
             try
             {
@@ -257,12 +286,7 @@ namespace Rock.Lava.DotLiquid
             }
         }
 
-        public override void UnregisterShortcode( string name )
-        {
-            throw new NotImplementedException();
-        }
-
-        public override ILavaTemplate ParseTemplate( string inputTemplate )
+        protected override ILavaTemplate OnParseTemplate( string inputTemplate )
         {
             // Create a new DotLiquid template and wrap it in a proxy for use with the Lava engine.
             var dotLiquidTemplate = CreateNewDotLiquidTemplate( inputTemplate );

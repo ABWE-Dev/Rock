@@ -34,7 +34,7 @@ namespace Rock.Lava.DotLiquid
         // A parsed DotLiquid template.
         private Template _dotLiquidTemplate;
 
-        private Hash _Context = new Hash();
+        //private Hash _Context = new Hash();
 
         public DotLiquidTemplateProxy( Template template )
         {
@@ -59,6 +59,56 @@ namespace Rock.Lava.DotLiquid
         //    _Context.AddOrReplace( key, newValue );
         //}
 
+        protected override bool OnTryRender( ILavaContext context, out string output, out IList<Exception> errors )
+        {
+            // Store the EnabledCommands setting for the context and the template in the DotLiquid Registers collection.
+            // Registers are internal variables that are not exposed in the template during the rendering process.
+            
+            //new List<string>();
+
+            //// Add the enabled commands for this template to those that are allowed in the current context.
+            //if ( this.EnabledCommands != null )
+            //{
+            //    var enabledCommands = context.GetEnabledCommands();
+
+            //    enabledCommands.AddRange( this.EnabledCommands );
+
+            //    context.SetEnabledCommands( enabledCommands );
+            //}
+
+            //if ( parameters.EnabledCommands != null )
+            //{
+            //    enabledCommands.AddRange( parameters.EnabledCommands );
+            //}
+
+            //dotLiquidRenderParameters.Registers = new Hash();
+
+            // The DotLiquid rendering engine ignores the LocalVariables and Registers parameters when using thread-safe Templates.
+            // Rock requires all templates to be thread-safe, so we need to supply a DotLiquid context here,
+            // rather than using the LocalVariables and Registers settings of the RenderParameters object.
+            var dotLiquidRenderParameters = new RenderParameters();
+
+            var dotliquidContext = context as DotLiquidLavaContext;
+
+            dotLiquidRenderParameters.Context = dotliquidContext.DotLiquidContext;
+
+            //dotLiquidRenderParameters.Context.Registers["EnabledCommands"] = enabledCommands.Distinct().JoinStrings( "," );
+
+            return TryRenderInternal( dotLiquidRenderParameters, out output, out errors );
+
+/*
+            //dotLiquidRenderParameters.LocalVariables = Hash.FromDictionary( parameters.LocalVariables );
+            //dotLiquidRenderParameters.Registers = Hash.FromDictionary( parameters.Registers );
+
+
+            output = _dotLiquidTemplate.Render( dotLiquidRenderParameters );
+
+            errors = _dotLiquidTemplate.Errors;
+
+            return !errors.Any();
+*/
+        }
+
         /// <summary>
         /// Try to render the template using the supplied context variables.
         /// </summary>
@@ -82,34 +132,34 @@ namespace Rock.Lava.DotLiquid
                 values.AddOrReplace( parameters.InstanceAssigns );
             }
 
+            var context = new Context();
+
+            context.Merge( Hash.FromDictionary( values ) );
+
             // The DotLiquid rendering engine ignores the LocalVariables and Registers parameters when using thread-safe Templates.
-            // Rock requires all templates to be thread-safe, so we need to supply a Liquid context here rather than using the LocalVariables and Registers parameters.
+            // Rock requires all templates to be thread-safe, so we need to supply a DotLiquid context here rather than using the LocalVariables and Registers parameters.
             var dotLiquidRenderParameters = new RenderParameters();
 
-            dotLiquidRenderParameters.Context = new Context();
+            //var dotliquidContext = context as DotLiquidLavaContext;
 
-            dotLiquidRenderParameters.Context.Merge( Hash.FromDictionary( values ) );
+            dotLiquidRenderParameters.Context = context;
 
-            //dotLiquidRenderParameters.LocalVariables = Hash.FromDictionary( parameters.LocalVariables );
-            //dotLiquidRenderParameters.Registers = Hash.FromDictionary( parameters.Registers );
+            return TryRenderInternal( dotLiquidRenderParameters, out output, out errors );
+        }
 
-            // Store the EnabledCommands setting for the context and the template in the DotLiquid Registers collection.
-            // Registers are internal variables that are not exposed in the template during the rendering process.
-            var enabledCommands = new List<string>();
-
+        private bool TryRenderInternal( RenderParameters dotLiquidRenderParameters, out string output, out IList<Exception> errors )
+        {
+            // Add the enabled commands for this template to those that are allowed in the current context.
             if ( this.EnabledCommands != null )
             {
-                enabledCommands.AddRange( this.EnabledCommands );
+                var enabledCommands = dotLiquidRenderParameters.Context.Registers["EnabledCommands"].ToStringSafe().SplitDelimitedValues( "," );
+
+                enabledCommands.Concat( this.EnabledCommands );
+
+                dotLiquidRenderParameters.Context.Registers["EnabledCommands"] = enabledCommands.Distinct().JoinStrings( "," );
             }
 
-            if ( parameters.EnabledCommands != null )
-            {
-                enabledCommands.AddRange( parameters.EnabledCommands );
-            }
-
-            dotLiquidRenderParameters.Registers = new Hash();
-
-            dotLiquidRenderParameters.Context.Registers["EnabledCommands"] = enabledCommands.Distinct().JoinStrings( "," );
+            //dotLiquidRenderParameters.Registers = new Hash();
 
             output = _dotLiquidTemplate.Render( dotLiquidRenderParameters );
 
@@ -132,7 +182,7 @@ namespace Rock.Lava.DotLiquid
         //    {
         //        // Replace with a list of Dictionary<string, object>
         //        var newList = new List<Dictionary<string, object>>();
-                
+
         //        foreach (var expandoElement in expandoCollection)
         //        {
         //            var newDictionary = ConvertExpandoObjectsToDictionaries( expandoElement ) as Dictionary<string, object>;
@@ -153,7 +203,7 @@ namespace Rock.Lava.DotLiquid
 
         //        return ConvertExpandoObjectsToDictionaries( newValue );
         //    }
-            
+
         //    var dictionary = input as IDictionary<string, object>;
 
         //    if ( dictionary != null )

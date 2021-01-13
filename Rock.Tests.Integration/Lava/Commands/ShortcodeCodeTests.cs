@@ -15,6 +15,7 @@
 // </copyright>
 //
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Rock.Lava;
 
 namespace Rock.Tests.Integration.Lava
 {
@@ -24,6 +25,42 @@ namespace Rock.Tests.Integration.Lava
     [TestClass]
     public class ShortcodeCodeTests : LavaIntegrationTestBase
     {
+        [TestMethod]
+        public void Shortcode_WithMergeFieldAsParameter_CorrectlyResolvesParameters()
+        {
+            var shortcodeTemplate = @"
+Font Name: {{ fontname }}
+Font Size: {{ fontsize }}
+Font Bold: {{ fontbold }}
+";
+
+            // Create a new test shortcode.
+            var shortcodeDefinition = new DynamicShortcodeDefinition();
+
+            shortcodeDefinition.ElementType = LavaShortcodeTypeSpecifier.Block;
+            shortcodeDefinition.TemplateMarkup = shortcodeTemplate;
+            shortcodeDefinition.Name = "shortcodetest";
+
+            TestHelper.LavaEngine.RegisterDynamicShortcode( shortcodeDefinition.Name, ( shortcodeName ) => { return shortcodeDefinition; } );
+
+            var input = @"
+{[ shortcodetest fontname:'Arial' fontsize:'{{ fontsize }}' fontbold:'true' ]}
+{[ endshortcodetest ]}
+";
+
+            var expectedOutput = @"
+Font Name: Arial
+Font Size: 99
+Font Bold: true
+";
+
+            expectedOutput = expectedOutput.Replace( "``", @"""" );
+
+             var context = new LavaDictionary() { { "fontsize", 99 }  };
+
+            TestHelper.AssertTemplateOutputWithWildcard( expectedOutput, input, context, ignoreWhiteSpace: true, wildCard: "<?>" );
+        }
+
         #region Bootstrap Alert
 
         /// <summary>

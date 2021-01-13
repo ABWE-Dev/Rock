@@ -35,7 +35,7 @@ namespace Rock.Lava.Fluid
     /// The FluidTagProxy wraps a LavaTag that is executed internally to render the element content.
     /// This approach allows the LavaTag to be more easily adapted for use with alternative Liquid templating engines.
     /// </remarks>
-    internal class FluidTagProxy : global::Fluid.Tags.ITagEx, ILiquidFrameworkElementRenderer
+    internal class FluidTagProxy : ITagEx, ILiquidFrameworkElementRenderer
     {
         #region Static factory methods
 

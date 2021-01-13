@@ -31,7 +31,55 @@ namespace Rock.Tests.Integration.Lava
     public class ParallelExecutionTests : LavaIntegrationTestBase
     {
         [TestMethod]
-        public void ParallelExecution_TemplateWithShortcodes_EmitsCorrectHtml()
+        public void ParallelExecution_ShortcodeWithParameters_ResolvesParameterCorrectly()
+        {
+            var shortcodeTemplate = @"
+Font Name: {{ fontname }}
+Font Size: {{ fontsize }}
+Font Bold: {{ fontbold }}
+";
+
+            // Create a new test shortcode.
+            var shortcodeDefinition = new DynamicShortcodeDefinition();
+
+            shortcodeDefinition.ElementType = LavaShortcodeTypeSpecifier.Block;
+            shortcodeDefinition.TemplateMarkup = shortcodeTemplate;
+            shortcodeDefinition.Name = "shortcodetest";
+            shortcodeDefinition.Parameters = new Dictionary<string, string> { { "fontname", "Arial" }, { "fontsize", "0" }, { "fontbold", "true" } };
+
+            TestHelper.LavaEngine.RegisterDynamicShortcode( shortcodeDefinition.Name, ( shortcodeName ) => { return shortcodeDefinition; } );
+
+            var input = @"
+{[ shortcodetest fontname:'Arial' fontsize:'{{ fontsize }}' fontbold:'true' ]}
+{[ endshortcodetest ]}
+";
+
+            var expectedOutput = @"
+Font Name: Arial
+Font Size: <?>
+Font Bold: true
+";
+
+            expectedOutput = expectedOutput.Replace( "``", @"""" );
+
+            //TestHelper.AssertTemplateOutput( expectedOutput, input, null, ignoreWhiteSpace: true );
+
+            var parallelOptions = new ParallelOptions { MaxDegreeOfParallelism = 100 };
+
+            Parallel.For( 1, 100000, parallelOptions, ( x ) =>
+            {
+                var context = new LavaDictionary()
+                {
+                    { "fontsize", x },
+                };
+                context["fontsize"] = x;
+                TestHelper.AssertTemplateOutputWithWildcard( expectedOutput, input, context, ignoreWhiteSpace: true, wildCard: "<?>" );
+            } );
+
+        }
+
+        [TestMethod]
+        public void ParallelExecution_ShortcodeWithChildItems_EmitsCorrectHtml()
         {
             var shortcodeTemplate = @"
 Parameter 1: {{ parameter1 }}
@@ -98,49 +146,5 @@ Panel 3 - Panel 3 content.
 
         }
 
-        [TestMethod]
-        public void ParallelExecution_TemplateWithParameters_CanResolveParameters()
-        {
-            var shortcodeTemplate = @"
-Font Name: {{ fontname }}
-Font Size: {{ fontsize }}
-Font Bold: {{ fontbold }}
-";
-
-            // Create a new test shortcode.
-            var shortcodeDefinition = new DynamicShortcodeDefinition();
-
-            shortcodeDefinition.ElementType = LavaShortcodeTypeSpecifier.Block;
-            shortcodeDefinition.TemplateMarkup = shortcodeTemplate;
-            shortcodeDefinition.Name = "shortcodetest";
-            //shortcodeDefinition.Parameters = new Dictionary<string, string> { { "speed", "10" } };
-
-            TestHelper.LavaEngine.RegisterDynamicShortcode( shortcodeDefinition.Name, ( shortcodeName ) => { return shortcodeDefinition; } );
-
-            var input = @"
-{[ shortcodetest fontname:'Arial' fontsize:'{{ fontsize }}' fontbold:'true' ]}
-{[ endshortcodetest ]}
-";
-
-            var expectedOutput = @"
-Font Name: Arial
-Font Size: <?>
-Font Bold: true
-";
-
-            expectedOutput = expectedOutput.Replace( "``", @"""" );
-
-            TestHelper.AssertTemplateOutput( expectedOutput, input, null, ignoreWhiteSpace: true );
-
-            var parallelOptions = new ParallelOptions { MaxDegreeOfParallelism = 100 };
-
-            Parallel.For( 0, 100000, parallelOptions, ( x ) =>
-            {
-                var context = new LavaDictionary();
-                context["fontsize"] = x;
-                TestHelper.AssertTemplateOutputWithWildcard( expectedOutput, input, context, ignoreWhiteSpace: true, wildCard: "<?>" );
-            } );
-
-        }
     }
 }

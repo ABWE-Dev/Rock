@@ -21,7 +21,6 @@ using System.IO;
 
 namespace Rock.Lava
 {
-
     public enum LavaEngineTypeSpecifier
     {
         // DotLiquid is an open-source implementation of the Liquid templating language. [https://github.com/dotliquid/dotliquid]
@@ -35,7 +34,17 @@ namespace Rock.Lava
     /// </summary>
     public interface ILavaEngine
     {
-        void Initialize( ILavaFileSystem fileSystem, IList<Type> filterImplementationTypes = null );
+        /// <summary>
+        /// Gets or sets a flag to determine if compiled Lava templates can be cached and reused.
+        /// </summary>
+        bool TemplateCachingIsEnabled { get; set; }
+
+        /// <summary>
+        /// Set configuration options for the Lava engine.
+        /// </summary>
+        /// <param name="options"></param>
+        void Initialize( LavaEngineConfigurationOptions options = null );
+        //void Initialize( ILavaFileSystem fileSystem, IList<Type> filterImplementationTypes = null );
 
         /// <summary>
         /// The descriptive name of the templating framework on which Lava is currently operating.
@@ -73,9 +82,9 @@ namespace Rock.Lava
 
         Dictionary<string, ILavaElementInfo> GetRegisteredElements();
 
-        void UnregisterShortcode( string name );
+        //void UnregisterShortcode( string name );
 
-        Type GetShortcodeType( string name );
+        //Type GetShortcodeType( string name );
 
         /// <summary>
         /// Try to render the provided template
@@ -98,8 +107,14 @@ namespace Rock.Lava
 
         bool TryParseTemplate( string inputTemplate, out ILavaTemplate template );
 
-        ILavaTemplate ParseTemplate( string inputTemplate );
+        //ILavaTemplate ParseTemplate( string inputTemplate );
 
+        /// <summary>
+        /// Compare two objects for equivalence according to the applicable Lava equality rules for the input object types.
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns>True if the two objects are considered equal.</returns>
         bool AreEqualValue( object left, object right );
 
         /// <summary>

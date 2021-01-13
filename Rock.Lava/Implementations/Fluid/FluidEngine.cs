@@ -60,7 +60,7 @@ namespace Rock.Lava.Fluid
         /// so that the standard filters are loaded prior to the custom RockFilter.
         /// This is to allow the custom 'Date' filter to replace the standard Date filter.
         /// </summary>
-        public override void Initialize( ILavaFileSystem fileSystem, IList<Type> filterImplementationTypes = null )
+        public override void OnSetConfiguration( LavaEngineConfigurationOptions options )
         {
             // Re-register the basic Liquid filters implemented by Fluid using CamelCase rather than the default snakecase.
             HideSnakeCaseFilters();
@@ -71,9 +71,9 @@ namespace Rock.Lava.Fluid
             TemplateContext.GlobalMemberAccessStrategy = new LavaObjectMemberAccessStrategy();
 
             // Register custom filters last, so they can override built-in filters of the same name.
-            if ( filterImplementationTypes != null )
+            if ( options.FilterImplementationTypes != null )
             {
-                foreach ( var filterImplementationType in filterImplementationTypes )
+                foreach ( var filterImplementationType in options.FilterImplementationTypes )
                 {
                     RegisterLavaFiltersFromImplementingType( filterImplementationType );
                 }
@@ -83,14 +83,15 @@ namespace Rock.Lava.Fluid
             RegisterSafeType( typeof( Rock.Lava.ILavaDataObject ) );
 
             // Set the file provider to resolve included file references.
-            if ( fileSystem == null )
+            if ( options.FileSystem == null )
             {
-                fileSystem = new LavaNullFileSystem();
+                options.FileSystem = new LavaNullFileSystem();
             }
 
-            TemplateContext.GlobalFileProvider = new FluidFileSystem( fileSystem );
+            TemplateContext.GlobalFileProvider = new FluidFileSystem( options.FileSystem );
 
         }
+
         /// <summary>
         /// This method hides the snake-case filters that are registered
         /// by default. Rock uses CamelCase filter names and to ensure that
@@ -428,51 +429,99 @@ namespace Rock.Lava.Fluid
             }
         }
 
-        public override bool TryRender( string inputTemplate, out string output, ILavaContext context )
+        protected override bool OnTryRender( ILavaTemplate inputTemplate, out string output, ILavaContext context )
         {
+            var templateProxy = inputTemplate as FluidTemplateProxy;
+
+            var fluidTemplate = templateProxy?.FluidTemplate;
+
+            return TryRenderInternal( fluidTemplate, out output, context );
+        }
+
+        private bool TryRenderInternal( LavaFluidTemplate template, out string output, ILavaContext context )
+        {
+
+            var templateContext = context as FluidLavaContext;
+
+            if ( templateContext == null )
+            {
+                throw new LavaException( "Invalid LavaContext parameter. This context type is not compatible with the Fluid templating engine." );
+            }
+
+            /* The Fluid framework parses the input template into a set of executable statements that can be rendered.
+             * To remain independent of a specific framework, custom Lava tags and blocks parse the original source template text to extract
+             * the information necessary to render their output. For this reason, we need to store the source in the context so that it can be passed
+             * to the Lava custom components when they are rendered.
+             */
+            templateContext.SetInternalFieldValue( Constants.ContextKeys.SourceTemplateElements, template.Elements );
+
+            templateContext.FluidContext.ParserFactory = _parserFactory;
             try
             {
-                string liquidTemplate;
 
-                var template = CreateNewFluidTemplate( inputTemplate, out liquidTemplate );
-
-                if ( context == null )
-                {
-                    context = NewContext();
-                }
-
-                var templateContext = context as FluidLavaContext;
-
-                if ( templateContext == null )
-                {
-                    throw new LavaException( "Invalid LavaContext parameter. This context type is not compatible with the Fluid templating engine." );
-                }
-
-                /* The Fluid framework parses the input template into a set of executable statements that can be rendered.
-                 * To remain independent of a specific framework, custom Lava tags and blocks parse the original source template text to extract
-                 * the information necessary to render their output. For this reason, we need to store the source in the context so that it can be passed
-                 * to the Lava custom components when they are rendered.
-                 */
-                templateContext.SetInternalFieldValue( Constants.ContextKeys.SourceTemplateElements, template.Elements );
-
-                templateContext.FluidContext.ParserFactory = _parserFactory;
-                
                 output = template.Render( templateContext.FluidContext );
-                
-                return true;
-            }
-            catch ( Exception ex )
+
+            return true;
+        }
+            catch (Exception ex )
             {
                 ProcessException( ex, out output );
 
                 return false;
             }
+
+}
+
+        protected override bool OnTryRender( string inputTemplate, out string output, ILavaContext context )
+        {
+            //            try
+            //            {
+            string liquidTemplate;
+
+            var template = CreateNewFluidTemplate( inputTemplate, out liquidTemplate );
+
+            if ( context == null )
+            {
+                context = NewContext();
+            }
+
+            return TryRenderInternal( template, out output, context );
+
+            /*
+                            var templateContext = context as FluidLavaContext;
+
+                            if ( templateContext == null )
+                            {
+                                throw new LavaException( "Invalid LavaContext parameter. This context type is not compatible with the Fluid templating engine." );
+                            }
+
+                            /* The Fluid framework parses the input template into a set of executable statements that can be rendered.
+                             * To remain independent of a specific framework, custom Lava tags and blocks parse the original source template text to extract
+                             * the information necessary to render their output. For this reason, we need to store the source in the context so that it can be passed
+                             * to the Lava custom components when they are rendered.
+                             */
+            /*
+                            templateContext.SetInternalFieldValue( Constants.ContextKeys.SourceTemplateElements, template.Elements );
+
+                            templateContext.FluidContext.ParserFactory = _parserFactory;
+
+                            output = template.Render( templateContext.FluidContext );
+
+                            return true;
+                        }
+                        catch ( Exception ex )
+                        {
+                            ProcessException( ex, out output );
+
+                            return false;
+                        }
+            */
         }
 
-        public override void UnregisterShortcode( string name )
-        {
-            throw new NotImplementedException();
-        }
+        //public override void UnregisterShortcode( string name )
+        //{
+        //    throw new NotImplementedException();
+        //}
 
         public override void RegisterTag( string name, Func<string, IRockLavaTag> factoryMethod )
         {
@@ -519,7 +568,7 @@ namespace Rock.Lava.Fluid
             _parserFactory.RegisterBlock( name, proxyInstance );
         }
 
-        public override ILavaTemplate ParseTemplate( string lavaTemplate )
+        protected override ILavaTemplate OnParseTemplate( string lavaTemplate )
         {
             string liquidTemplate;
 
@@ -534,13 +583,23 @@ namespace Rock.Lava.Fluid
 
         public override bool AreEqualValue( object left, object right )
         {
-            throw new NotImplementedException();
+            if ( right == null )
+            {
+                if ( left == null )
+                {
+                    return true;
+                }
+
+                return false;
+            }
+
+            return left.Equals( right );
         }
 
-        public override Type GetShortcodeType( string name )
-        {
-            throw new NotImplementedException();
-        }
+        //public override Type GetShortcodeType( string name )
+        //{
+        //    throw new NotImplementedException();
+        //}
 
         #endregion
 

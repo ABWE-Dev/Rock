@@ -29,77 +29,11 @@ using Fluid.Values;
 using Microsoft.Extensions.Primitives;
 using Rock.Lava.Fluid;
 
-namespace Fluid.Tags
-{
-    public interface ITagEx : ITag
-    {
-        Statement Parse( ParseTreeNode node, LavaFluidParserContext context );
-    }
-}
-
-
 namespace Rock.Lava.Fluid
 {
     /// <summary>
-    /// An extension of the Fluid BlockContext that allows storing additional context information.
-    /// </summary>
-    public class BlockContextEx : BlockContext
-    {
-        public BlockContextEx( ParseTreeNode tag )
-            : base( tag )
-        {
-            //
-        }
-
-        /// <summary>
-        /// A property to store extended information about the block context.
-        /// </summary>
-        public BlockInfo AdditionalData { get; set; }
-    }
-
-    /// <summary>
-    /// An element from a Fluid template that has been parsed.
-    /// </summary>
-    public class FluidParsedTemplateElement
-    {
-        public string ElementId { get; set; }
-
-        public Statement Statement { get; set; }
-        public string Node {get; set; }
-
-        public int StartIndex { get; set; }
-        public int EndIndex { get; set; }
-    }
-
-    public class FluidElementParseEventArgs : EventArgs
-    {
-        public string ElementId { get; set; }
-        public string ElementText { get; set; }
-        public int StartIndex { get; set; }
-        public int EndIndex { get; set; }
-
-        public Statement Statement { get; set; }
-    }
-
-    public interface IFluidParserEx : IFluidParser
-    {
-        event EventHandler<FluidElementParseEventArgs> ElementParsing;
-        event EventHandler<FluidElementParseEventArgs> ElementParsed;
-    }
-
-    public class BlockInfo
-    {
-        public int StartPosition { get; set; }
-        public int EndPosition { get; set; }
-
-        public string SourceText { get; set; }
-        public string OpenTag { get; set; }
-        public string InnerText { get; set; }
-        public string CloseTag { get; set; }
-    }
-
-    /// <summary>
     /// An extended implementation of the Fluid Liquid parser that allows parsing of Lava templates.
+    /// This implementation should contain any Lava-specific customisations that are not suitable as additions to the Fluid core code.
     /// </summary>
     public class LavaFluidParser : FluidParserEx
     {
@@ -127,11 +61,11 @@ namespace Rock.Lava.Fluid
         }
     }
 
-        /// <summary>
-        /// An extended implementation of the Fluid Liquid parser.
-        /// This implementation adds the ability to capture the source text of tokens as they are processed.
-        /// </summary>
-        public class FluidParserEx : IFluidParser, IFluidParserEx
+    /// <summary>
+    /// An extended implementation of the Fluid Liquid parser.
+    /// This implementation adds the ability to capture the source text of tokens as they are processed.
+    /// </summary>
+    public class FluidParserEx : IFluidParser, IFluidParserEx
     {
         protected bool _isComment; // true when the current block is a comment
         protected bool _isRaw; // true when the current block is raw
@@ -1424,8 +1358,76 @@ namespace Rock.Lava.Fluid
         }
     }
 
+    #region Support Classes
+
+    /// <summary>
+    /// An extension of the Fluid BlockContext that allows storing additional context information.
+    /// </summary>
+    public class BlockContextEx : BlockContext
+    {
+        public BlockContextEx( ParseTreeNode tag )
+            : base( tag )
+        {
+            //
+        }
+
+        /// <summary>
+        /// A property to store extended information about the block context.
+        /// </summary>
+        public BlockInfo AdditionalData { get; set; }
+    }
+
+    /// <summary>
+    /// An element from a Fluid template that has been parsed.
+    /// </summary>
+    public class FluidParsedTemplateElement
+    {
+        public string ElementId { get; set; }
+
+        public Statement Statement { get; set; }
+        public string Node { get; set; }
+
+        public int StartIndex { get; set; }
+        public int EndIndex { get; set; }
+    }
+
+    public class FluidElementParseEventArgs : EventArgs
+    {
+        public string ElementId { get; set; }
+        public string ElementText { get; set; }
+        public int StartIndex { get; set; }
+        public int EndIndex { get; set; }
+
+        public Statement Statement { get; set; }
+    }
+
+    public interface IFluidParserEx : IFluidParser
+    {
+        event EventHandler<FluidElementParseEventArgs> ElementParsing;
+        event EventHandler<FluidElementParseEventArgs> ElementParsed;
+    }
+
+    public class BlockInfo
+    {
+        public int StartPosition { get; set; }
+        public int EndPosition { get; set; }
+
+        public string SourceText { get; set; }
+        public string OpenTag { get; set; }
+        public string InnerText { get; set; }
+        public string CloseTag { get; set; }
+    }
+
+//    namespace Fluid.Tags
+    //{
+        public interface ITagEx : ITag
+        {
+            Statement Parse( ParseTreeNode node, LavaFluidParserContext context );
+        }
+    //}
+
+    #endregion
 
 
-    
 
 }

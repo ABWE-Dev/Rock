@@ -15,6 +15,7 @@
 // </copyright>
 //
 using System.Collections.Generic;
+using System.Diagnostics;
 using Fluid.Ast;
 using Irony.Parsing;
 using Microsoft.Extensions.Primitives;
@@ -72,6 +73,8 @@ namespace Rock.Lava.Fluid
         /// </summary>
         public void EnterBlockSection( string name, TagStatement statement )
         {
+            Debug.Print( $"Entering Block: ThreadId={System.Threading.Thread.CurrentThread.ManagedThreadId}, CurrentBlockCount={_blocks.Count}" );
+
             CurrentBlock.EnterBlock( name, statement );
         }
 
@@ -81,12 +84,9 @@ namespace Rock.Lava.Fluid
         /// </summary>
         public void ExitBlock()
         {
+            Debug.Print( $"Exiting Block: ThreadId={System.Threading.Thread.CurrentThread.ManagedThreadId}, CurrentBlockCount={_blocks.Count}" );
+
             CurrentBlock = _blocks.Pop();
         }
     }
-
-
-
-    
-
 }

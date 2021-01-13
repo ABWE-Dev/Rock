@@ -21,7 +21,7 @@ using System.Collections.Generic;
 namespace Rock.Lava
 {
     /// <summary>
-    /// Represents the environment and configuration in which a Lava template is resolved at runtime by the Lava Engine.
+    /// Represents the configuration and data used by the Lava Engine to resolve a Lava template.
     /// </summary>
     public interface ILavaContext
     {
@@ -42,6 +42,12 @@ namespace Rock.Lava
         /// <param name="key"></param>
         /// <param name="value"></param>
         void SetInternalFieldValue( string key, object value );
+
+        /// <summary>
+        /// Sets a collection of named values for internal use only. Internal values are not available to be resolved in the Lava Template.
+        /// </summary>
+        /// <param name="values"></param>
+        void SetInternalFieldValues( IDictionary<string, object> values );
 
         /// <summary>
         /// Sets a collection of named values for internal use only. Internal values are not available to be resolved in the Lava Template.
@@ -101,7 +107,7 @@ namespace Rock.Lava
         /// Sets a collection of user-defined variables in the current context that are internally available to custom filters and tags.
         /// </summary>
         /// <param name="values"></param>
-        void SetMergeFieldValues( LavaDictionary values );
+        void SetMergeFieldValues( IDictionary<string, object> values );
 
         /// <summary>
         /// Get or set the value of a field that is accessible for merging into a template.
@@ -109,8 +115,6 @@ namespace Rock.Lava
         /// <param name="key"></param>
         /// <returns></returns>
         object this[string key] { get; set; }
-
-        string ResolveMergeFields( string content, IDictionary<string, object> mergeObjects, string enabledLavaCommands = null, bool encodeStrings = false, bool throwExceptionOnErrors = false );
 
         /// <summary>
         /// Executes the specified action in a new child scope.
@@ -129,45 +133,17 @@ namespace Rock.Lava
         /// </summary>
         void ExitChildScope();
 
-        #region Obsolete
-
         /// <summary>
-        /// Retrieves a nested stack of Environments, with the current environment first.
-        /// An environment holds the variables that have been defined by the container in which a Lava template is resolved.
+        /// Use the information in this context to resolve the specified Lava template.
         /// </summary>
-        //[Obsolete( "Not required?" )]
-        //IList<LavaDictionary> GetEnvironments();
-
-        /// <summary>
-        /// Retrieves a nested stack of Variables, with the current context first.
-        /// A scope holds the variables that have been created and assigned in the process of resolving a Lava template.
-        /// </summary>
-        //[Obsolete( "Not required?" )]
-        //IList<LavaDictionary> GetScopes();
-
-        /// <summary>
-        /// Gets the set of merge fields in the current Lava source markup.
-        /// </summary>
+        /// <param name="content"></param>
+        /// <param name="mergeObjects"></param>
+        /// <param name="enabledLavaCommands"></param>
+        /// <param name="encodeStrings"></param>
+        /// <param name="throwExceptionOnErrors"></param>
         /// <returns></returns>
-        //[Obsolete( "Use GetMergeFields instead?" )]
-        //IDictionary<string, object> GetMergeFieldsInScope();
-
-        /// <summary>
-        /// Gets the dictionary of values that are active in the local scope.
-        /// Values are defined by the outermost container first, and overridden by values defined in a contained scope.
-        /// </summary>
-        /// <returns></returns>
-        //[Obsolete( "Rename as GetMergeFields()?" )]
-        //LavaDictionary GetMergeFieldsInLocalScope();
-
-        /// <summary>
-        /// Gets the set of merge fields in the current Lava block or container hierarchy.
-        /// </summary>
-        /// <returns></returns>
-        //[Obsolete( "Use GetMergeFields instead?" )]
-        //IDictionary<string, object> GetMergeFieldsInContainerScope();
-
-        #endregion
+[Obsolete("Should use LavaEngine.TryRender instead?")]
+        string ResolveMergeFields( string content, IDictionary<string, object> mergeObjects, string enabledLavaCommands = null, bool encodeStrings = false, bool throwExceptionOnErrors = false );
 
     }
 }

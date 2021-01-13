@@ -29,7 +29,16 @@ namespace Rock.Tests.UnitTests.Lava
     {
         public static LavaTestHelper New( LavaEngineTypeSpecifier? engineType = null )
         {
-            global::Rock.Lava.LavaEngine.Initialize( engineType, null, new List<Type> { typeof( RockFilters ) } );
+            var engineOptions = new LavaEngineConfigurationOptions
+            {
+                //FileSystem = new MockFileProvider(),
+                FilterImplementationTypes = new List<Type> { typeof( global::Rock.Lava.RockFilters ) },
+
+                // Use the default Rock template provider for testing.
+                CacheService = new WebsiteLavaTemplateCacheService()
+            };
+
+            global::Rock.Lava.LavaEngine.Initialize( engineType, engineOptions );
 
             var helper = new LavaTestHelper();
 

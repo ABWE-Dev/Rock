@@ -97,6 +97,16 @@ namespace Rock.Lava
             return OnTryRender( parameters, out output, out errors );
         }
 
+        public bool TryRender( ILavaContext context, out string output, out IList<Exception> errors )
+        {
+            //if ( parameters == null )
+            //{
+            //    parameters = new LavaRenderParameters();
+            //}
+
+            return OnTryRender( context, out output, out errors );
+        }
+
         /// <summary>
         /// Override this method to implement the rendering using a Liquid rendering engine implementation.
         /// </summary>
@@ -105,5 +115,7 @@ namespace Rock.Lava
         /// <param name="errors"></param>
         /// <returns></returns>
         protected abstract bool OnTryRender( LavaRenderParameters parameters, out string output, out IList<Exception> errors );
+        protected abstract bool OnTryRender( ILavaContext context, out string output, out IList<Exception> errors );
+
     }
 }

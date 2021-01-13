@@ -13,6 +13,7 @@ namespace Rock.Lava
     /// <summary>
     /// A case-insensitive dictionary implementation for storing variables used to resolve Lava templates.
     /// </summary>
+    [Obsolete("Is this necessary now? Seems to be functionally equivalent to LavaDataObject which also supports IDictionary?")]
     public class LavaDictionary : IDictionary<string, object>, IDictionary, ILavaDataObject
     {
         #region Fields
@@ -86,6 +87,11 @@ namespace Rock.Lava
                 return _lambda( this, key );
 
             return null;
+        }
+
+        public void SetValue( string key, object value )
+        {
+            _nestedDictionary[key] = value;
         }
 
         public T Get<T>( string key )

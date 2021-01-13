@@ -43,38 +43,38 @@ namespace Rock.Lava.Fluid
 
         //public object this[string key] { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
-        public IList<IDictionary<string, object>> Environments
-        {
-            get
-            {
-                return null;
-                //var environments = new List<IDictionary<string, object>>();
+        //public IList<IDictionary<string, object>> Environments
+        //{
+        //    get
+        //    {
+        //        return null;
+        //        //var environments = new List<IDictionary<string, object>>();
 
-                //foreach ( var hash in _context.Environments )
-                //{
-                //    environments.Add( hash as IDictionary<string, object> );
-                //}
+        //        //foreach ( var hash in _context.Environments )
+        //        //{
+        //        //    environments.Add( hash as IDictionary<string, object> );
+        //        //}
 
-                //return environments;
-            }
-        }
+        //        //return environments;
+        //    }
+        //}
 
-        public IList<IDictionary<string, object>> Scopes
-        {
-            get
-            {
-                return null;
-                //var environments = new List<IDictionary<string, object>>();
+        //public IList<IDictionary<string, object>> Scopes
+        //{
+        //    get
+        //    {
+        //        return null;
+        //        //var environments = new List<IDictionary<string, object>>();
 
-                //foreach ( var hash in _context.Scopes )
-                //{
-                //    environments.Add( hash as IDictionary<string, object> );
-                //}
+        //        //foreach ( var hash in _context.Scopes )
+        //        //{
+        //        //    environments.Add( hash as IDictionary<string, object> );
+        //        //}
 
-                //return environments;
-            }
+        //        //return environments;
+        //    }
 
-        }
+        //}
 
         public override List<string> GetEnabledCommands()
         {
@@ -119,24 +119,24 @@ namespace Rock.Lava.Fluid
         //    //throw new NotImplementedException();
         //}
 
-        public IDictionary<string, object> GetMergeFieldsInEnvironment()
-        {
-            // TODO: Not possible in Fluid unless we use reflection???
+        //public IDictionary<string, object> GetMergeFieldsInEnvironment()
+        //{
+        //    // TODO: Not possible in Fluid unless we use reflection???
 
 
-            // get merge fields loaded by the block or container
-            var internalMergeFields = new Dictionary<string, object>();
+        //    // get merge fields loaded by the block or container
+        //    var internalMergeFields = new Dictionary<string, object>();
 
-            //if ( _context.LocalScope. .AmbientValues _context.AmbientValues.. .Environments.Count > 0 )
-            //{
-            //    foreach ( var item in _context.Environments[0] )
-            //    {
-            //        internalMergeFields.AddOrReplace( item.Key, item.Value );
-            //    }
-            //}
+        //    //if ( _context.LocalScope. .AmbientValues _context.AmbientValues.. .Environments.Count > 0 )
+        //    //{
+        //    //    foreach ( var item in _context.Environments[0] )
+        //    //    {
+        //    //        internalMergeFields.AddOrReplace( item.Key, item.Value );
+        //    //    }
+        //    //}
 
-            return internalMergeFields;
-        }
+        //    return internalMergeFields;
+        //}
         //public override IDictionary<string, object> GetMergeFieldsInScope()
         //{
         //    return new Dictionary<string, object>( _context.AmbientValues );
@@ -357,13 +357,13 @@ namespace Rock.Lava.Fluid
             _context.AmbientValues[key] = value;
         }
 
-        public override void SetInternalFieldValues( LavaDictionary values )
-        {
-            foreach ( var kvp in values )
-            {
-                _context.AmbientValues[kvp.Key] = kvp.Value;
-            }
-        }
+        //public override void SetInternalFieldValues( LavaDictionary values )
+        //{
+        //    foreach ( var kvp in values )
+        //    {
+        //        _context.AmbientValues[kvp.Key] = kvp.Value;
+        //    }
+        //}
 
         /// <summary>
         /// Gets a named value that is for internal use only. Internal values are not available to be resolved in the Lava Template.
@@ -419,25 +419,25 @@ namespace Rock.Lava.Fluid
             return template;
         }
 
-        private Scope GetRootScope( Scope scope )
-        {
-            var parentScope = GetParentScope( scope );
+        //private Scope GetRootScope( Scope scope )
+        //{
+        //    var parentScope = GetParentScope( scope );
 
-            while ( parentScope != null )
-            {
-                scope = parentScope;
+        //    while ( parentScope != null )
+        //    {
+        //        scope = parentScope;
 
-                parentScope = GetParentScope( parentScope );
-            }
+        //        parentScope = GetParentScope( parentScope );
+        //    }
 
-            return scope;
-        }
+        //    return scope;
+        //}
 
         private Scope GetParentScope( Scope scope )
         {
             Scope parentScope = null;
 
-            var parentField = scope.GetType().GetField( "_parent", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance  );
+            var parentField = scope.GetType().GetField( "_parent", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance );
 
             if ( parentField != null )
             {

@@ -14,13 +14,15 @@
 // limitations under the License.
 // </copyright>
 //
+using System;
 using System.Collections.Generic;
 
 namespace Rock.Lava
 {
     /// <summary>
-    /// Specifies that this object can be made accessible in a Lava template.
+    /// Represents an object that can be made accessible in a Lava template.
     /// </summary>
+    [Obsolete("Rename to LavaDataDictionary?")]
     public interface ILavaDataObject
     {
         /// <summary>

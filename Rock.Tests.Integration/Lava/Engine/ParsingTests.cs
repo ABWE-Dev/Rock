@@ -92,5 +92,51 @@ Slow
 
             Assert.That.AreEqual( expectedOutput, output );
         }
+
+        [TestMethod]
+        public void LavaToLiquidConverter_LavaShortcodeWithMultipleParameters_IsReplacedWithRenamedBlock()
+        {
+            var input = @"{[ shortcodetest fontname:'Arial' fontsize:'{{ fontsize }}' fontbold:'true' ]}{[ endshortcodetest ]}";
+            var expectedOutput = @"{% shortcodetest_ fontname:'Arial' fontsize:'{{ fontsize }}' fontbold:'true' %}{% endshortcodetest_ %}";
+
+            var converter = new LavaToLiquidTemplateConverter();
+
+            var output = converter.ReplaceTemplateShortcodes( input );
+
+            Assert.That.AreEqualIgnoreWhitespace( expectedOutput, output );
+        }
+
+        [TestMethod]
+        public void LavaToLiquidConverter_LavaShortcodeWithNoParameters_IsReplacedWithRenamedBlock()
+        {
+            var input = @"{[ shortcodetest ]}{[ endshortcodetest ]}";
+            var expectedOutput = @"{% shortcodetest_ %}{% endshortcodetest_ %}";
+
+            var converter = new LavaToLiquidTemplateConverter();
+
+            var output = converter.ReplaceTemplateShortcodes( input );
+
+            Assert.That.AreEqualIgnoreWhitespace( expectedOutput, output );
+        }
+
+
+        /*
+{[ shortcodetest ]}
+
+    [[ item title:'Panel 1' ]]
+        Panel 1 content.
+    [[ enditem ]]
+    
+    [[ item title:'Panel 2' ]]
+        Panel 2 content.
+    [[ enditem ]]
+    
+    [[ item title:'Panel 3' ]]
+        Panel 3 content.
+    [[ enditem ]]
+
+{[ endshortcodetest ]}
+         
+         * */
     }
 }

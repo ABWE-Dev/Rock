@@ -34,9 +34,14 @@ namespace Rock.Tests.Integration.Lava
         {
             engineType = engineType ?? LavaEngineTypeSpecifier.DotLiquid;
 
-            ILavaFileSystem fileSystem = new MockFileProvider();
+            var engineOptions = new LavaEngineConfigurationOptions
+            {
+                FileSystem = new MockFileProvider(),
+                FilterImplementationTypes = new List<Type> { typeof( Rock.Lava.RockFilters ) },
+                CacheService = new WebsiteLavaTemplateCacheService()
+            };
 
-            global::Rock.Lava.LavaEngine.Initialize( engineType, fileSystem, new List<Type> { typeof( RockFilters ) } );
+            global::Rock.Lava.LavaEngine.Initialize( engineType, engineOptions );
 
             var engine = global::Rock.Lava.LavaEngine.Instance;
 

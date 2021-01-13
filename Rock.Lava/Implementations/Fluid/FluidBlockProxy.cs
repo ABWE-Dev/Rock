@@ -35,8 +35,8 @@ namespace Rock.Lava.Fluid
     /// A wrapper for a Lava Block that enables it to be rendered by the Fluid templating engine.
     /// </summary>
     /// <remarks>
-    /// This implementation allows a set of factory methods to be registered, and subsequently used to 
-    /// generate instances of Fluid Block elements dynamically at runtime.
+    /// This implementation uses a set of pre-registered factory methods to configure instances of the FluidBlockProxy
+    /// dynamically at runtime.
     /// The FluidBlockProxy wraps a LavaBlock that is executed internally to render the element content.
     /// This approach allows the LavaBlock to be more easily adapted for use with alternative Liquid templating engines.
     /// </remarks>
@@ -66,7 +66,7 @@ namespace Rock.Lava.Fluid
         //    System.Diagnostics.Debug.Print(Id.ToString());
         //}
 
-        private IRockLavaBlock _lavaBlock = null;
+        //private IRockLavaBlock _lavaBlock = null;
 
         public string SourceElementName
         {

@@ -43,7 +43,7 @@ namespace Rock.Tests.Integration.Lava
         {
             var fileSystem = GetMockFileProvider();
 
-            TestHelper.LavaEngine.Initialize( fileSystem );
+            TestHelper.LavaEngine.Initialize( new LavaEngineConfigurationOptions { FileSystem = fileSystem } );
 
             var input = @"
 Name: Ted Decker
@@ -74,7 +74,7 @@ Email: ted@rocksolidchurch.com
         {
             var fileSystem = GetMockFileProvider();
 
-            TestHelper.LavaEngine.Initialize( fileSystem );
+            TestHelper.LavaEngine.Initialize( new LavaEngineConfigurationOptions { FileSystem = fileSystem } );
 
             var input = @"
 {% include '_unknown.lava' %}
@@ -88,7 +88,8 @@ Email: ted@rocksolidchurch.com
         [TestMethod]
         public void IncludeStatement_ShouldRenderError_IfFileSystemIsNotConfigured()
         {
-            TestHelper.LavaEngine.Initialize( null );
+            TestHelper.LavaEngine.Initialize();// new LavaEngineConfigurationOptions { FileSystem = fileSystem } );
+            //TestHelper.LavaEngine.Initialize( null );
 
             var input = @"
 {% include '_template.lava' %}

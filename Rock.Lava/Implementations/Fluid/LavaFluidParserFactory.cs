@@ -21,6 +21,9 @@ using Irony.Parsing;
 
 namespace Rock.Lava.Fluid
 {
+    /// <summary>
+    /// A factoory responsible for creating new instances of the Lava Parser for Fluid.
+    /// </summary>
     public class LavaFluidParserFactory : FluidParserFactoryBase
     {
         protected override IFluidParser OnCreateParser( LanguageData languageData, Dictionary<string, ITag> tags, Dictionary<string, ITag> blocks )

@@ -525,14 +525,6 @@ namespace Rock.Lava.DotLiquid
             _context.Registers[key] = value;
         }
 
-        public override void SetInternalFieldValues( LavaDictionary values )
-        {
-            foreach ( var kvp in values )
-            {
-                _context.Registers[kvp.Key] = kvp.Value;
-            }
-        }
-
         public override void EnterChildScope()
         {
             // Push a new scope onto the stack.

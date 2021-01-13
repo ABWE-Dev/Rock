@@ -55,30 +55,38 @@ namespace Rock.Lava
             }
         }
 
-        public static void Initialize( LavaEngineTypeSpecifier? engineType, ILavaFileSystem fileSystem = null, IList<Type> filterImplementationTypes = null )
+        //public static void Initialize( LavaEngineTypeSpecifier? engineType, ILavaFileSystem fileSystem = null, IList<Type> filterImplementationTypes = null )
+        public static void Initialize( LavaEngineTypeSpecifier? engineType, LavaEngineConfigurationOptions options )
+        // LavaEngineTypeSpecifier? engineType, ILavaFileSystem fileSystem = null, IList<Type> filterImplementationTypes = null )
         {
             _liquidFramework = engineType ?? LavaEngineTypeSpecifier.DotLiquid;
 
             ILavaEngine engine;
 
+            if ( options == null )
+            {
+                options = new LavaEngineConfigurationOptions();
+            }
+
             if ( _liquidFramework == LavaEngineTypeSpecifier.Fluid )
             {
                 engine = new FluidEngine();
 
-                fileSystem = new FluidFileSystem( fileSystem );
+                options.FileSystem = new FluidFileSystem( options.FileSystem );
             }
             else
             {
                 engine = new DotLiquidEngine();
 
-                fileSystem = new DotLiquidFileSystem( fileSystem );
+                options.FileSystem = new DotLiquidFileSystem( options.FileSystem );
             }
 
-            engine.Initialize( fileSystem, filterImplementationTypes );
+            engine.Initialize( options );
 
             _instance = engine;
         }
 
+        [Obsolete("Rename as Current")]
         public static ILavaEngine Instance
         {
             get
@@ -86,7 +94,7 @@ namespace Rock.Lava
                 if ( _instance == null )
                 {
                     // Initialize a default instance.
-                    Initialize( _liquidFramework );
+                    Initialize( _liquidFramework , new LavaEngineConfigurationOptions() );
                 }
 
                 return _instance;

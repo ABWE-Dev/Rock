@@ -16,27 +16,56 @@
 //
 using System;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
 using Rock.Lava.Shortcodes;
 
 namespace Rock.Lava
 {
-
     /// <summary>
     /// Provides base functionality for an engine that can parse and render Lava Templates.
     /// </summary>
-    //TODO: Implement IRockStartup.
-    public abstract class LavaEngineBase : ILavaEngine // ,IRockStartup
+    public abstract class LavaEngineBase : ILavaEngine
     {
-        public abstract void Initialize( ILavaFileSystem fileSystem, IList<Type> filterImplementationTypes = null );
+        /// <summary>
+        /// Initializes the Lava engine.
+        /// Doing this in startup will force the static Liquid class to get instantiated
+        /// so that the standard filters are loaded prior to the custom RockFilter.
+        /// This is to allow the custom 'Date' filter to replace the standard Date filter.
+        /// </summary>
+        public void Initialize( LavaEngineConfigurationOptions options )
+        {
+            if ( options == null )
+            {
+                options = new LavaEngineConfigurationOptions();
+            }
+
+            _cacheService = options.CacheService;
+
+            OnSetConfiguration( options );
+        }
+
+        /// <summary>
+        /// Override this method to set configuration options for the specific Liquid framework engine implementation.
+        /// </summary>
+        /// <param name="options"></param>
+        public abstract void OnSetConfiguration( LavaEngineConfigurationOptions options );
 
         public abstract string EngineName { get; }
 
         public abstract ILavaContext NewContext();
 
+        private ILavaTemplateCacheService _cacheService;
+
+        public ILavaTemplateCacheService TemplateCacheService
+        {
+            get
+            {
+                return _cacheService;
+            }
+        }
+
         public abstract LavaEngineTypeSpecifier EngineType { get; }
 
-        public abstract Type GetShortcodeType( string name );
+        //public abstract Type GetShortcodeType( string name );
 
         public abstract void RegisterSafeType( Type type, string[] allowedMembers = null );
 
@@ -83,11 +112,11 @@ namespace Rock.Lava
             {
                 RegisterBlock( registrationKey, ( blockName ) =>
                {
-                    // Get a shortcode instance using the provided shortcut factory.
-                    var shortcode = shortcodeFactoryMethod( registrationKey );
+                   // Get a shortcode instance using the provided shortcut factory.
+                   var shortcode = shortcodeFactoryMethod( registrationKey );
 
-                    // Return the shortcode instance as a RockLavaBlock
-                    return shortcode as IRockLavaBlock;
+                   // Return the shortcode instance as a RockLavaBlock
+                   return shortcode as IRockLavaBlock;
                } );
                 ;
             }
@@ -165,40 +194,133 @@ namespace Rock.Lava
 
         public bool TryRender( string inputTemplate, out string output )
         {
-            return TryRender( inputTemplate, out output, context: null );
+            return TryRender( inputTemplate, out output, mergeValues: null );
         }
 
         public bool TryRender( string inputTemplate, out string output, LavaDictionary mergeValues )
         {
-            var context = NewContext();
+            ILavaContext context;
 
-            context.SetMergeFieldValues( mergeValues );
+            if ( mergeValues != null )
+            {
+                context = NewContext();
+
+                context.SetMergeFieldValues( mergeValues );
+            }
+            else
+            {
+                context = null;
+            }
 
             return TryRender( inputTemplate, out output, context );
         }
 
-        public abstract bool TryRender( string inputTemplate, out string output, ILavaContext context );
+        public bool TryRender( string inputTemplate, out string output, ILavaContext context )
+        {
+            ILavaTemplate template;
 
-        public abstract void UnregisterShortcode( string name );
+            try
+            {
+                if ( _cacheService != null && this.TemplateCachingIsEnabled )
+                {
+                    _cacheService.TryGetTemplate( inputTemplate,
+                        () =>
+                        {
+                            ILavaTemplate parsedTemplate;
+
+                            TryParseTemplate( inputTemplate, out parsedTemplate );
+
+                            return parsedTemplate;
+                        },
+                        out template );
+                }
+                else
+                {
+                    template = null;
+                }
+
+                if ( template == null )
+                {
+                    var isValid = TryParseTemplate( inputTemplate, out template );
+
+                    if ( !isValid )
+                    {
+                        throw new LavaException( "Lava Template render operation failed." );
+                    }
+                }
+
+                if ( context == null )
+                {
+                    context = NewContext();
+                }
+
+                return OnTryRender( template, out output, context );
+            }
+            catch ( Exception ex )
+            {
+                ProcessException( ex );
+
+                output = null;
+                return false;
+            }
+
+        }
+
+        /// <summary>
+        /// Override this method to render the Lava template using the underlying rendering engine.
+        /// </summary>
+        /// <param name="inputTemplate"></param>
+        /// <param name="output"></param>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        [Obsolete("Use OnTryRender( ILavaTemplate... ) instead.")]
+        protected abstract bool OnTryRender( string inputTemplate, out string output, ILavaContext context );
+
+        /// <summary>
+        /// Override this method to render the Lava template using the underlying rendering engine.
+        /// </summary>
+        /// <param name="inputTemplate"></param>
+        /// <param name="output"></param>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        protected abstract bool OnTryRender( ILavaTemplate inputTemplate, out string output, ILavaContext context );
 
         public abstract bool AreEqualValue( object left, object right );
 
+        /// <summary>
+        /// Attempt to parse and compile the specified Lava source text into a valid Lava template.
+        /// </summary>
+        /// <param name="inputTemplate"></param>
+        /// <param name="template"></param>
+        /// <returns></returns>
         public bool TryParseTemplate( string inputTemplate, out ILavaTemplate template )
         {
             try
             {
-                template = ParseTemplate( inputTemplate );
+                template = OnParseTemplate( inputTemplate );
+
                 return true;
             }
-            catch
+            catch ( Exception ex )
             {
+                ProcessException( ex );
+
                 template = null;
                 return false;
             }
         }
 
-        public abstract ILavaTemplate ParseTemplate( string inputTemplate );
+        /// <summary>
+        /// Override this method to implement parsing and compilation of Lava source text.
+        /// </summary>
+        /// <param name="inputTemplate"></param>
+        /// <returns></returns>
+        protected abstract ILavaTemplate OnParseTemplate( string inputTemplate );
 
+        /// <summary>
+        /// Get the collection of registered Lava template elements.
+        /// </summary>
+        /// <returns></returns>
         public Dictionary<string, ILavaElementInfo> GetRegisteredElements()
         {
             var tags = new Dictionary<string, ILavaElementInfo>();
@@ -313,7 +435,7 @@ namespace Rock.Lava
             }
             else if ( this.ExceptionHandlingStrategy == ExceptionHandlingStrategySpecifier.Ignore )
             {
-                // We should probably log the message here rather than failing silently.
+                // We should probably log the message here rather than failing silently, but this preserves current behavior.
                 message = null;
             }
             else
@@ -323,6 +445,8 @@ namespace Rock.Lava
         }
 
         public ExceptionHandlingStrategySpecifier ExceptionHandlingStrategy { get; set; } = ExceptionHandlingStrategySpecifier.RenderToOutput;
+
+        public bool TemplateCachingIsEnabled { get; set; } = true;
 
         /// <summary>
         /// Convert a Lava template to a Liquid-compatible template by replacing Lava-specific syntax and keywords.
@@ -335,52 +459,5 @@ namespace Rock.Lava
 
             return converter.ConvertToLiquid( lavaTemplateText );
         }
-    }
-
-    public class LavaToLiquidTemplateConverter
-    {
-        /// <summary>
-        /// Convert a Lava template to a Liquid-compatible template by replacing Lava-specific syntax and keywords.
-        /// </summary>
-        /// <param name="lavaTemplateText"></param>
-        /// <returns></returns>
-        public string ConvertToLiquid( string lavaTemplateText )
-        {
-            string liquidTemplateText;
-
-            liquidTemplateText = ReplaceTemplateShortcodes( lavaTemplateText );
-            liquidTemplateText = ReplaceElseIfKeyword( liquidTemplateText );
-
-            return liquidTemplateText;
-        }
-
-        internal static readonly Regex FullShortCodeToken = new Regex( @"{\[\s*(\w+)\s*([^\]}]*)?\]}", RegexOptions.Compiled );
-
-        public string ReplaceTemplateShortcodes( string inputTemplate )
-        {
-            /* The Lava shortcode syntax is not recognized as a document element by Fluid, and at present there is no way to intercept or replace the Fluid parser.
-             * As a workaround, we pre-process the template to replace the Lava shortcode token "{[ ]}" with the Liquid tag token "{% %}" and add a prefix to avoid naming collisions with existing standard tags.
-             * The shortcode can then be processed as a regular custom block by the Fluid templating engine.
-             * As a future improvement, we could look at submitting a pull request to the Fluid project to add support for custom parsers.
-             */
-            var newBlockName = "{% $1<suffix> $2 %}".Replace( "<suffix>", LavaEngine.ShortcodeInternalNameSuffix );
-
-            inputTemplate = FullShortCodeToken.Replace( inputTemplate, newBlockName );
-
-            return inputTemplate;
-        }
-
-        internal static readonly Regex ElseIfToken = new Regex( @"{\%(.*?\s?)elseif(\s?.*?)\%}", RegexOptions.Compiled );
-
-        public string ReplaceElseIfKeyword( string inputTemplate )
-        {
-            // "elseif" is not a recognized keyword, because Liquid implements the less obvious variant "elsif".
-            // This keyword forms part of a stateful construct (if/then/else) that is processed internally by the Liquid engine,
-            // so the most portable method of processing this alternative is to replace it with the recognized Liquid keyword.            
-            inputTemplate = ElseIfToken.Replace( inputTemplate, "{%$1elsif$2%}" );
-
-            return inputTemplate;
-        }
-
     }
 }
