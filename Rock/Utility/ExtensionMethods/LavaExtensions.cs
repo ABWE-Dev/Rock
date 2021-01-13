@@ -549,37 +549,25 @@ namespace Rock
         {
             try
             {
-                // 7-9-2020 JME / NA
-                // We decided to remove the check for lava merge fields here as this method is specifically
-                // made to resolve them. The performance increase for text without lava is acceptable as in
-                // a vast majority of cases the string will have lava (that's what this method is for). In
-                // these cases there is a performance tax (though small) on the vast majority of calls.
-
                 // If there have not been any EnabledLavaCommands explicitly set, then use the global defaults.
                 if ( enabledLavaCommands == null )
                 {
                     enabledLavaCommands = GlobalAttributesCache.Value( "DefaultEnabledLavaCommands" );
                 }
 
+                var context = LavaEngine.Instance.NewContext();
+
+                context.SetEnabledCommands( enabledLavaCommands, "," );
+
+                context.SetMergeFieldValue( "CurrentPerson", currentPersonOverride );
+                context.SetMergeFieldValues( mergeObjects );
+
                 var template = GetTemplate( content );
-
-                var renderParameters = new LavaRenderParameters();
-
-                var enabledCommands = enabledLavaCommands.SplitDelimitedValues( ",", StringSplitOptions.RemoveEmptyEntries );
-
-                if ( enabledCommands.Any() )
-                {
-                    renderParameters.EnabledCommands.AddRange( enabledCommands );
-                }
-                
-                renderParameters.Registers.AddOrReplace( "CurrentPerson", currentPersonOverride );
-
-                renderParameters.LocalVariables = mergeObjects;
 
                 IList<Exception> errors;
                 string output;
 
-                var isRendered = template.TryRender( renderParameters, out output, out errors );
+                var isRendered = template.TryRender( context, out output, out errors );
 
                 return output;
             }
@@ -753,10 +741,9 @@ namespace Rock
                 templateKey = content.XxHash();
             }
 
+            // Retrieve the template from the cache, or add it to the cache with specified key.
+            // It is essential that the LavaTemplate object is thread-safe.
             var template = LavaTemplateCache.Get( templateKey, content ).Template;
-
-            // Clear any previous errors from the template.
-            //template.Errors.Clear();
 
             return template;
         }
