@@ -762,6 +762,43 @@ namespace Rock
         }
 
         /// <summary>
+        /// Returns a LavaTemplate object from the template cache.
+        /// If the template does not already exist, it will be created and added to the cache.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <param name="content">The content.</param>
+        /// <param name="template"></param>
+        /// <param name="retrievedFromCache"></param>
+        /// <returns></returns>
+        public static void GetTemplate( string key, string content, out LavaTemplateCache template, out bool retrievedFromCache )
+        {
+            const int hashLength = 10;
+            string templateKey;
+
+            if ( string.IsNullOrEmpty( content ) )
+            {
+                /* [2020-08-01] DJL - Cache the null template specifically, but process other whitespace templates individually
+                 * to ensure that the format of the final output is preserved.
+                 */
+                templateKey = string.Empty;
+            }
+            else if ( content.Length <= hashLength )
+            {
+                // If the content is less than the size of the MD5 hash,
+                // simply use the content as the key to save processing time.
+                templateKey = content;
+            }
+            else
+            {
+                // Calculate a hash of the content using xxHash.
+                templateKey = content.XxHash();
+            }
+
+            // Retrieve the template from the cache, or add it to the cache with specified key.
+            LavaTemplateCache.Get( templateKey, content, out template, out retrievedFromCache );
+        }
+
+        /// <summary>
         /// Resolve any client ids in the string. This is used with Lava when writing out postback commands.
         /// </summary>
         /// <param name="content">The content.</param>
