@@ -795,18 +795,18 @@ namespace RockWeb.Blocks.Finance
                 RegisterJavaScriptForGridActions();
 
                 var qryTransactionDetails = financialBatchQry.SelectMany( a => a.Transactions ).SelectMany( a => a.TransactionDetails );
-                var accountSummaries = qryTransactionDetails.GroupBy( a => a.Account ).Select( a => new
+                var accountSummaries = qryTransactionDetails.GroupBy(a => a.Account).Select(a => new
                 {
                     FinancialAccount = a.Key,
-                    TotalAmount = (decimal?)a.Sum( d => d.Amount )
-                } ).OrderBy( a => a.FinancialAccount.Order )
+                    TotalAmount = (decimal?)a.Sum(d => d.Amount)
+                }).OrderBy(a => a.FinancialAccount.Order)
                 .ToList();
 
-                var mergeFields = Rock.Lava.LavaHelper.GetCommonMergeFields( this.RockPage, CurrentPerson );
-                mergeFields.Add( "BatchSummary", accountSummaries );
+                var mergeFields = Rock.Lava.LavaHelper.GetCommonMergeFields(this.RockPage, CurrentPerson);
+                mergeFields.Add("BatchSummary", accountSummaries);
 
-                string lavaTemplate = this.GetAttributeValue( SUMMARY_LAVA_TEMPLATE );
-                lSummary.Text = lavaTemplate.ResolveMergeFields( mergeFields );
+                string lavaTemplate = this.GetAttributeValue(SUMMARY_LAVA_TEMPLATE);
+                lSummary.Text = lavaTemplate.ResolveMergeFields(mergeFields);
             }
             catch ( Exception ex )
             {

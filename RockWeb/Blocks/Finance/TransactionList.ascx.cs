@@ -1982,10 +1982,10 @@ namespace RockWeb.Blocks.Finance
 
             var showAccountSummary = this.GetAttributeValue( AttributeKey.ShowAccountSummary ).AsBoolean();
             if ( showAccountSummary ||
-                _scheduledTxn == null &&
+                (_scheduledTxn == null &&
                 _registration == null &&
                 _person == null &&
-                !isExporting )
+                !isExporting && showAccountSummary) )
             {
                 pnlSummary.Visible = true;
 

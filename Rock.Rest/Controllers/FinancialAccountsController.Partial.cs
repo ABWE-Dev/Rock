@@ -101,7 +101,7 @@ namespace Rock.Rest.Controllers
                 {
                     // since there usually aren't that many accounts, go ahead and fetch all the children so that they don't need to be lazy loaded.
                     // this will also help the "Select Children" btn in the AccountPicker work better
-                    accountItem.Children = this.GetChildren( accountId, activeOnly, displayPublicName ).ToList();
+                    // accountItem.Children = this.GetChildren( accountId, activeOnly, displayPublicName ).ToList();
                 }
 
                 accountItem.IconCssClass = "fa fa-file-o";
