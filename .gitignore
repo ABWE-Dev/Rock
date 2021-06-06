@@ -52,6 +52,3 @@ node_modules
 RockWeb/Plugins/
 RockWeb/Webhooks/SQLEndpoint.ashx
 PrecompiledWeb
-
-RockWeb/Assets/Fonts/FontAwesome/
-RockWeb/Styles/FontAwesome

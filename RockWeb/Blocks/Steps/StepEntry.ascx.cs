@@ -482,7 +482,7 @@ namespace RockWeb.Blocks.Steps
         /// <returns></returns>
         private bool CanEdit()
         {
-            return UserCanAdministrate && _step != null;
+            return GetStepType().IsAuthorized(Authorization.EDIT, CurrentPerson) && _step != null;
         }
 
         /// <summary>
