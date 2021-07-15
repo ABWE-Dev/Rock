@@ -117,6 +117,14 @@ namespace RockWeb.Blocks.Crm.PersonDetail
         DefaultBooleanValue = false,
         Order = 9 )]
 
+    [CustomDropdownListField( "Destination on Finish",
+        Description = "Destination page on clicking save or cancel",
+        ListSource ="Person,Back",
+        IsRequired = true,
+        DefaultValue = "Person",
+        Order = 10,
+        Key = AttributeKey.DestinationOnFinish)]
+
     #endregion Block Attributes
 
     public partial class EditGroup : PersonBlock
@@ -134,6 +142,7 @@ namespace RockWeb.Blocks.Crm.PersonDetail
             public const string ShowCounty = "ShowCounty";
             public const string NewPersonPhone = "NewPersonPhone";
             public const string NewPersonEmail = "NewPersonEmail";
+            public const string DestinationOnFinish = "DestinationOnFinish";
         }
         #endregion Attribute Keys
 
@@ -379,6 +388,7 @@ namespace RockWeb.Blocks.Crm.PersonDetail
             }
             else
             {
+                ViewState["RefUrl"] = Request.UrlReferrer.ToString();
                 if ( _group != null )
                 {
                     tbGroupName.Text = _group.Name;
@@ -1481,8 +1491,24 @@ namespace RockWeb.Blocks.Crm.PersonDetail
                         Rock.Attribute.Helper.GetEditValues( phGroupAttributes, _group );
 
 	                    _group.SaveAttributeValues( rockContext );
-	
-	                    Response.Redirect( string.Format( "~/Person/{0}", Person.Id ), false );
+
+                        if ( GetAttributeValue(AttributeKey.DestinationOnFinish) == "Back" )
+                        {
+                            object refUrl = ViewState["RefUrl"];
+                            if ( refUrl != null )
+                            {
+                                Response.Redirect( (string)refUrl );
+                            }
+                            else
+                            {
+                                Response.Redirect( string.Format( "~/Person/{0}", Person.Id ), false );
+                            }
+                        }
+                        else {  // default
+                            Response.Redirect( string.Format("~/Person/{0}", Person.Id ), false );
+                        }
+
+
 	
 	                } );
 				}
@@ -1501,7 +1527,21 @@ namespace RockWeb.Blocks.Crm.PersonDetail
         /// <param name="e">The <see cref="EventArgs" /> instance containing the event data.</param>
         protected void btnCancel_Click( object sender, EventArgs e )
         {
-            Response.Redirect( string.Format( "~/Person/{0}", Person.Id ), false );
+            if ( GetAttributeValue( AttributeKey.DestinationOnFinish) == "Back" )
+            {
+                object refUrl = ViewState["RefUrl"];
+                if (refUrl != null) {
+                    Response.Redirect( (string)refUrl );
+                }
+                else
+                {
+                    Response.Redirect( string.Format("~/Person/{0}", Person.Id ), false );
+                }
+            }
+            else
+            {  // default
+                Response.Redirect( string.Format( "~/Person/{0}", Person.Id ), false );
+            }
         }
 
         /// <summary>
@@ -1551,7 +1591,22 @@ namespace RockWeb.Blocks.Crm.PersonDetail
                 rockContext.SaveChanges();
             }
 
-            Response.Redirect( string.Format( "~/Person/{0}", Person.Id ), false );
+            if ( GetAttributeValue( AttributeKey.DestinationOnFinish ) == "Back" )
+            {
+                object refUrl = ViewState["RefUrl"];
+                if (refUrl != null)
+                {
+                    Response.Redirect( (string)refUrl );
+                }
+                else
+                {
+                    Response.Redirect( string.Format("~/Person/{0}", Person.Id ), false );
+                }
+            }
+            else
+            {  // default
+                Response.Redirect( string.Format( "~/Person/{0}", Person.Id ), false );
+            }
         }
 
         #endregion
