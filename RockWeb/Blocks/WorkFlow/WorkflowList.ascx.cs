@@ -356,6 +356,9 @@ namespace RockWeb.Blocks.WorkFlow
                     var qryParam = new Dictionary<string, string>();
                     qryParam.Add( "WorkflowTypeId", workflow.WorkflowTypeId.ToString() );
                     qryParam.Add( "WorkflowGuid", workflow.Guid.ToString() );
+                    /// \CUSTOM CODE START
+                    qryParam.Add( "WorkflowId", workflow.Id.ToString() );
+                    /// \CUSTOM CODE END
                     NavigateToLinkedPage( "EntryPage", qryParam );
                 }
                 else
