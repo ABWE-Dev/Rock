@@ -3896,6 +3896,47 @@ namespace Rock.Lava
             }
         }
 
+        /// <summary>
+        /// Gets the steps of selected program that person has begun
+        /// </summary>
+        /// <param name="context">The context.</param>
+        /// <param name="input">The input.</param>
+        /// <param name="stepProgramId">The step program identifier.</param>
+        /// <param name="stepStetus">The step status.</param>
+        /// <param name="stepTypeId">The step type identifier.</param>
+        /// <returns></returns>
+        public static List<Model.Step> Steps(Context context, object input, string stepProgramId, string stepStatus = "All", string stepTypeId = "All")
+        {
+            var person = GetPerson(input);
+            int? numericalStepProgramId = stepProgramId.AsIntegerOrNull();
+            int? numericalStepTypeId = stepTypeId.AsIntegerOrNull();
+
+            if (person != null && numericalStepProgramId.HasValue)
+            {
+                var aliasIds = person.Aliases.Select(a => a.Id);
+                var stepQuery = new StepService(GetRockContext(context))
+                    .Queryable("StepStatus, StepType")
+                    .Where(s =>
+                        s.StepType.StepProgramId == numericalStepProgramId.Value &&
+                        aliasIds.Contains(s.PersonAliasId)
+                       );
+
+                if (stepStatus != "All")
+                {
+                    stepQuery = stepQuery.Where(s => s.StepStatus.Name == stepStatus);
+                }
+
+                if (stepTypeId != "All" && numericalStepTypeId.HasValue)
+                {
+                    stepQuery = stepQuery.Where(s => s.StepTypeId == numericalStepTypeId.Value);
+                }
+
+                return stepQuery.ToList();
+            }
+
+            return new List<Model.Step>();
+        }
+
         #endregion Person Filters
 
         #region Group Filters
