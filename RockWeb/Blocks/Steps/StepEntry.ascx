@@ -17,6 +17,8 @@
                 </div>
             </div>
 
+            <Rock:PanelDrawer ID="pdAuditDetails" runat="server"></Rock:PanelDrawer>
+
             <div class="panel-body">
 
                 <Rock:NotificationBox ID="nbMessage" runat="server" NotificationBoxType="Warning" />

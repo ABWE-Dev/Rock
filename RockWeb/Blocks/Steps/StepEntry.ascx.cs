@@ -540,6 +540,8 @@ namespace RockWeb.Blocks.Steps
             // Get the Step data model
             var step = GetStep();
 
+            pdAuditDetails.SetEntity(step, ResolveUrl("~"));
+
             int stepId = 0;
 
             if ( step != null )
