@@ -802,7 +802,7 @@ namespace RockWeb.Blocks.Groups
                     }
 
                     // load with Groups where the current person has GroupMemberHistory for
-                    _groupsWithGroupHistory = new HashSet<int>( new GroupMemberHistoricalService( rockContext ).Queryable().Where( a => qry.Any( x => x.GroupMember.Id == a.GroupMemberId ) ).Select( a => a.GroupId ).ToList() );
+                    _groupsWithGroupHistory = new HashSet<int>( new GroupMemberHistoricalService( rockContext ).Queryable().Where( a => qry.Any( x => x.GroupMember.Id == a.GroupMemberId ) ).Select( a => a.GroupId ).ToList() );                    
 
                     groupList = qry
                         .AsEnumerable()
@@ -854,6 +854,8 @@ namespace RockWeb.Blocks.Groups
                 // load with groups that have Group History
                 _groupsWithGroupHistory = new HashSet<int>( new GroupHistoricalService( rockContext ).Queryable().Where( a => qryGroups.Any( g => g.Id == a.GroupId ) ).Select( a => a.GroupId ).ToList() );
 
+                var showMemberCount = GetAttributeValue("DisplayMemberCountColumn").AsBoolean();
+
                 groupList = qryGroups
                     .AsEnumerable()
                     .Where( g => g.IsAuthorized( Rock.Security.Authorization.VIEW, CurrentPerson ) )
@@ -872,7 +874,7 @@ namespace RockWeb.Blocks.Groups
                         GroupRole = string.Empty,
                         DateAdded = DateTime.MinValue,
                         IsSynced = g.GroupSyncs.Any(),
-                        MemberCount = g.Members.Count()
+                        MemberCount = showMemberCount == true ? g.Members.Count() : 1
                     } )
                     .AsQueryable()
                     .Sort( sortProperty )
