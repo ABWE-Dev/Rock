@@ -37,6 +37,8 @@
                     }
                 });
 
+                this.$el.attr('type', 'search');
+
                 this.initializeEventHandlers();
             },
             initializeEventHandlers: function () {
