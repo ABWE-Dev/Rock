@@ -169,7 +169,9 @@ namespace Rock.Web.UI.Controls
                 {
                     using ( var rockContext = new RockContext() )
                     {
-                        _financialAccountsCache = new FinancialAccountService( rockContext ).Queryable().AsNoTracking()
+                        _financialAccountsCache = new FinancialAccountService( rockContext ).Queryable()
+                            .Where(fa => SelectableAccountIds.Any(Id => Id == fa.Id))
+                            .AsNoTracking()
                             .Select( a => new
                             {
                                 a.Id,
