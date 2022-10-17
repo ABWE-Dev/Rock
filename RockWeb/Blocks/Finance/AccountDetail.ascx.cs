@@ -448,7 +448,15 @@ namespace RockWeb.Blocks.Finance
             lRightDetails.Text = rightDescription.Html;
 
             account.LoadAttributes();
-            Helper.AddDisplayControls( account, Helper.GetAttributeCategories( account, true, false ), phAttributesView, null, false );
+            List<string> exclude = new List<string>();
+            foreach (var attribute in account.Attributes)
+            {
+                if (!attribute.Value.IsAuthorized(Authorization.VIEW, CurrentPerson))
+                {
+                    exclude.Add(attribute.Key);
+                }
+            }
+            Helper.AddDisplayControls(account, Helper.GetAttributeCategories(account, true, false), phAttributesView, exclude, false); ;
         }
 
         /// <summary>
