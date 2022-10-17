@@ -1,4 +1,4 @@
-// <copyright>
+﻿// <copyright>
 // Copyright by the Spark Development Network
 //
 // Licensed under the Rock Community License (the "License");
@@ -226,7 +226,7 @@ function ()
             //
             // Create a Select Expression to return the Person records referenced by the Group Members.
             //
-            var personGroupsQuery = new PersonService( context ).Queryable()
+            var personGroupsQuery = new PersonService( context ).Queryable(true)
                                                                 .Where( p => groupMemberQuery.Select( gm => gm.PersonId ).Contains( p.Id ) );
 
             var selectExpression = FilterExpressionExtractor.Extract<Model.Person>( personGroupsQuery, parameterExpression, "p" );
