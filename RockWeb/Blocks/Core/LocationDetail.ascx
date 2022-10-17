@@ -36,7 +36,7 @@
                             </div>
                             <div class="col-md-6">
                                 <Rock:RockCheckBox ID="cbIsActive" runat="server" Label="Active" />
-                                <Rock:AddressControl ID="acAddress" runat="server" UseStateAbbreviation="true" ShowCounty="true" />
+                                <Rock:AddressControl ID="acAddress" runat="server" UseStateAbbreviation="false" ShowCounty="true" />
                                 <asp:Button ID="btnStandardize" runat="server" OnClick="btnStandardize_Click" Text="Verify Address" CssClass="btn btn-action margin-b-md" />
                                 <asp:Literal ID="lStandardizationUpdate" runat="server" />
                                 <Rock:RockCheckBox ID="cbGeoPointLocked" runat="server" Label="Location Locked" Text="Yes" Help="Locks the location to prevent verification services (standardization/geocoding) from updating the address or point." />
