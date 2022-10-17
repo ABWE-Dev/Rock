@@ -645,7 +645,8 @@
                             self.setViewMode('search');
 
                             var searchRestUrl = self.options.searchRestUrl;
-                            var restUrlParams = self.options.restParams + '/' + searchKeyword;
+                            var additionalParams = self.options.restParams.split("?");
+                            var restUrlParams = additionalParams[0] + '/' + searchKeyword + '?' + additionalParams[1];
 
                             searchRestUrl += restUrlParams;
 
