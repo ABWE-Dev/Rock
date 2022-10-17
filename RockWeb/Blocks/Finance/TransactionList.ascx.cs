@@ -2003,7 +2003,7 @@ namespace RockWeb.Blocks.Finance
                 _scheduledTxn == null &&
                 _registration == null &&
                 _person == null &&
-                !isExporting )
+                !isExporting && showAccountSummary )
             {
                 pnlSummary.Visible = true;
 
