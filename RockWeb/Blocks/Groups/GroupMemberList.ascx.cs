@@ -2036,7 +2036,7 @@ namespace RockWeb.Blocks.Groups
             List<int> selectedGroupMemberIds = new List<int>();
 
             // If any row is selected, use those selected, otherwise choose all of them.
-            selectedGroupMemberIds = !gGroupMembers.SelectedKeys.Any() ? qry.Select( gm => gm.Id ).ToList() : gGroupMembers.SelectedKeys.OfType<int>().ToList();
+            selectedGroupMemberIds = !gGroupMembers.SelectedKeys.Any() ? new List<int>() : gGroupMembers.SelectedKeys.OfType<int>().ToList();
 
             var hasInactiveGroupMembers = qry.Where( gm => gm.GroupMemberStatus == GroupMemberStatus.Inactive ).Any();
 

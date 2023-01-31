@@ -895,15 +895,16 @@ namespace RockWeb.Blocks.Groups
                 // load with groups that have Group History
                 _groupsWithGroupHistory = new HashSet<int>( new GroupHistoricalService( rockContext ).Queryable().Where( a => qryGroups.Any( g => g.Id == a.GroupId ) ).Select( a => a.GroupId ).ToList() );
 
+                var groupMemberService = new GroupMemberService(rockContext);
                 groupList = qryGroups
                     .AsEnumerable()
-                    .Where( g => g.IsAuthorized( Rock.Security.Authorization.VIEW, CurrentPerson ) )
-                    .Select( g => new GroupListRowInfo
+                    .Where(g => g.IsAuthorized(Rock.Security.Authorization.VIEW, CurrentPerson))
+                    .Select(g => new GroupListRowInfo
                     {
                         Id = g.Id,
                         Path = string.Empty,
-                        Name = ( ( useRolePrefix && g.GroupType.Id != roleGroupTypeId ) ? "GROUP - " : string.Empty ) + g.Name,
-                        GroupType = GroupTypeCache.Get( g.GroupTypeId ),
+                        Name = ((useRolePrefix && g.GroupType.Id != roleGroupTypeId) ? "GROUP - " : string.Empty) + g.Name,
+                        GroupType = GroupTypeCache.Get(g.GroupTypeId),
                         GroupOrder = g.Order,
                         Description = g.Description,
                         IsSystem = g.IsSystem,
@@ -915,8 +916,8 @@ namespace RockWeb.Blocks.Groups
                         IsSecurityRole = g.IsSecurityRole,
                         DateAdded = DateTime.MinValue,
                         IsSynced = g.GroupSyncs.Any(),
-                        MemberCount = g.Members.Count()
-                    } )
+                        MemberCount = groupMemberService.Queryable().Where(gm => gm.GroupId == g.Id).Count()
+                    })
                     .AsQueryable()
                     .Sort( sortProperty )
                     .ToList();
