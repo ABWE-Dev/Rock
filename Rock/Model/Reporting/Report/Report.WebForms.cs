@@ -226,14 +226,22 @@ namespace Rock.Model
                 whereExpression = this.DataView.GetExpression( serviceInstance, paramExpression, dataViewFilterOverrides );
             }
 
-            MethodInfo getMethod = serviceInstance.GetType().GetMethod( "Get", new Type[] { typeof( ParameterExpression ), typeof( Expression ), typeof( Rock.Web.UI.Controls.SortProperty ), typeof( int? ) } );
-            if ( getMethod == null )
-            {
-                throw new RockReportException( this, $"Unable to determine IService.Get method for {serviceInstance}" );
+
+            IQueryable<IEntity> qry;
+            // LB 1/6/2023: We have to include deceased people if the person dataview calls for it
+            if (reportEntityTypeType == typeof(Person) && this.DataView.IncludeDeceased) {
+                qry = (serviceInstance as PersonService).Queryable(this.DataView.IncludeDeceased).Where(paramExpression, whereExpression, null, null);
+            } else {
+                MethodInfo getMethod = serviceInstance.GetType().GetMethod( "Get", new Type[] { typeof( ParameterExpression ), typeof( Expression ), typeof( Rock.Web.UI.Controls.SortProperty ), typeof( int? ) } );
+                if ( getMethod == null )
+                {
+                    throw new RockReportException( this, $"Unable to determine IService.Get method for {serviceInstance}" );
+                }
+
+                var getResult = getMethod.Invoke( serviceInstance, new object[] { paramExpression, whereExpression, null, null } );
+                qry = getResult as IQueryable<IEntity>;
             }
 
-            var getResult = getMethod.Invoke( serviceInstance, new object[] { paramExpression, whereExpression, null, null } );
-            var qry = getResult as IQueryable<IEntity>;
             var qryExpression = qry.Expression;
             var sortProperty = reportGetQueryableArgs.SortProperty;
 

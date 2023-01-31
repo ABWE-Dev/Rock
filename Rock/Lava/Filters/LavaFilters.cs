@@ -2565,7 +2565,7 @@ namespace Rock.Lava
 
                 // Get all GroupMember records tied to this Person and the Family GroupType. Note that a given Person can belong to multiple families.
                 var groupMemberQuery = new GroupMemberService( LavaHelper.GetRockContextFromLavaContext( context ) )
-                    .Queryable( "GroupLocations.Location" )
+                    .Queryable( "GroupLocations.Location", true)
                     .AsNoTracking()
                     .Where( m => m.PersonId == person.Id &&
                                  m.Group.GroupTypeId == familyGroupTypeId );

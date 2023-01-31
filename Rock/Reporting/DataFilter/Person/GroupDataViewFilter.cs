@@ -200,7 +200,7 @@ function ()
             //
             // Construct the Query to return the list of Group Members matching the filter conditions.
             //
-            var groupMemberQuery = new GroupMemberService( context ).Queryable();
+            var groupMemberQuery = new GroupMemberService( context ).Queryable(true);
 
             // Filter By Group.
             groupMemberQuery = groupMemberQuery.Where( x => groupKeys.Contains( x.GroupId ) );

@@ -1,4 +1,4 @@
-// <copyright>
+﻿// <copyright>
 // Copyright by the Spark Development Network
 //
 // Licensed under the Rock Community License (the "License");
@@ -368,7 +368,7 @@ function ()
 
             var personService = new PersonService( context );
 
-            var personQuery = personService.Queryable();
+            var personQuery = personService.Queryable(true);
 
             if (dataView != null)
             {
