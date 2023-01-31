@@ -34,6 +34,8 @@ namespace Rock.UniversalSearch.IndexModels
     {
         public static string RemoveAccents(string text)
         {
+            if (text == null) return null;
+
             StringBuilder sbReturn = new StringBuilder();
             var arrayText = text.Normalize(NormalizationForm.FormD).ToCharArray();
             foreach (char letter in arrayText)
