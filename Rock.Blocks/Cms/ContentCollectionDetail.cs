@@ -1264,6 +1264,14 @@ namespace Rock.Blocks.Cms
                     return actionError;
                 }
 
+                // Reset the cached field values.
+                var filterSettings = collection.FilterSettings.FromJsonOrNull<ContentCollectionFilterSettingsBag>() ?? new ContentCollectionFilterSettingsBag();
+                filterSettings.FieldValues = new Dictionary<string, List<ListItemBag>>();
+                filterSettings.AttributeValues = new Dictionary<string, List<ListItemBag>>();
+                collection.FilterSettings = filterSettings.ToJson();
+
+                rockContext.SaveChanges();
+
                 contentCollectionId = collection.Id;
             }
 

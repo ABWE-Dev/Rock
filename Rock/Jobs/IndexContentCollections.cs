@@ -15,6 +15,7 @@
 // </copyright>
 //
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -25,6 +26,8 @@ using Rock.Attribute;
 using Rock.Cms.ContentCollection;
 using Rock.Data;
 using Rock.Model;
+using Rock.ViewModels.Cms;
+using Rock.ViewModels.Utility;
 using Rock.Web.Cache;
 
 namespace Rock.Jobs
@@ -97,6 +100,23 @@ namespace Rock.Jobs
                 MaxConcurrency = maxConcurrency,
                 IsTrendingEnabled = true
             };
+
+            // Clear out the cached filter values so they get rebuilt.
+            using ( var rockContext = new RockContext() )
+            {
+                var contentCollectionService = new ContentCollectionService( rockContext );
+                var contentCollections = contentCollectionService.Queryable().ToList();
+
+                foreach ( var collection in contentCollections )
+                {
+                    var filterSettings = collection.FilterSettings.FromJsonOrNull<ContentCollectionFilterSettingsBag>() ?? new ContentCollectionFilterSettingsBag();
+                    filterSettings.FieldValues = new Dictionary<string, List<ListItemBag>>();
+                    filterSettings.AttributeValues = new Dictionary<string, List<ListItemBag>>();
+                    collection.FilterSettings = filterSettings.ToJson();
+                }
+
+                rockContext.SaveChanges();
+            }
 
             // First delete all indexes so we start clean.
             foreach ( var entityTypeCache in indexableEntityTypes )

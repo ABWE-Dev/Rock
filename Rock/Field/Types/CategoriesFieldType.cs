@@ -35,7 +35,7 @@ namespace Rock.Field.Types
     /// </summary>
     [RockPlatformSupport( Utility.RockPlatform.WebForms )]
     [Rock.SystemGuid.FieldTypeGuid( Rock.SystemGuid.FieldType.CATEGORIES )]
-    public class CategoriesFieldType : CategoryFieldType, IEntityReferenceFieldType
+    public class CategoriesFieldType : CategoryFieldType, IEntityReferenceFieldType, ISplitMultiValueFieldType
     {
         #region Formatting
 
@@ -57,6 +57,97 @@ namespace Rock.Field.Types
 
             return string.Empty;
         }
+
+        /// <summary>
+        /// Returns the value using the most appropriate datatype
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <param name="configurationValues">The configuration values.</param>
+        /// <returns></returns>
+        public override object ValueAsFieldType( string value, Dictionary<string, ConfigurationValue> configurationValues )
+        {
+            return value.SplitDelimitedValues().AsGuidList();
+        }
+
+        #endregion
+
+        #region EditControl
+
+        #endregion
+
+        #region Filter Control
+
+        /// <summary>
+        /// Gets the type of the filter comparison.
+        /// </summary>
+        /// <value>
+        /// The type of the filter comparison.
+        /// </value>
+        public override ComparisonType FilterComparisonType
+        {
+            get
+            {
+                return ComparisonHelper.ContainsFilterComparisonTypes;
+            }
+        }
+
+        #endregion
+
+        #region IEntityReferenceFieldType
+
+        /// <inheritdoc/>
+        List<ReferencedEntity> IEntityReferenceFieldType.GetReferencedEntities( string privateValue, Dictionary<string, string> privateConfigurationValues )
+        {
+            var guids = privateValue.SplitDelimitedValues().AsGuidList();
+
+            if ( !guids.Any() )
+            {
+                return null;
+            }
+
+            var categoryIds = guids
+                .Select( g => CategoryCache.Get( g ) )
+                .Where( c => c != null )
+                .Select( c => c.Id )
+                .ToList();
+
+            if ( !categoryIds.Any() )
+            {
+                return null;
+            }
+
+            var referencedEntities = new List<ReferencedEntity>();
+            foreach ( var categoryId in categoryIds )
+            {
+                referencedEntities.Add( new ReferencedEntity( EntityTypeCache.GetId<Category>().Value, categoryId ) );
+            }
+
+            return referencedEntities;
+        }
+
+        /// <inheritdoc/>
+        List<ReferencedProperty> IEntityReferenceFieldType.GetReferencedProperties( Dictionary<string, string> privateConfigurationValues )
+        {
+            return new List<ReferencedProperty>
+            {
+                new ReferencedProperty( EntityTypeCache.GetId<Category>().Value, nameof( Category.Name ) )
+            };
+        }
+
+        #endregion
+
+        #region ISplitMultiValueFieldType
+
+        /// <inheritdoc/>
+        public ICollection<string> SplitMultipleValues( string privateValue )
+        {
+            return privateValue.Split( ',' );
+        }
+
+        #endregion
+
+        #region WebForms
+#if WEBFORMS
 
         /// <summary>
         /// Returns the field's current value(s)

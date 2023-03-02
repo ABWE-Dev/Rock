@@ -873,6 +873,7 @@
     <Compile Include="Data\RockContextAnalytics.cs" />
     <Compile Include="Data\RockContextReadOnly.cs" />
     <Compile Include="Field\IEntityReferenceFieldType.cs" />
+    <Compile Include="Field\ISplitMultiValueFieldType.cs" />
     <Compile Include="Field\PersistedValues.cs" />
     <Compile Include="Field\ReferencedEntity.cs" />
     <Compile Include="Field\ReferencedProperty.cs" />

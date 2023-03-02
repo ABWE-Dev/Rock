@@ -479,7 +479,7 @@ namespace Rock.Blocks.Cms
         {
             return GetActiveCollectionFilterNames( contentCollection )
                 .Where( f => f.Value.StartsWith( "attr_" ) )
-                .Select( f => f.Value.Substring( 5 ).ToLower() )
+                .Select( f => f.Text.ToLower() )
                 .ToList();
         }
 
@@ -502,9 +502,7 @@ namespace Rock.Blocks.Cms
                 return true;
             }
 
-            var validKeys = GetActiveCollectionFilterNames( contentCollection )
-                .Select( f => f.Value.StartsWith( "attr_" ) ? f.Value.Substring( 5 ) : f.Value )
-                .ToList();
+            var validKeys = GetActiveCollectionFilterAttributeKeys( contentCollection );
 
             foreach ( var key in validKeys )
             {
@@ -543,9 +541,7 @@ namespace Rock.Blocks.Cms
             };
 
             // Add in all the query string filters.
-            var validKeys = GetActiveCollectionFilterNames( contentCollection )
-                .Select( f => f.Value.StartsWith( "attr_" ) ? f.Value.Substring( 5 ) : f.Value )
-                .ToList();
+            var validKeys = GetActiveCollectionFilterAttributeKeys( contentCollection );
 
             foreach ( var key in validKeys )
             {
