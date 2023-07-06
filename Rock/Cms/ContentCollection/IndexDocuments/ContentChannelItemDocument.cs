@@ -60,6 +60,10 @@ namespace Rock.Cms.ContentCollection.IndexDocuments
             var yearValue = document.Year.ToString();
             FieldValueHelper.AddFieldValue( source.ContentCollectionId, nameof( document.Year ), yearValue, yearValue );
 
+            // Add slug to document
+            document["Slug"] = contentChannelItem.PrimarySlug;
+            FieldValueHelper.AddFieldValue( source.ContentCollectionId, "Slug", contentChannelItem.PrimarySlug, contentChannelItem.PrimarySlug);
+
             document.AddPersonalizationData( contentChannelItem, source );
             document.AddIndexableAttributes( contentChannelItem, source );
             await document.AddExistingTrendingDataAsync( source );
