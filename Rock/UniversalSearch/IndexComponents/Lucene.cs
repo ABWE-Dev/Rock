@@ -539,7 +539,10 @@ namespace Rock.UniversalSearch.IndexComponents
             {
                 Occur occur = fieldCriteria.SearchType == CriteriaSearchType.And ? Occur.MUST : Occur.SHOULD;
                 var indexModelTypesQuery = new BooleanQuery();
-                var indexedAttributes = AttributeCache.GetPersonAttributes().Where(at => at.IsIndexEnabled == true);
+                List<AttributeCache> indexedAttributes = new List<AttributeCache>();
+                foreach (var entity in entities) {
+                    indexedAttributes.AddRange(AttributeCache.AllForEntityType(entity).Where(at => at.IsIndexEnabled == true));
+                }
 
                 foreach ( var modelType in indexModelTypes )
                 {
@@ -871,6 +874,26 @@ namespace Rock.UniversalSearch.IndexComponents
                             typeMappingProperty.IndexType = IndexType.Indexed;
 
                             typeMapping.Add(attribute.Key, typeMappingProperty);
+                        }
+                    }
+
+                    if (instance is ContentChannelItemIndex)
+                    {
+                        // Add attributes from the ContentChannelItem model to the index to make them searchable
+
+                        var entityTypeCache = EntityTypeCache.Get(SystemGuid.EntityType.CONTENT_CHANNEL_ITEM);
+                        var indexableAttributes = AttributeCache.GetByEntityType(entityTypeCache.Id).Where(att => att.IsIndexEnabled == true);
+
+                        foreach (var attribute in indexableAttributes)
+                        {
+                            if (!typeMapping.ContainsKey(attribute.Key)) {
+                                var typeMappingProperty = new TypeMappingProperties();
+                                typeMappingProperty.Name = attribute.Key;
+                                typeMappingProperty.Boost = 1;
+                                typeMappingProperty.IndexType = IndexType.Indexed;
+
+                                typeMapping.Add(attribute.Key, typeMappingProperty);
+                            }
                         }
                     }
 

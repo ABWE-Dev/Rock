@@ -404,6 +404,23 @@ namespace Rock.Cms.ContentCollection.IndexComponents
                 }
             }
 
+            var entityTypeCache = Rock.Web.Cache.EntityTypeCache.Get(SystemGuid.EntityType.CONTENT_CHANNEL_ITEM);
+            var indexableAttributes = Rock.Web.Cache.AttributeCache.GetByEntityType(entityTypeCache.Id).Where(att => att.IsIndexEnabled == true);
+
+            foreach (var attribute in indexableAttributes)
+            {
+                var key = $"{attribute.Key}ValueRaw";
+
+                if (!typeMapping.Any(item => item.Name == key)) {
+                    var typeMappingProperty = new TypeMappingProperties();
+                    typeMappingProperty.Name = key;
+                    typeMappingProperty.Boost = 1;
+                    typeMappingProperty.IsSearched = true;
+
+                    typeMapping.Add(typeMappingProperty);
+                }
+            }
+
             index.MappingProperties = typeMapping;
             index.FieldAnalyzers = fieldAnalyzers;
 
@@ -756,7 +773,20 @@ namespace Rock.Cms.ContentCollection.IndexComponents
                 // Index the known properties.
                 foreach ( var typeMappingProperty in index.MappingProperties )
                 {
-                    var propertyValue = documentType.GetProperty( typeMappingProperty.Name ).GetValue( document, null );
+                    // var propertyValue = documentType.GetProperty( typeMappingProperty.Name ).GetValue( document, null );
+
+                    var prop = documentType.GetProperty(typeMappingProperty.Name);
+                    object propertyValue;
+
+                    // Could be a real property on the class, or one added dynamically. So we have to check.
+                    if (prop == null)
+                    {
+                        propertyValue = document[typeMappingProperty.Name]?.ToString() ?? "";
+                    }
+                    else
+                    {
+                        propertyValue = documentType.GetProperty(typeMappingProperty.Name).GetValue(document, null);
+                    }
 
                     if ( propertyValue is ICollection collectionProperty )
                     {
@@ -774,20 +804,22 @@ namespace Rock.Cms.ContentCollection.IndexComponents
                 // Index any attributes or other non-property values that were defined.
                 foreach ( var dynamicProperty in document.GetAdditionalMemberNames() )
                 {
-                    var propertyValue = document[dynamicProperty];
+                    if (!index.MappingProperties.Any(mp => mp.Name == dynamicProperty)) {
+                        var propertyValue = document[dynamicProperty];
 
-                    if ( propertyValue is ICollection collectionProperty )
-                    {
-                        foreach ( var collectionValue in collectionProperty )
+                        if ( propertyValue is ICollection collectionProperty )
                         {
-                            var stringField = new StringField( dynamicProperty, collectionValue.ToStringSafe().ToLower(), global::Lucene.Net.Documents.Field.Store.YES );
+                            foreach ( var collectionValue in collectionProperty )
+                            {
+                                var stringField = new StringField( dynamicProperty, collectionValue.ToStringSafe().ToLower(), global::Lucene.Net.Documents.Field.Store.YES );
+                                doc.Add( stringField );
+                            }
+                        }
+                        else
+                        {
+                            var stringField = new StringField( dynamicProperty, propertyValue.ToStringSafe().ToLower(), global::Lucene.Net.Documents.Field.Store.YES );
                             doc.Add( stringField );
                         }
-                    }
-                    else
-                    {
-                        var stringField = new StringField( dynamicProperty, propertyValue.ToStringSafe().ToLower(), global::Lucene.Net.Documents.Field.Store.YES );
-                        doc.Add( stringField );
                     }
                 }
 
