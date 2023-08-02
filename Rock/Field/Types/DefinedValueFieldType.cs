@@ -614,11 +614,9 @@ namespace Rock.Field.Types
         {
             return privateValue.Split( ',' );
         }
-
         #endregion
 
         #region WebForms
-#if WEBFORMS
 
         /// <summary>
         /// Returns the field's current value(s)

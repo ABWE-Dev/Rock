@@ -165,7 +165,6 @@ namespace Rock.Field.Types
         #endregion
 
         #region WebForms
-#if WEBFORMS
 
         /// <summary>
         /// Returns the field's current value(s)
@@ -271,80 +270,7 @@ namespace Rock.Field.Types
             return base.FilterControl( configurationValues, id, required, filterMode );
         }
 
-        /// <summary>
-        /// Determines whether this filter has a filter control
-        /// </summary>
-        /// <returns></returns>
-        public override bool HasFilterControl()
-        {
-            return true;
-        }
-
-        /// <summary>
-        /// Gets the type of the filter comparison.
-        /// </summary>
-        /// <value>
-        /// The type of the filter comparison.
-        /// </value>
-        public override ComparisonType FilterComparisonType
-        {
-            get
-            {
-                return ComparisonHelper.ContainsFilterComparisonTypes;
-            }
-        }
-
         #endregion
 
-        #region IEntityReferenceFieldType
-
-        /// <inheritdoc/>
-        List<ReferencedEntity> IEntityReferenceFieldType.GetReferencedEntities( string privateValue, Dictionary<string, string> privateConfigurationValues )
-        {
-            if ( string.IsNullOrWhiteSpace( privateValue ) )
-            {
-                return null;
-            }
-
-            var guids = new List<Guid>();
-
-            foreach ( string guidValue in privateValue.Split( new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries ) )
-            {
-                Guid? guid = guidValue.AsGuidOrNull();
-                if ( guid.HasValue )
-                {
-                    guids.Add( guid.Value );
-                }
-            }
-
-            using ( var rockContext = new RockContext() )
-            {
-                var referencedEntities = guids.Select( a => new ScheduleService( rockContext ).Get( a ) )
-                .Select( s => s.Id )
-                .ToList()
-                .Select( s => new ReferencedEntity( EntityTypeCache.GetId<Schedule>().Value, s ) )
-                .ToList();
-
-                if ( !referencedEntities.Any() )
-                {
-                    return null;
-                }
-
-                return referencedEntities;
-            }
-        }
-
-        /// <inheritdoc/>
-        List<ReferencedProperty> IEntityReferenceFieldType.GetReferencedProperties( Dictionary<string, string> privateConfigurationValues )
-        {
-            // This field type references the Name property of a Group and
-            // should have its persisted values updated when changed.
-            return new List<ReferencedProperty>
-            {
-                new ReferencedProperty( EntityTypeCache.GetId<Schedule>().Value, nameof( Schedule.Name ) )
-            };
-        }
-
-        #endregion
     }
 }
