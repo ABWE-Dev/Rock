@@ -1120,7 +1120,7 @@ namespace Rock.Web.UI
                             if ( type != null )
                             {
                                 int? contextId = PageParameter( type.Name + "Id" ).AsIntegerOrNull();
-                                if ( contextId.HasValue )
+                                if ( contextId.HasValue && this.Site.DisablePredictableIds == false )
                                 {
                                     ModelContext.AddOrReplace( modelContextName, new Data.KeyEntity( contextId.Value ) );
                                 }
@@ -1137,7 +1137,7 @@ namespace Rock.Web.UI
                         foreach ( var pageContext in _pageCache.PageContexts )
                         {
                             int? contextId = PageParameter( pageContext.Value ).AsIntegerOrNull();
-                            if ( contextId.HasValue )
+                            if ( contextId.HasValue && this.Site.DisablePredictableIds == false)
                             {
                                 ModelContext.AddOrReplace( pageContext.Key, new Data.KeyEntity( contextId.Value ) );
                             }
@@ -1428,6 +1428,11 @@ Rock.settings.initialize({{
 
                         if ( !ClientScript.IsStartupScriptRegistered( "rock-obsidian-init" ) )
                         {
+                            var pageParameters = new Dictionary<string, string>(); 
+                            foreach (var param in PageParameters()) {
+                                pageParameters.Add(param.Key.UrlEncode(), param.Value.ToString().UrlEncode());
+                            }
+
                             var script = $@"
 Obsidian.onReady(() => {{
     System.import('@Obsidian/Templates/rockPage.js').then(module => {{
@@ -1435,7 +1440,7 @@ Obsidian.onReady(() => {{
             executionStartTime: new Date().getTime(),
             pageId: {_pageCache.Id},
             pageGuid: '{_pageCache.Guid}',
-            pageParameters: {PageParameters().ToJson()},
+            pageParameters: {pageParameters.ToJson()},
             currentPerson: {( CurrentPerson == null ? "null" : CurrentPerson.ToViewModel( CurrentPerson ).ToCamelCaseJson( false, false ) )},
             contextEntities: {GetContextViewModels().ToCamelCaseJson( false, false )},
             loginUrlWithReturnUrl: '{GetLoginUrlWithReturnUrl()}'
