@@ -135,6 +135,7 @@ namespace RockWeb.Blocks.WorkFlow
 
                     var mergeFields = new Dictionary<string, object>();
                     mergeFields.Add( "Role", role );
+                    mergeFields.Add( "CurrentPerson" , CurrentPerson);
                     mergeFields.Add( "Actions", actions.OrderByDescending( a => a.CreatedDateTime ) );
                     mergeFields.Add( "PanelTitle", panelTitle );
                     mergeFields.Add( "PanelIcon", panelIcon );
