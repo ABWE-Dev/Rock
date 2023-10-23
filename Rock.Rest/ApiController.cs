@@ -417,18 +417,27 @@ namespace Rock.Rest
                             }
                             else if ( propertyType == typeof( int ) || propertyType == typeof( int? ) || propertyType.IsEnum )
                             {
-                                // By default, objects that hold integer values, hold int64, so coerce to int32
                                 try
                                 {
-                                    var int32 = Convert.ToInt32( currentValue );
-                                    property.SetValue( targetModel, int32 );
+                                    var int32 = Convert.ToInt32(currentValue);
+
+                                    if (!propertyType.IsEnum)
+                                    {
+                                        property.SetValue(targetModel, int32);
+                                    }
+                                    else
+                                    {
+                                        // Convert the int to the enum type per https://stackoverflow.com/a/54627581
+                                        var convertedValue = Enum.ToObject(propertyType, int32);
+                                        property.SetValue(targetModel, convertedValue, null);
+                                    }
                                 }
-                                catch ( OverflowException )
+                                catch (OverflowException)
                                 {
                                     var response = ControllerContext.Request.CreateErrorResponse(
                                         HttpStatusCode.BadRequest,
-                                        string.Format( "Cannot cast {0} to int32", key ) );
-                                    throw new HttpResponseException( response );
+                                        string.Format("Cannot cast {0} to int32", key));
+                                    throw new HttpResponseException(response);
                                 }
                             }
                             else
