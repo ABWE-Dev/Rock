@@ -15,8 +15,9 @@
 // </copyright>
 //
 using System;
+using System.Globalization;
 using System.Linq;
-
+using System.Text;
 using Rock.Data;
 using Rock.Model;
 using Rock.UniversalSearch.IndexModels.Attributes;
@@ -31,6 +32,18 @@ namespace Rock.UniversalSearch.IndexModels
     [System.Diagnostics.DebuggerDisplay( "{FirstName} {LastName}" )]
     public class PersonIndex : IndexModelBase
     {
+        public static string RemoveAccents(string text)
+        {
+            StringBuilder sbReturn = new StringBuilder();
+            var arrayText = text.Normalize(NormalizationForm.FormD).ToCharArray();
+            foreach (char letter in arrayText)
+            {
+                if (CharUnicodeInfo.GetUnicodeCategory(letter) != UnicodeCategory.NonSpacingMark)
+                    sbReturn.Append(letter);
+            }
+            return sbReturn.ToString();
+        }
+
         /// <summary>
         /// Gets or sets the first name.
         /// </summary>
@@ -39,6 +52,15 @@ namespace Rock.UniversalSearch.IndexModels
         /// </value>
         [RockIndexField( Boost = 3 )]
         public string FirstName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the first name.
+        /// </summary>
+        /// <value>
+        /// The first name.
+        /// </value>
+        [RockIndexField(Boost = 3)]
+        public string NormalizedFirstName { get; set; }
 
         /// <summary>
         /// Gets or sets the name of the nick.
@@ -50,6 +72,15 @@ namespace Rock.UniversalSearch.IndexModels
         public string NickName { get; set; }
 
         /// <summary>
+        /// Gets or sets the name of the nick.
+        /// </summary>
+        /// <value>
+        /// The name of the nick.
+        /// </value>
+        [RockIndexField(Boost = 3, Analyzer = "")]
+        public string NormalizedNickName { get; set; }
+
+        /// <summary>
         /// Gets or sets the last name.  
         /// </summary>
         /// <value>
@@ -57,6 +88,15 @@ namespace Rock.UniversalSearch.IndexModels
         /// </value>
         [RockIndexField( Boost = 3.5 )] // gives slight nudge to last name over first name
         public string LastName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the name of the nick.
+        /// </summary>
+        /// <value>
+        /// The name of the nick.
+        /// </value>
+        [RockIndexField(Boost = 3.5)]
+        public string NormalizedLastName { get; set; }
 
         /// <summary>
         /// Gets or sets the suffix.
@@ -241,8 +281,11 @@ namespace Rock.UniversalSearch.IndexModels
 
                 personIndex.Id = person.Id;
                 personIndex.FirstName = person.FirstName;
+                personIndex.NormalizedFirstName = RemoveAccents(person.FirstName);
                 personIndex.NickName = person.NickName;
+                personIndex.NormalizedNickName = RemoveAccents(person.NickName);
                 personIndex.LastName = person.LastName;
+                personIndex.NormalizedLastName = RemoveAccents(person.LastName);
 
                 personIndex.ModelOrder = 10;
 
