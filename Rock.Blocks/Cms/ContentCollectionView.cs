@@ -343,7 +343,7 @@ namespace Rock.Blocks.Cms
                         Label = filterSettings.Label,
                         IsMultipleSelection = filterSettings.IsMultipleSelection,
                         HeaderMarkup = filterOption.HeaderMarkup,
-                        Items = attributeValues.ContainsKey( attrKey ) ? attributeValues[attrKey] : new List<ListItemBag>()
+                        Items = attributeValues.ContainsKey( attrKey ) ? attributeValues[attrKey].OrderBy(item => item.Text).ToList() : new List<ListItemBag>()
                     } );
                 }
 
