@@ -433,6 +433,7 @@ namespace RockWeb.Blocks.Reporting
                 {
                     nbErrorMessage.NotificationBoxType = NotificationBoxType.Warning;
                     nbErrorMessage.Text = "This report did not complete in a timely manner. You can try again or adjust the timeout setting of this block.";
+                    nbErrorMessage.Visible = true;
                 }
                 else
                 {
