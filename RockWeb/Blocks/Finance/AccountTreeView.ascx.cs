@@ -230,7 +230,7 @@ namespace RockWeb.Blocks.Finance
                 lbAddAccountChild.Enabled = canEditBlock;
             }
 
-            divTreeviewActions.Visible = canEditBlock || canAddChildAccount;
+            // divTreeviewActions.Visible = canEditBlock || canAddChildAccount;
             lbAddAccountRoot.Enabled = canEditBlock;
             lbAddAccountChild.Enabled = canAddChildAccount;
 
