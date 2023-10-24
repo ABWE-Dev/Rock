@@ -143,7 +143,7 @@ namespace Rock.Cms.ContentCollection.Indexers
 
             using ( var rockContext = new RockContext() )
             {
-                itemEntity = new ContentChannelItemService( rockContext ).Get( id );
+                itemEntity = new ContentChannelItemService( rockContext ).GetInclude(id, (i) => i.ContentChannelItemSlugs);
                 var now = RockDateTime.Now;
 
                 // If entity wasn't found or isn't visible yet then don't index.
