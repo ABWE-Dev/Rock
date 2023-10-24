@@ -162,6 +162,8 @@ namespace Rock.UniversalSearch.IndexModels
                 }
             }
 
+            AddIndexableAttributes(businessIndex, business);
+
             return businessIndex;
         }
     }

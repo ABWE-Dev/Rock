@@ -552,7 +552,7 @@ namespace Rock.UniversalSearch.IndexComponents
                         {
                             var fieldName = field.Field.Substring( 0, 1 ).ToUpper() + field.Field.Substring( 1 );
 
-                            if ( modelType.GetProperty( fieldName ) != null )
+                            if ( modelType.GetProperty( fieldName ) != null || ((modelType == typeof(BusinessIndex) || modelType == typeof(PersonIndex)) && indexedAttributes.Any(at => at.Key == fieldName)))
                             {
                                 // Add field filter
                                 var phraseQuery = new PhraseQuery();
@@ -857,6 +857,24 @@ namespace Rock.UniversalSearch.IndexComponents
                         }
                     }
 
+                    if (instance is PersonIndex || instance is BusinessIndex)
+                    {
+                        // Add attributes from the person model to the index to make them searchable
+
+                        var entityTypeCache = EntityTypeCache.Get(SystemGuid.EntityType.PERSON);
+                        var indexableAttributes = AttributeCache.GetByEntityType(entityTypeCache.Id).Where(att => att.IsIndexEnabled == true);
+
+                        foreach (var attribute in indexableAttributes)
+                        {
+                            var typeMappingProperty = new TypeMappingProperties();
+                            typeMappingProperty.Name = attribute.Key;
+                            typeMappingProperty.Boost = 1;
+                            typeMappingProperty.IndexType = IndexType.Indexed;
+
+                            typeMapping.Add(attribute.Key, typeMappingProperty);
+                        }
+                    }
+
                     index.MappingProperties = typeMapping;
                     index.FieldAnalyzers = fieldAnalyzers;
                     _indexes[indexName] = index;
@@ -901,7 +919,23 @@ namespace Rock.UniversalSearch.IndexComponents
                 Document doc = new Document();
                 foreach ( var typeMappingProperty in index.MappingProperties.Values )
                 {
-                    TextField textField = new TextField( typeMappingProperty.Name, documentType.GetProperty( typeMappingProperty.Name ).GetValue( document, null ).ToStringSafe().ToLower(), global::Lucene.Net.Documents.Field.Store.YES );
+                    var prop = documentType.GetProperty(typeMappingProperty.Name);
+                    string value = "";
+
+                    if (prop == null)
+                    {
+                        var docAsIndexModel = document as IndexModelBase;
+                        if (docAsIndexModel != null)
+                        {
+                            value = (document as IndexModelBase)[typeMappingProperty.Name]?.ToString() ?? "";
+                        }
+                    }
+                    else
+                    {
+                        value = documentType.GetProperty(typeMappingProperty.Name).GetValue(document, null).ToStringSafe().ToLower();
+                    }
+
+                    TextField textField = new TextField(typeMappingProperty.Name, value, global::Lucene.Net.Documents.Field.Store.YES);
                     textField.Boost = typeMappingProperty.Boost;
                     doc.Add( textField );
                 }
