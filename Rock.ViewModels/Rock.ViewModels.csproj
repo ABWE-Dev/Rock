@@ -64,6 +64,9 @@
     <Compile Include="Blocks\Cms\LavaShortcodeDetail\LavaShortcodeDetailOptionsBag.cs" />
     <Compile Include="Blocks\Engagement\AchievementAttemptDetail\AchievementAttemptBag.cs" />
     <Compile Include="Blocks\Engagement\AchievementAttemptDetail\AchievementAttemptDetailOptionsBag.cs" />
+    <Compile Include="Blocks\Finance\FinancialAccountDetail\FinancialAccountBag.cs" />
+    <Compile Include="Blocks\Finance\FinancialAccountDetail\FinancialAccountDetailOptionsBag.cs" />
+    <Compile Include="Blocks\Finance\FinancialAccountDetail\FinancialAccountParticipantBag.cs" />
     <Compile Include="Blocks\Finance\FinancialGatewayDetail\FinancialGatewayBag.cs" />
     <Compile Include="Blocks\Finance\FinancialGatewayDetail\FinancialGatewayDetailOptionsBag.cs" />
     <Compile Include="Blocks\Engagement\StreakTypeExclusionDetail\StreakTypeExclusionBag.cs" />
@@ -574,6 +577,5 @@
       <Name>Rock.Enums</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
