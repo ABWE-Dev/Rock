@@ -31,7 +31,7 @@
     </DropDownList>
 
     <CheckBoxList v-if="isCheckBoxListStyle"
-                  v-model="(internalValue as string[])"
+                  v-model="modelAsStringArray"
                   v-bind="standardProps"
                   :disabled="disabled"
                   :horizontal="isHorizontal"
@@ -47,8 +47,8 @@
 
     </CheckBoxList>
 
-    <RadioButtonList v-if="isRadioButtonListStyle"
-                     v-model="(internalValue as string)"
+     <RadioButtonList v-if="isRadioButtonListStyle"
+                     v-model="modelAsString"
                      v-bind="standardProps"
                      :disabled="disabled"
                      :horizontal="isHorizontal"
@@ -173,6 +173,14 @@
                 return [];
             }
         }
+    });
+
+    const modelAsStringArray = computed(() => {
+        return (internalValue.value as string[]);
+    });
+
+    const modelAsString = computed(() => {
+        return (internalValue.value as string);
     });
 
     /**
