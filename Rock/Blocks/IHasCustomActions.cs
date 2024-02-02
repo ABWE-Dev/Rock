@@ -25,7 +25,7 @@ namespace Rock.Blocks
     /// Identifies a block as having custom administrative actions that should
     /// be added to the block's configuration bar.
     /// </summary>
-    internal interface IHasCustomActions
+    public interface IHasCustomActions
     {
         /// <summary>
         /// Adds custom actions to the configuration area of a block instance.

@@ -38,7 +38,8 @@
       "@Obsidian/Utility": [ "../Rock.JavaScript.Obsidian/Framework/Utility" ],
       "@Obsidian/Utility/*": [ "../Rock.JavaScript.Obsidian/Framework/Utility/*" ],
       "@Obsidian/ValidationRules": [ "../Rock.JavaScript.Obsidian/Framework/ValidationRules" ],
-      "@Obsidian/ViewModels/*": [ "../Rock.JavaScript.Obsidian/Framework/ViewModels/*" ]
+      "@Obsidian/ViewModels/*": [ "../Rock.JavaScript.Obsidian/Framework/ViewModels/*" ],
+      "@Obsidian/Blocks/*": [ "../Rock.JavaScript.Obsidian.Blocks/src/*" ]
     }
   },
   "references": [
