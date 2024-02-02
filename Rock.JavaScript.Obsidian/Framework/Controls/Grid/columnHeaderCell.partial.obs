@@ -189,6 +189,10 @@
             if (filterButtonElement.value && filterButtonElement.value.contains(ev.target)) {
                 return;
             }
+
+            if (ev.target.closest(".datepicker")) {
+                return;
+            }
         }
 
         isFilterOpen.value = false;
