@@ -77,7 +77,7 @@ namespace Rock.Jobs
 
             // Get groups to sync.
             var activeSyncList = new List<GroupSyncInfo>();
-            using ( var rockContextReadOnly = new RockContextReadOnly() )
+            using ( var rockContextReadOnly = new RockContext() )
             {
                 // Get groups that are not archived and are still active.
                 activeSyncList = new GroupSyncService( rockContextReadOnly )
