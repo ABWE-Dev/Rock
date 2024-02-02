@@ -46,7 +46,8 @@ const packageMaps: Record<string, string> = {
     "@Obsidian/Templates/*": "/Obsidian/Templates/*",
     "@Obsidian/Utility/*": "/Obsidian/Utility.js",
     "@Obsidian/Utility": "/Obsidian/Utility.js",
-    "@Obsidian/ValidationRules": "/Obsidian/ValidationRules.js"
+    "@Obsidian/ValidationRules": "/Obsidian/ValidationRules.js",
+    "@Obsidian/Blocks/*": "/Obsidian/Blocks/*"
 };
 
 /**
