@@ -998,7 +998,15 @@ namespace RockWeb.Blocks.Connection
             lRequestModalViewModeStatusIcons.Text = GetStatusIconHtml( viewModel );
             lRequestModalViewModePersonFullName.Text = viewModel.PersonFullname;
             lRequestModalViewModeEmail.Text = requesterPerson.GetEmailTag( ResolveRockUrl( "/" ) );
-            aRequestModalViewModeProfileLink.Attributes["href"] = string.Format( "/person/{0}", viewModel.PersonId );
+            var personProfileRef = new PageReference(GetAttributeValue(AttributeKey.PersonProfilePage), new Dictionary<string, string> { { "PersonGuid", requesterPerson.Guid.ToString() }, { "PersonId", requesterPerson.Id.ToString() } });
+            if (!personProfileRef.Route.Contains("PersonId")) {
+                personProfileRef.Parameters.Remove("PersonId");
+            }
+            if (!personProfileRef.Route.Contains("PersonGuid"))
+            {
+                personProfileRef.Parameters.Remove("PersonGuid");
+            }
+            aRequestModalViewModeProfileLink.Attributes["href"] = personProfileRef.BuildUrl();
             btnRequestModalViewModeTransfer.Visible = DoShowTransferButton();
 
             /* 
