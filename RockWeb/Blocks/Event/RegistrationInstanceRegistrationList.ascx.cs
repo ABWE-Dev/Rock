@@ -577,6 +577,11 @@ namespace RockWeb.Blocks.Event
                     var registrationEntityType = EntityTypeCache.Get( typeof( Rock.Model.Registration ) );
 
                     var instance = new RegistrationInstanceService( rockContext ).Get( instanceId.Value );
+                    if (!instance.IsAuthorized(Authorization.VIEW, CurrentPerson))
+                    {
+                        return;
+                    }
+
                     if ( instance != null )
                     {
                         decimal cost = instance.RegistrationTemplate.Cost;
