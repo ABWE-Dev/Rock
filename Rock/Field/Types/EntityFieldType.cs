@@ -164,7 +164,7 @@ namespace Rock.Field.Types
         /// <returns></returns>
         public IEntity GetEntity( string value, RockContext rockContext )
         {
-            var entityIdentifier = GetEntityIdentifier( value, out EntityTypeCache entityType );
+            var entityIdentifier = GetEntityIdentifier( value, out EntityTypeCache entityType ).AsIntegerOrNull();
 
             if ( entityType == null )
             {
