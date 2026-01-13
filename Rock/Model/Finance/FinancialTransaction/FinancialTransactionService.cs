@@ -440,10 +440,10 @@ namespace Rock.Model
                     query = query.Where( t => t.TransactionDetails.Any( td => td.AccountId == accountId ) );
 
                 }
-                else
-                {
-                    query = query.Where( t => t.TransactionDetails.Any( td => selectedAccountIds.Contains( td.AccountId ) ) );
-                }
+                //else
+                //{
+                //    query = query.Where( t => t.TransactionDetails.Any( td => selectedAccountIds.Contains( td.AccountId ) ) );
+                //}
             }
             else
             {
@@ -452,10 +452,10 @@ namespace Rock.Model
                     var accountId = accountIds[0];
                     query = query.Where( t => t.TransactionDetails.Any( td => accountId == td.AccountId ) );
                 }
-                else
-                {
-                    query = query.Where( t => t.TransactionDetails.Any( td => accountIds.Contains( td.AccountId ) ) );
-                }
+                //else
+                //{
+                //    query = query.Where( t => t.TransactionDetails.Any( td => accountIds.Contains( td.AccountId ) ) );
+                //}
             }
 
             // We'll need to factor in partial amount refunds...
